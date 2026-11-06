@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Label Printing</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+  :root{
+    --bg:#f1f5f9; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
+    --navy:#0f172a; --navy2:#1e293b;
+    --acetate:#4f46e5; --acetate-d:#4338ca; --acetate-l:#eef2ff;
+    --sticker:#0d9488; --sticker-d:#0f766e; --sticker-l:#f0fdfa;
+    --accent:var(--acetate); --accent-d:var(--acetate-d); --accent-l:var(--acetate-l);
+    --success:#16a34a; --success-d:#15803d;
+    --warning:#f59e0b; --warning-d:#d97706;
+    --danger:#dc2626; --danger-d:#b91c1c;
+    --info:#0284c7; --info-d:#0369a1;
+    --gray:#64748b; --gray-d:#475569;
+    --radius:16px; --shadow:0 10px 30px -14px rgba(15,23,42,.22);
+  }
+  body.theme-sticker{ --accent:var(--sticker); --accent-d:var(--sticker-d); --accent-l:var(--sticker-l); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+  svg{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .hidden{display:none!important}
+
+  /* ===== App shell ===== */
+  .app{display:flex;min-height:100vh}
+  .sidebar{width:262px;flex-shrink:0;background:linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%);color:#cbd5e1;display:flex;flex-direction:column;padding:22px 14px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .logo-wrap{display:flex;align-items:center;gap:12px;padding:2px 8px 20px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+  .logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#14b8a6);display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.35);flex-shrink:0}
+  .logo svg{width:26px;height:26px;stroke:#fff}
+  .logo-wrap b{color:#fff;font-size:1rem;line-height:1.2;display:block}
+  .logo-wrap small{color:#94a3b8;font-size:.72rem}
+  .nav{display:flex;flex-direction:column;gap:4px;flex:1}
+  .nav-label{font-size:.66rem;letter-spacing:1.5px;font-weight:700;color:#64748b;padding:16px 12px 6px}
+  .nav-item{display:flex;align-items:center;gap:12px;width:100%;border:none;background:transparent;color:#cbd5e1;padding:11px 12px;border-radius:11px;font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;text-align:start;transition:.18s}
+  .nav-item svg{width:20px;height:20px}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+  .nav-item.active{background:var(--accent);color:#fff;box-shadow:0 10px 20px -10px var(--accent)}
+  .nav-item.danger:hover{background:rgba(220,38,38,.22);color:#fecaca}
+  .nav-count{margin-inline-start:auto;background:rgba(255,255,255,.16);font-size:.72rem;padding:1px 9px;border-radius:99px;font-weight:700}
+  .side-foot{font-size:.7rem;color:#64748b;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,.08);margin-top:10px}
+
+  .content{flex:1;min-width:0}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(241,245,249,.88);backdrop-filter:blur(10px);padding:10px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--border)}
+  .topbar-title-wrap{min-width:180px}
+  .topbar-right{margin-inline-start:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+  .topbar h1{font-size:1.4rem;line-height:1.2}
+  .topbar p{color:var(--muted);font-size:.84rem}
+
+  /* Masterpiece Live Clock & Date Capsule */
+  .topbar-clock-card{
+    display:inline-flex;align-items:center;gap:12px;
+    background:#ffffff;border:1.5px solid #e2e8f0;border-radius:999px;
+    padding:6px 16px 6px 14px;
+    box-shadow:0 4px 14px -3px rgba(15,23,42,.08),0 1px 3px rgba(15,23,42,.04);
+    transition:all .25s ease;user-select:none;
+  }
+  .topbar-clock-card:hover{border-color:#cbd5e1;box-shadow:0 6px 20px -3px rgba(15,23,42,.12)}
+  .tcc-live{
+    position:relative;display:inline-flex;align-items:center;gap:6px;
+    background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);
+    padding:2px 7px;border-radius:99px;
+  }
+  .tcc-pulse-dot{
+    width:6px;height:6px;border-radius:50%;background:#10b981;
+    box-shadow:0 0 8px #10b981;animation:pulseLive 2s infinite ease-in-out;
+  }
+  @keyframes pulseLive{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+  .tcc-live-txt{font-size:.62rem;font-weight:800;color:#059669;letter-spacing:.8px;line-height:1}
+  .tcc-time-wrap{display:flex;align-items:baseline;gap:4px}
+  .tcc-digits{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    font-size:1.05rem;font-weight:800;color:#0f172a;letter-spacing:.5px;
+    font-variant-numeric:tabular-nums;line-height:1;
+  }
+  .tcc-ampm{
+    font-size:.68rem;font-weight:800;color:var(--accent);background:var(--accent-l);
+    padding:2px 5px;border-radius:5px;line-height:1;letter-spacing:.5px;
+  }
+  .tcc-divider{width:1.5px;height:20px;background:#e2e8f0}
+  .tcc-date-wrap{display:flex;align-items:center;gap:8px}
+  .tcc-cal-icon{color:var(--accent);display:grid;place-items:center}
+  .tcc-cal-icon svg{width:15px;height:15px}
+  .tcc-date-text{display:flex;flex-direction:column;text-align:start;line-height:1.15}
+  .tcc-day{font-size:.75rem;font-weight:800;color:#1e293b;letter-spacing:.2px}
+  .tcc-date{font-size:.70rem;font-weight:600;color:#64748b;letter-spacing:.2px}
+
+  /* Stage switch (modern segmented toggle) */
+  .stage-switch{margin-inline-start:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;background:#e2e8f0;border-radius:15px;padding:5px;min-width:460px;box-shadow:inset 0 2px 4px rgba(15,23,42,.08)}
+  .stage-switch .thumb{position:absolute;top:5px;bottom:5px;inset-inline-start:5px;width:calc(50% - 5px);border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-d));box-shadow:0 8px 18px -8px var(--accent);transition:transform .32s cubic-bezier(.4,0,.2,1),background .3s}
+  .stage-switch[data-stage=sticker] .thumb{transform:translateX(100%)}
+  .stage-switch button{position:relative;z-index:1;border:none;background:transparent;padding:11px 14px;font:inherit;font-weight:700;font-size:.88rem;color:#475569;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:color .2s;border-radius:11px}
+  .stage-switch button:not(.on):hover{color:var(--text)}
+  .stage-switch button.on{color:#fff}
+  .stage-switch .step{font-size:.62rem;font-weight:800;letter-spacing:1px;opacity:.75;display:block;text-align:start;line-height:1}
+  .stage-switch .nm{display:block;line-height:1.2}
+
+  .view{padding:26px 32px 50px;max-width:1340px}
+
+  /* Cards */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden}
+  .card.accent{border-top:5px solid var(--accent)}
+  .card-head{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .card-head h2{font-size:1.08rem;display:flex;align-items:center;gap:10px}
+  .card-head h2 svg{color:var(--accent)}
+  .card-body{padding:22px}
+  .badge{background:var(--accent-l);color:var(--accent-d);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:99px}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:22px}
+  .stat{background:var(--card);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);border-inline-start:5px solid var(--accent)}
+  .stat .si{width:44px;height:44px;border-radius:12px;background:var(--accent-l);color:var(--accent);display:grid;place-items:center}
+  .stat .si svg{width:22px;height:22px}
+  .stat small{color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.5px}
+  .stat b{display:block;font-size:1.5rem;line-height:1.2}
+
+  /* Form */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+  .field label{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:#334155;margin-bottom:6px;letter-spacing:.5px}
+  .field label .n{background:var(--accent);color:#fff;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.68rem}
+  .field label em{color:var(--danger);font-style:normal}
+  .span-all{grid-column:1/-1}
+  .input{position:relative}
+  .input svg{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none}
+  .input svg.chev{inset-inline-start:auto;inset-inline-end:12px}
+  .input input,.input select{width:100%;padding:11px 12px 11px 38px;border:1.8px solid #cbd5e1;border-radius:10px;font:inherit;background:#fff;color:var(--text);transition:.15s;outline:none}
+  .input select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:36px;font-weight:600}
+  .input input:focus,.input select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
+  .input input.invalid,.input select.invalid{border-color:var(--danger);background:#fef2f2}
+  .input input[readonly]{background:var(--accent-l);color:var(--accent-d);font-weight:800;border-style:dashed;cursor:not-allowed}
+  .input.other{margin-top:8px}
+
+  .sides{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:680px;border-radius:12px}
+  .sides input{display:none}
+  .sides label{margin:0;justify-content:center;padding:11px 4px;border:1.8px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;font-weight:700;font-size:.84rem;color:var(--muted);transition:.15s;text-align:center}
+  .sides label:hover{border-color:var(--accent)}
+  .sides input:checked+label{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 6px 14px -6px var(--accent)}
+  .formula{margin-top:6px;font-size:.78rem;color:var(--muted)}
+  .formula b{color:var(--accent-d)}
+
+  .form-foot{margin-top:22px;padding-top:20px;border-top:2px dashed var(--border);display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
+  .form-foot .field{min-width:230px}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-inline-start:auto}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;font-size:.9rem;color:#fff;cursor:pointer;transition:.15s;box-shadow:0 4px 10px -4px rgba(0,0,0,.35);text-decoration:none}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+  .btn:active{transform:none}
+  .btn-save{background:linear-gradient(135deg,var(--success),var(--success-d))}
+  .btn-update{background:linear-gradient(135deg,var(--warning),var(--warning-d))}
+  .btn-clear{background:linear-gradient(135deg,var(--gray),var(--gray-d))}
+  .btn-danger{background:linear-gradient(135deg,var(--danger),var(--danger-d))}
+  .btn-info{background:linear-gradient(135deg,var(--info),var(--info-d))}
+  .btn-sm{padding:7px 12px;font-size:.8rem;border-radius:8px}
+
+  /* Toolbar */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-inline-start:auto;align-items:center}
+  .toolbar .input input{padding-block:8px;min-width:170px}
+  .toolbar .input input[type=date]{min-width:150px}
+
+  /* Brand filter + groups */
+  .brandbar{display:flex;gap:8px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--border);background:#f8fafc}
+  .bchip{display:inline-flex;align-items:center;gap:8px;border:1.8px solid var(--border);background:#fff;border-radius:99px;padding:6px 14px;font:inherit;font-weight:700;font-size:.82rem;cursor:pointer;color:#334155;transition:.15s}
+  .bchip i{width:10px;height:10px;border-radius:50%;background:var(--c,#94a3b8)}
+  .bchip b{background:var(--bg);border-radius:99px;padding:0 8px;font-size:.75rem}
+  .bchip:hover{border-color:var(--c,var(--accent))}
+  .bchip.on{background:var(--c,var(--accent));border-color:var(--c,var(--accent));color:#fff}
+  .bchip.on i{background:#fff}
+  .bchip.on b{background:rgba(255,255,255,.25);color:#fff}
+  .grp{border-bottom:1px solid var(--border)}
+  .grp-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 22px;background:#fff;border-inline-start:6px solid var(--c)}
+  .grp-head-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1}
+  .grp-head h3{font-size:1.05rem;margin-inline-end:6px}
+  .pill{background:var(--bg);padding:3px 12px;border-radius:99px;font-size:.78rem;font-weight:700;color:#334155}
+  .pill.main{background:var(--c);color:#fff}
+  .btn-clear-brand{
+    margin-inline-start:8px;
+    padding:4px 12px;
+    font-size:.75rem;
+    font-weight:700;
+    border-radius:8px;
+    background:#fee2e2;
+    color:#b91c1c;
+    border:1px solid #fca5a5;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    transition:all .18s ease;
+  }
+  .btn-clear-brand:hover{
+    background:#dc2626;
+    color:#fff;
+    border-color:#dc2626;
+    transform:translateY(-1px);
+    box-shadow:0 3px 8px rgba(220,38,38,.3);
+  }
+  .btn-clear-brand svg{width:13px;height:13px}
+  .grand{padding:14px 22px;background:var(--navy);color:#fff;display:flex;gap:18px;flex-wrap:wrap;font-weight:700;align-items:center}
+
+  /* Table */
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:760px}
+  thead th{background:var(--navy);color:#fff;padding:12px 14px;text-align:start;font-size:.75rem;letter-spacing:.8px;white-space:nowrap}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+  tbody tr:nth-child(even){background:#f8fafc}
+  tbody tr:hover{background:var(--accent-l)}
+  tbody tr.editing{outline:2px solid var(--warning);outline-offset:-2px;background:#fffbeb}
+  td.num,th.num{text-align:center}
+  td.total{font-weight:800;color:var(--accent-d)}
+  .chip{display:inline-block;background:var(--accent-l);color:var(--accent-d);padding:2px 10px;border-radius:99px;font-weight:700;font-size:.8rem}
+  .row-act{display:flex;gap:6px}
+  tfoot td{background:var(--accent-l);font-weight:800;padding:12px 14px;color:var(--accent-d)}
+  .empty{padding:50px 20px;text-align:center;color:var(--muted)}
+  .empty svg{width:56px;height:56px;color:#cbd5e1;stroke-width:1.4;margin-bottom:10px}
+
+  /* Dashboard */
+  .seg{display:inline-flex;background:var(--bg);border-radius:12px;padding:4px;gap:4px}
+  .seg button{border:none;background:transparent;padding:9px 18px;border-radius:9px;font:inherit;font-weight:700;font-size:.88rem;color:var(--muted);cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--accent);color:#fff;box-shadow:0 4px 10px -4px var(--accent)}
+  .dash-ctrl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .periodlabel{font-weight:700;color:var(--accent-d);background:var(--accent-l);display:inline-block;padding:6px 14px;border-radius:99px;font-size:.85rem}
+  .dash-h{margin:22px 0 10px;font-size:1rem}
+  .bcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .bcard{border:1px solid var(--border);border-top:5px solid var(--c);border-radius:12px;padding:16px;background:#fff}
+  .bcard h4{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:1rem}
+  .bcard h4 i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+  .bcard .row{display:flex;justify-content:space-between;font-size:.88rem;padding:3px 0;color:var(--muted)}
+  .bcard .row b{color:var(--text)}
+  .bar{height:8px;background:var(--bg);border-radius:9px;overflow:hidden;margin-top:10px}
+  .bar span{display:block;height:100%;background:var(--c);border-radius:9px}
+  .bshare{font-size:.75rem;color:var(--muted);margin-top:4px;text-align:end}
+  .chart{display:flex;align-items:stretch;gap:4px;height:250px;padding-top:6px;border-bottom:2px solid var(--border);overflow-x:auto}
+  .col{flex:1;min-width:22px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+  .col .stack{width:100%;max-width:40px;display:flex;flex-direction:column-reverse;border-radius:6px 6px 0 0;overflow:hidden;background:var(--bg);min-height:2px}
+  .col .stack span{display:block;width:100%;min-height:0}
+  .col .val{font-size:.65rem;font-weight:700;color:#475569;margin-bottom:2px}
+  .col .xl{font-size:.68rem;color:var(--muted);text-align:center;margin-top:4px;line-height:1.2}
+  .col.sel .xl{font-weight:800;color:var(--accent-d)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0 0;font-size:.82rem;font-weight:600}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:6px}
+  .matrix th.gth{text-align:center;border-inline-start:2px solid rgba(255,255,255,.35)}
+  .matrix td.sep,.matrix th.sep{border-inline-start:2px solid rgba(148,163,184,.5)}
+  .matrix tr.all td{background:var(--accent-l);font-weight:800;color:var(--accent-d)}
+  .matrix .bname{display:inline-flex;align-items:center;gap:8px;font-weight:800}
+  .matrix .bname i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+
+  /* Modal + toast */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);display:grid;place-items:center;z-index:50;padding:20px}
+  .modal{background:#fff;border-radius:18px;padding:28px;max-width:420px;width:100%;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);animation:pop .2s ease}
+  .modal .mi{width:64px;height:64px;border-radius:50%;background:#fee2e2;color:var(--danger);display:grid;place-items:center;margin:0 auto 14px}
+  .modal .mi svg{width:30px;height:30px}
+  .modal h3{margin-bottom:6px}
+  .modal p{color:var(--muted);margin-bottom:20px;font-size:.92rem}
+  .modal .btns{justify-content:center;margin:0}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+
+  /* Backup item in sidebar */
+  .nav-backup-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px}
+  .nav-backup-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+  .nav-backup-text{display:flex;flex-direction:column;text-align:start;line-height:1.2;min-width:0}
+  .backup-live-tag{font-size:.63rem;font-weight:700;color:#34d399;display:flex;align-items:center;gap:5px;margin-top:2px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+  .live-dot-mini{width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981;animation:pulseLive 2s infinite ease-in-out;flex-shrink:0}
+  .backup-cloud-pill{font-size:.60rem;font-weight:800;padding:2px 7px;border-radius:99px;background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.4);letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
+  .backup-cloud-pill.local{background:rgba(56,189,248,.15);color:#7dd3fc;border-color:rgba(56,189,248,.35)}
+  .backup-cloud-pill.synced{background:rgba(16,185,129,.28);color:#34d399;border-color:#10b981;box-shadow:0 0 8px rgba(16,185,129,.35)}
+
+  /* Modal Wide for Backup */
+  .modal.modal-wide{max-width:620px;text-align:start;padding:24px 26px;max-height:92vh;overflow-y:auto}
+  .modal-top{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:16px}
+  .modal-top .m-ico{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#0284c7,#0d9488);color:#fff;display:grid;place-items:center;flex-shrink:0}
+  .modal-top .m-ico svg{width:24px;height:24px}
+  .modal-top h3{font-size:1.15rem;color:#0f172a;line-height:1.2}
+  .modal-top p{color:var(--muted);font-size:.82rem;margin:2px 0 0}
+  .modal-close-btn{margin-inline-start:auto;background:transparent;border:none;font-size:1.6rem;cursor:pointer;color:var(--muted);padding:2px 8px;border-radius:8px;line-height:1}
+  .modal-close-btn:hover{color:var(--text);background:var(--bg)}
+
+  .bk-banner{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-inline-start:4px solid #10b981}
+  .bk-banner-status{display:flex;align-items:center;gap:10px}
+  .bk-banner-status b{display:block;font-size:.88rem;color:#f8fafc}
+  .bk-banner-status small{color:#94a3b8;font-size:.74rem}
+  .bk-banner-time{font-size:.82rem;font-weight:700;color:#34d399;font-variant-numeric:tabular-nums;text-align:end}
+
+  .bk-card{border:1.8px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;background:#f8fafc}
+  .bk-card.accent{border-color:#38bdf8;background:#f0f9ff}
+  .bk-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .bk-card-head h4{display:flex;align-items:center;gap:8px;font-size:.92rem;color:#0f172a}
+  .bk-card-head h4 svg{color:#0284c7}
+  .bk-desc{font-size:.82rem;color:#475569;margin-bottom:12px;line-height:1.45}
+
+  .bk-link-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .bk-link-input{flex:1;min-width:260px;padding:9px 12px;border:1.8px solid #cbd5e1;border-radius:10px;font:inherit;font-size:.82rem;font-weight:700;color:#0f172a;background:#fff;outline:none;font-family:monospace}
+  .bk-link-input:focus{border-color:#0284c7}
+  .bk-actions-bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  #toasts{position:fixed;bottom:22px;inset-inline-end:22px;display:flex;flex-direction:column;gap:10px;z-index:60}
+  .toast{background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;display:flex;align-items:center;gap:10px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);border-inline-start:5px solid var(--success);animation:pop .25s ease;font-weight:600;font-size:.9rem}
+  .toast.warn{border-color:var(--warning)} .toast.err{border-color:var(--danger)}
+
+  /* Responsive */
+  @media(max-width:1000px){
+    .app{flex-direction:column}
+    .sidebar{position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:auto;flex-direction:row;padding:6px 8px;z-index:40;overflow:visible;border-top:1px solid rgba(255,255,255,.1)}
+    .logo-wrap,.nav-label,.side-foot,.nav-count,.side-clock{display:none}
+    .nav{flex-direction:row;gap:2px;justify-content:space-around}
+    .nav-item{flex-direction:column;gap:2px;padding:6px 4px;font-size:.62rem;text-align:center;justify-content:center}
+    .content{padding-bottom:78px}
+    .topbar{padding:12px 16px}
+    .stage-switch{min-width:0;width:100%}
+    .view{padding:18px 14px 30px}
+  }
+  /* ===== User Authentication Capsule & Topbar Row ===== */
+  .topbar-upper-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;width:100%}
+  .user-capsule{
+    display:flex;align-items:center;gap:10px;background:#ffffff;
+    border:1.5px solid #cbd5e1;border-radius:99px;padding:4px 6px 4px 12px;
+    box-shadow:0 4px 16px -4px rgba(15,23,42,0.08);transition:.18s;
+  }
+  .user-capsule:hover{border-color:var(--accent);box-shadow:0 6px 20px -4px rgba(15,23,42,0.12)}
+  .user-capsule-info{display:flex;align-items:center;gap:8px}
+  .user-avatar-dot{
+    width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,var(--navy),#4338ca);
+    color:#fff;display:grid;place-items:center;font-size:.75rem;flex-shrink:0;
+  }
+  .user-avatar-dot svg{width:15px;height:15px}
+  .user-capsule-text{display:flex;flex-direction:column;line-height:1.15}
+  .user-capsule-name{font-size:.82rem;font-weight:800;color:var(--text);white-space:nowrap}
+  .user-capsule-role{font-size:.62rem;font-weight:800;letter-spacing:.6px;color:#0ea5e9;text-transform:uppercase}
+  .user-capsule-role.admin{color:#7c3aed}
+  .user-capsule-actions{display:flex;align-items:center;gap:4px;margin-inline-start:4px}
+  .btn-user-act{
+    border:none;background:var(--bg);color:var(--gray-d);
+    padding:5px 9px;border-radius:99px;font:inherit;font-size:.72rem;font-weight:700;
+    cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:.15s;
+  }
+  .btn-user-act svg{width:13px;height:13px}
+  .btn-user-act:hover{background:var(--accent-l);color:var(--accent-d)}
+  .btn-user-act.danger:hover{background:#fee2e2;color:#dc2626}
+  .admin-only.hidden{display:none!important}
+
+  /* ===== Login Screen Gateway ===== */
+  .login-overlay{
+    position:fixed;inset:0;z-index:99999;
+    background:#070b14;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;overflow-y:auto;
+    transition:opacity .25s ease, visibility .25s ease;
+  }
+  .login-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .login-bg-glow{
+    position:absolute;width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle,rgba(99,102,241,0.22) 0%,rgba(14,165,233,0.12) 40%,transparent 70%);
+    pointer-events:none;filter:blur(40px);
+  }
+  .login-card{
+    position:relative;width:100%;max-width:440px;
+    background:linear-gradient(180deg,#0f172a 0%,#131c31 100%);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:24px;
+    padding:36px 30px;
+    box-shadow:0 30px 70px -15px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+    color:#f8fafc;
+    animation:loginPop .25s ease-out;
+  }
+  @keyframes loginPop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .login-header{text-align:center;margin-bottom:22px}
+  .login-logo-glow{
+    width:66px;height:66px;border-radius:20px;
+    background:linear-gradient(135deg,#6366f1,#06b6d4);
+    display:grid;place-items:center;margin:0 auto 14px;
+    box-shadow:0 0 30px rgba(99,102,241,0.45);
+  }
+  .login-logo-glow svg{width:34px;height:34px;stroke:#fff}
+  .login-header h2{font-size:1.35rem;font-weight:800;color:#fff;letter-spacing:.4px;margin-bottom:4px}
+  .login-sub{font-size:.78rem;color:#94a3b8;margin-bottom:12px}
+  .login-badge-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(99,102,241,0.16);border:1px solid rgba(99,102,241,0.35);
+    color:#a5b4fc;padding:4px 12px;border-radius:99px;font-size:.7rem;font-weight:700;
+  }
+  .login-badge-pill svg{width:13px;height:13px}
+  .login-alert{
+    background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;
+    border-radius:12px;padding:10px 14px;font-size:.82rem;font-weight:700;
+    margin-bottom:18px;display:flex;align-items:center;gap:8px;
+  }
+  .login-form{display:flex;flex-direction:column;gap:16px}
+  .login-field{display:flex;flex-direction:column;gap:6px;text-align:start}
+  .login-field label{font-size:.8rem;font-weight:700;color:#cbd5e1}
+  .login-input-wrap{
+    position:relative;display:flex;align-items:center;
+    background:rgba(15,23,42,0.8);border:1.6px solid rgba(255,255,255,0.14);
+    border-radius:12px;padding:0 12px;transition:.18s;
+  }
+  .login-input-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.25)}
+  .login-input-icon{color:#64748b;display:grid;place-items:center;margin-inline-end:8px}
+  .login-input-icon svg{width:18px;height:18px}
+  .login-input-wrap input{
+    flex:1;background:transparent;border:none;color:#fff;
+    padding:12px 0;font:inherit;font-size:.9rem;outline:none;
+  }
+  .login-input-wrap input::placeholder{color:#64748b}
+  .btn-toggle-pass{background:transparent;border:none;color:#64748b;cursor:pointer;padding:4px;border-radius:6px;display:grid;place-items:center}
+  .btn-toggle-pass:hover{color:#fff}
+  .btn-toggle-pass svg{width:18px;height:18px}
+  .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:#94a3b8}
+  .login-remember{display:flex;align-items:center;gap:6px;cursor:pointer}
+  .login-remember input{cursor:pointer;accent-color:#6366f1}
+  .login-cloud-status{display:flex;align-items:center;gap:5px;font-size:.72rem;color:#34d399;font-weight:700}
+  .btn-login{
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    color:#fff;border:none;border-radius:12px;
+    padding:13px;font:inherit;font-weight:800;font-size:.95rem;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+    box-shadow:0 10px 25px -8px rgba(79,70,229,0.6);transition:.18s;
+  }
+  .btn-login:hover{box-shadow:0 14px 30px -6px rgba(79,70,229,0.8);transform:translateY(-1px)}
+  .login-footer{margin-top:22px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;text-align:center}
+  .login-footer-info{font-size:.72rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
+  .login-footer-info svg{width:13px;height:13px}
+  .login-hint{font-size:.73rem;color:#a5b4fc;margin-top:8px;background:rgba(99,102,241,0.12);padding:6px 12px;border-radius:8px;border:1px dashed rgba(99,102,241,0.3)}
+  .login-hint code{background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;font-family:monospace;color:#38bdf8}
+
+  /* ===== Lockout Screen (إيقاف النسخة عن بُعد) ===== */
+  .lockout-overlay{
+    position:fixed;inset:0;z-index:999999;
+    background:radial-gradient(circle at 50% 40%,#1e1014 0%,#090305 100%);
+    display:grid;place-items:center;padding:24px;
+    transition:opacity .25s ease;
+  }
+  .lockout-card{
+    max-width:500px;width:100%;text-align:center;
+    background:#170b0e;border:1.8px solid #ef4444;border-radius:24px;
+    padding:40px 32px;box-shadow:0 0 80px rgba(239,68,68,0.25);
+    color:#fff;animation:loginPop .25s ease-out;
+  }
+  .lockout-icon{
+    width:72px;height:72px;border-radius:50%;background:#fee2e2;color:#dc2626;
+    display:grid;place-items:center;margin:0 auto 18px;box-shadow:0 0 35px rgba(220,38,38,0.4);
+  }
+  .lockout-icon svg{width:38px;height:38px}
+  .lockout-card h2{font-size:1.5rem;color:#fecaca;margin-bottom:4px}
+  .lockout-en{font-size:1rem;font-weight:600;color:#94a3b8;margin-bottom:14px}
+  .lockout-desc{font-size:.9rem;color:#cbd5e1;line-height:1.55;margin-bottom:20px}
+  .lockout-badge{display:inline-block;background:#ef4444;color:#fff;font-weight:800;font-size:.76rem;padding:6px 16px;border-radius:99px;letter-spacing:1px;margin-bottom:24px}
+  .lockout-actions{display:flex;flex-direction:column;gap:10px;align-items:center}
+
+  /* Admin Users Table inside Modal */
+  .admin-users-list{margin-top:12px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff}
+  .user-table-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border)}
+  .user-table-row:last-child{border-bottom:none}
+  .user-badge-role{font-size:.68rem;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase}
+  .user-badge-role.admin{background:#ede9fe;color:#7c3aed}
+  .user-badge-role.operator{background:#e0f2fe;color:#0284c7}
+
+  @media(max-width:560px){
+    .btns{margin:0;width:100%} .btns .btn{flex:1;justify-content:center}
+    .stage-switch .step{display:none}
+    .brandbar,.card-head,.card-body{padding-inline:14px}
+  }
+  @media print{
+    .sidebar,.stage-switch,.toolbar,.row-act,.col-act,#toasts,.brandbar,.dash-ctrl button,.dash-ctrl .seg,.dash-ctrl .input,.login-overlay,.lockout-overlay,.user-capsule{display:none!important}
+    body{background:#fff} .view{padding:0} .card{box-shadow:none} .topbar{position:static;background:#fff}
+    thead th{background:#000!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body class="theme-acetate">
+
+<!-- ===== Login & Authentication Gateway (بوابة تسجيل الدخول والتحكم) ===== -->
+<div id="loginScreen" class="login-overlay">
+  <div class="login-bg-glow"></div>
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo-glow">
+        <div class="login-logo"><i data-i="printer"></i></div>
+      </div>
+      <h2>System Label Printing</h2>
+      <p class="login-sub">Department Access Control & Verification Portal</p>
+      <div class="login-badge-pill">
+        <i data-i="shield"></i>
+        <span>بوابة الدخول الآمنة • Protected Gateway</span>
+      </div>
+    </div>
+
+    <!-- Error / Info Notice -->
+    <div id="loginError" class="login-alert hidden"></div>
+
+    <form id="loginForm" class="login-form" autocomplete="off">
+      <div class="login-field">
+        <label for="loginUsername">اسم المستخدم (Username)</label>
+        <div class="login-input-wrap">
+          <span class="login-input-icon"><i data-i="user"></i></span>
+          <input type="text" id="loginUsername" placeholder="Enter username..." required autofocus>
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label for="loginPassword">كلمة المرور (Password)</label>
+        <div class="login-input-wrap">
+          <span class="login-input-icon"><i data-i="lock"></i></span>
+          <input type="password" id="loginPassword" placeholder="Enter password..." required>
+          <button type="button" class="btn-toggle-pass" id="btnTogglePass" title="Show/Hide Password">
+            <i data-i="eye" id="passEyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="login-options">
+        <label class="login-remember">
+          <input type="checkbox" id="loginRemember" checked>
+          <span>تذكر الدخول (Remember)</span>
+        </label>
+        <span class="login-cloud-status" id="loginCloudStatus">
+          <span class="live-dot-mini"></span> Remote Control Ready
+        </span>
+      </div>
+
+      <button type="submit" class="btn btn-login" id="btnLoginSubmit">
+        <i data-i="check"></i>
+        <span>تسجيل الدخول (Sign In)</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <div class="login-footer-info">
+        <i data-i="shield"></i>
+        <span>User Account Isolation & Remote Master Control</span>
+      </div>
+      <div class="login-hint">
+        Master Admin: <code>admin</code> • Password: <code>admin</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Remote Suspension / Lockout Screen (شاشة إيقاف النسخة عن بُعد) ===== -->
+<div id="systemLockoutScreen" class="lockout-overlay hidden">
+  <div class="lockout-card">
+    <div class="lockout-icon"><i data-i="shield"></i></div>
+    <h2>النظام موقوف حالياً</h2>
+    <h3 class="lockout-en">System Suspended by Administrator</h3>
+    <p id="lockoutMsg" class="lockout-desc">تم تعليق تشغيل هذه النسخة مؤقتاً بأمر إدارة النظام. لا يمكن الوصول إلى البيانات أو تسجيل طلبات جديدة في الوقت الحالي.</p>
+    <div class="lockout-badge">STATUS: REMOTELY SUSPENDED (مغلق عن بُعد)</div>
+    
+    <div class="lockout-actions">
+      <button type="button" class="btn btn-clear btn-sm" id="btnCheckStatusNow">
+        <i data-i="refresh"></i>التحقق من حالة النظام الآن (Check Status)
+      </button>
+      <button type="button" class="btn btn-sm" id="btnAdminUnlock" style="background:transparent;color:#94a3b8">
+        <i data-i="lock"></i>دخول المدير لفك التعليق (Admin Bypass)
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="logo-wrap">
+      <div class="logo"><i data-i="printer"></i></div>
+      <div><b>System Label Printing</b><small>Label Printing Department</small></div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="entry" type="button"><i data-i="edit"></i>Data Entry</button>
+      <button class="nav-item" data-view="records" type="button"><i data-i="table"></i>Records Report</button>
+      <button class="nav-item" data-view="dashboard" type="button"><i data-i="dash"></i>Dashboard</button>
+    </nav>
+    <div class="side-foot">Data is saved automatically in this browser.</div>
+  </aside>
+
+  <!-- ===== Content ===== -->
+  <div class="content">
+    <div class="topbar">
+      <div class="topbar-title-wrap">
+        <h1 id="pageTitle">Data Entry</h1>
+        <p id="pageSub"></p>
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-upper-row">
+          <!-- User Authentication Capsule -->
+          <div class="user-capsule" id="topbarUserCapsule">
+            <div class="user-capsule-info">
+              <span class="user-avatar-dot"><i data-i="user"></i></span>
+              <div class="user-capsule-text">
+                <span class="user-capsule-name" id="userDisplayName">Master Admin</span>
+                <span class="user-capsule-role admin" id="userRoleBadge">ADMIN</span>
+              </div>
+            </div>
+            <div class="user-capsule-actions">
+              <button type="button" class="btn-user-act admin-only" id="btnOpenAdminControl" title="Master Control Panel">
+                <i data-i="shield"></i><span>Control</span>
+              </button>
+              <button type="button" class="btn-user-act danger" id="btnLogout" title="Logout">
+                <i data-i="logOut"></i><span>Logout</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Masterpiece Live Clock & Date Capsule -->
+          <div class="topbar-clock-card" title="Live System Time & Date">
+            <div class="tcc-live">
+              <span class="tcc-pulse-dot"></span>
+              <span class="tcc-live-txt">LIVE</span>
+            </div>
+            <div class="tcc-time-wrap">
+              <span class="tcc-digits" id="clockTime">--:--:--</span>
+              <span class="tcc-ampm" id="clockAmpm">--</span>
+            </div>
+            <div class="tcc-divider"></div>
+            <div class="tcc-date-wrap">
+              <span class="tcc-cal-icon"><i data-i="cal"></i></span>
+              <div class="tcc-date-text">
+                <span class="tcc-day" id="clockDay">---</span>
+                <span class="tcc-date" id="clockDate">-- --- ----</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-switch" id="stageSwitch" data-stage="acetate">
+          <span class="thumb"></span>
+          <button type="button" data-stage="acetate" class="on"><i data-i="tag"></i><span><span class="step">STAGE 1</span><span class="nm">Acetate Labels</span></span></button>
+          <button type="button" data-stage="sticker"><i data-i="sticker"></i><span><span class="step">STAGE 2</span><span class="nm">Sticker Printing Details</span></span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VIEW: DATA ENTRY ===== -->
+    <section class="view" id="view-entry">
+      <div class="stats" id="stats"></div>
+
+      <div class="card accent" id="entry-acetate">
+        <div class="card-head">
+          <h2><i data-i="edit"></i>Acetate Labels — Data Entry</h2>
+          <span class="badge" id="mode-acetate">New Record</span>
+        </div>
+        <form class="card-body" id="form-acetate" autocomplete="off" novalidate></form>
+      </div>
+
+      <div class="card accent hidden" id="entry-sticker">
+        <div class="card-head">
+          <h2><i data-i="edit"></i>Sticker Printing Details — Data Entry</h2>
+          <span class="badge" id="mode-sticker">New Record</span>
+        </div>
+        <form class="card-body" id="form-sticker" autocomplete="off" novalidate></form>
+      </div>
+    </section>
+
+    <!-- ===== VIEW: RECORDS REPORT ===== -->
+    <section class="view hidden" id="view-records">
+      <div class="card accent">
+        <div class="card-head">
+          <h2><i data-i="table"></i><span id="tableTitle">Records Report</span></h2>
+          <div class="toolbar">
+            <div class="input"><i data-i="search"></i><input id="search" type="text" placeholder="Search..."></div>
+            <div class="input"><i data-i="cal"></i><input id="filterDate" type="date" title="Filter by date"></div>
+            <button class="btn btn-clear btn-sm" id="btnResetFilter" type="button">Reset</button>
+            <button class="btn btn-danger btn-sm" id="btnExportPdf" type="button"><i data-i="pdf"></i>Export PDF</button>
+            <button class="btn btn-save btn-sm" id="btnPrint" type="button"><i data-i="printer"></i>Print</button>
+          </div>
+        </div>
+        <div class="brandbar" id="brandBar"></div>
+        <div id="tableWrap"></div>
+      </div>
+    </section>
+
+    <!-- ===== VIEW: DASHBOARD ===== -->
+    <section class="view hidden" id="view-dashboard">
+      <div class="card accent">
+        <div class="card-head">
+          <h2><i data-i="dash"></i>Dashboard</h2>
+          <span class="badge" id="dashBadge"></span>
+        </div>
+        <div class="card-body">
+          <div class="dash-ctrl">
+            <div class="seg" id="dashPeriod">
+              <button type="button" data-p="day" class="on">Daily</button>
+              <button type="button" data-p="week">Weekly</button>
+              <button type="button" data-p="month">Monthly</button>
+            </div>
+            <div class="input"><i data-i="cal"></i><input type="date" id="dashDate" style="width:auto;padding-block:9px"></div>
+            <button class="btn btn-clear btn-sm" id="dashToday" type="button">Today</button>
+            <button class="btn btn-save btn-sm" id="dashPrint" type="button"><i data-i="printer"></i>Print</button>
+            <span class="periodlabel" id="dashLabel"></span>
+          </div>
+          <div class="stats" id="dashKpis"></div>
+          <h3 class="dash-h">Brands — Selected Period</h3>
+          <div class="bcards" id="dashBrands"></div>
+          <h3 class="dash-h" id="chartTitle">Trend</h3>
+          <div id="dashChart"></div>
+          <div class="legend" id="dashLegend"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2><i data-i="table"></i>Daily / Weekly / Monthly Summary by Brand</h2><span class="badge" id="matrixBadge"></span></div>
+        <div class="table-wrap" id="dashMatrix"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<div class="overlay hidden" id="confirm">
+  <div class="modal">
+    <div class="mi"><i data-i="trash"></i></div>
+    <h3 id="confirmTitle">Delete record?</h3>
+    <p id="confirmText">This action cannot be undone.</p>
+    <div class="btns">
+      <button class="btn btn-clear" id="confirmNo" type="button">Cancel</button>
+      <button class="btn btn-danger" id="confirmYes" type="button">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file input for restore -->
+<input type="file" id="restoreFile" accept=".json,application/json" class="hidden">
+
+<!-- ===== Backup & Secret Cloud Link Modal ===== -->
+<div class="overlay hidden" id="backupModal">
+  <div class="modal modal-wide">
+    <div class="modal-top">
+      <div class="m-ico"><i data-i="cloud"></i></div>
+      <div>
+        <h3>Live Backup &amp; Secret Cloud Link</h3>
+        <p>الحفظ التلقائي اللحظي والرابط السري المباشر للنسخ الاحتياطي</p>
+      </div>
+      <button type="button" class="modal-close-btn" id="backupClose">&times;</button>
+    </div>
+
+    <!-- Live Status Banner -->
+    <div class="bk-banner">
+      <div class="bk-banner-status">
+        <span class="live-dot-mini"></span>
+        <div>
+          <b>Auto-Backup Active • حفظ تلقائي لحظي مستمر</b>
+          <small id="backupStatusDetail">Data is continuously protected on your device</small>
+        </div>
+      </div>
+      <div class="bk-banner-time" id="backupLastTime">--:--:--</div>
+    </div>
+
+    <!-- Secret Cloud Link Card -->
+    <div class="bk-card accent">
+      <div class="bk-card-head">
+        <h4><i data-i="link"></i>Direct Secret Link (رابط التحميل السري المباشر)</h4>
+        <span class="badge" id="cloudStatusBadge">Not Created</span>
+      </div>
+      <p class="bk-desc">
+        رابط سري ومباشر خاص بك وحدك، يمكنك استخدامه لتحميل أو استرجاع بياناتك من أي مكان، ويتم تحديثه تلقائياً باستمرار لضمان عدم ضياع الداتا.
+      </p>
+
+      <div id="noCloudLinkWrap">
+        <button type="button" class="btn btn-save" id="btnCreateCloudLink">
+          <i data-i="cloud"></i>إنشاء الرابط السري المباشر الآن (Create Secret Link)
+        </button>
+      </div>
+
+      <div class="hidden" id="hasCloudLinkWrap">
+        <div class="bk-link-row">
+          <input type="text" class="bk-link-input" id="cloudLinkInput" readonly value="">
+          <button type="button" class="btn btn-info btn-sm" id="btnCopyCloudLink" title="Copy Secret Link">
+            <i data-i="copy"></i>Copy Link
+          </button>
+          <a href="#" target="_blank" class="btn btn-clear btn-sm" id="btnOpenCloudLink" title="Open/Download Link">
+            <i data-i="download"></i>Download Directly
+          </a>
+        </div>
+        <div class="bk-actions-bar">
+          <button type="button" class="btn btn-save btn-sm" id="btnSyncNow">
+            <i data-i="refresh"></i>مزامنة وتحديث الرابط الآن (Sync Now)
+          </button>
+          <button type="button" class="btn btn-clear btn-sm" id="btnRestoreFromCloud">
+            <i data-i="upload"></i>استرجاع البيانات من الرابط (Restore)
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" id="btnResetCloudLink" title="Change or Reset Link">
+            Change Link
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Local File Backup Card -->
+    <div class="bk-card">
+      <div class="bk-card-head">
+        <h4><i data-i="download"></i>Local File Backup (نسخة احتياطية على جهازك)</h4>
+      </div>
+      <p class="bk-desc">تحميل ملف JSON كامل يحتوي على كل بيانات Acetate Labels و Sticker Printing للاحتفاظ به على الكمبيوتر.</p>
+      <button type="button" class="btn btn-clear btn-sm" id="btnDownloadJson">
+        <i data-i="download"></i>تحميل ملف النسخة الاحتياطية (Download .JSON)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Restore Choice Modal ===== -->
+<div class="overlay hidden" id="restoreChoiceModal">
+  <div class="modal">
+    <div class="mi" style="background:#e0f2fe;color:#0284c7"><i data-i="upload"></i></div>
+    <h3>Restore Backup Data</h3>
+    <p>Choose where to restore your data from:</p>
+    <div class="btns" style="flex-direction:column;gap:10px">
+      <button class="btn btn-save" id="btnRestoreFromPublicDirect" type="button"><i data-i="refresh"></i>Restore from C:\Users\Public (استرجاع مباشر من المسار)</button>
+      <button class="btn btn-save" id="btnRestoreFromCloudDirect" type="button" style="background:#0d9488"><i data-i="cloud"></i>Restore from Secret Cloud Link (استرجاع من الرابط السري)</button>
+      <button class="btn btn-clear" id="btnRestoreFromFileDirect" type="button"><i data-i="download"></i>Restore from Local File (اختيار ملف من جهازك)</button>
+      <button class="btn btn-sm" id="btnCancelRestoreChoice" type="button" style="background:transparent;color:var(--muted);box-shadow:none">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Master Admin Control Modal (لوحة تحكم المالك) ===== -->
+<div class="overlay hidden" id="adminControlModal">
+  <div class="modal modal-wide" style="max-width:680px">
+    <div class="modal-top">
+      <div class="m-ico" style="background:linear-gradient(135deg,#dc2626,#7c3aed)"><i data-i="shield"></i></div>
+      <div>
+        <h3>Master Admin Control Hub • لوحة تحكم المالك</h3>
+        <p>التحكم الكامل في تشغيل النسخة، الصلاحيات، المستخدمين، والمسح عن بُعد</p>
+      </div>
+      <button type="button" class="modal-close-btn" id="adminControlClose">&times;</button>
+    </div>
+
+    <!-- Remote Switch Banner -->
+    <div class="bk-card" style="background:#fff1f2;border-color:#fca5a5">
+      <div class="bk-card-head">
+        <h4><i data-i="power" style="color:#dc2626"></i>حالة تشغيل النسخة الحية (Global Kill Switch)</h4>
+        <span class="badge" id="adminLiveStatusBadge" style="background:#10b981;color:#fff">ACTIVE</span>
+      </div>
+      <p class="bk-desc">
+        يمكنك تعليق تشغيل النسخة فوراً على جميع الأجهزة في العالم أو إعادة تفعيلها بضغطة زر واحدة.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" class="btn btn-save btn-sm" id="btnSetSystemActive">
+          <i data-i="check"></i>تفعيل وتشغيل النظام (Active)
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" id="btnSetSystemSuspend">
+          <i data-i="power"></i>إيقاف النسخة عن بُعد (Suspend All Instances)
+        </button>
+        <button type="button" class="btn btn-clear btn-sm" id="btnEmergencyWipe">
+          <i data-i="trash"></i>مسح البيانات فوراً (Emergency Wipe)
+        </button>
+      </div>
+    </div>
+
+    <!-- Users Management Card -->
+    <div class="bk-card">
+      <div class="bk-card-head">
+        <h4><i data-i="user"></i>إدارة حسابات المستخدمين (User Accounts & Isolation)</h4>
+        <button type="button" class="btn btn-save btn-sm" id="btnOpenAddUser">
+          <i data-i="plus"></i>إضافة مستخدم جديد
+        </button>
+      </div>
+      <p class="bk-desc">كل مستخدم له حساب خاص به ولا يمكن لأي شخص الدخول بحساب مستخدم آخر.</p>
+      <div class="admin-users-list" id="adminUsersList"></div>
+    </div>
+
+    <!-- GitHub Remote Control Sync Card -->
+    <div class="bk-card accent">
+      <div class="bk-card-head">
+        <h4><i data-i="link"></i>الربط مع GitHub للتحكم عن بُعد (GitHub Remote Control)</h4>
+        <span class="badge" id="adminGithubStatus">Online</span>
+      </div>
+      <p class="bk-desc">
+        اربط النسخة برابط مباشر من <b>GitHub Gist</b> أو <b>GitHub Raw</b> لتتحكم في إيقاف أو تشغيل النسخة وتعديل المستخدمين في أي ثانية من هاتفك المحمول أو أي كمبيوتر!
+      </p>
+      <div class="bk-link-row">
+        <input type="text" class="bk-link-input" id="adminGithubUrlInput" placeholder="رابط GitHub Raw أو Gist المباشر">
+        <button type="button" class="btn btn-save btn-sm" id="btnSaveGithubUrl">حفظ وتفعيل الرابط</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button type="button" class="btn btn-clear btn-sm" id="btnCopyGistJson">
+          <i data-i="copy"></i>نسخ كود JSON للتحكم في GitHub
+        </button>
+        <button type="button" class="btn btn-info btn-sm" id="btnSyncRemoteNow">
+          <i data-i="refresh"></i>مزامنة فورية الآن
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal to Add/Edit User -->
+<div class="overlay hidden" id="addUserModal" style="z-index:75">
+  <div class="modal" style="text-align:start;max-width:380px">
+    <h3 style="margin-bottom:12px;display:flex;align-items:center;gap:8px"><i data-i="user"></i>إضافة مستخدم جديد</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-size:.8rem;font-weight:700;color:var(--text)">اسم المستخدم (Username):</label>
+        <input type="text" id="newUsername" class="bk-link-input" style="width:100%" placeholder="مثال: ahmed_ops">
+      </div>
+      <div>
+        <label style="font-size:.8rem;font-weight:700;color:var(--text)">كلمة المرور (Password):</label>
+        <input type="password" id="newPassword" class="bk-link-input" style="width:100%" placeholder="••••••••">
+      </div>
+      <div>
+        <label style="font-size:.8rem;font-weight:700;color:var(--text)">الاسم الظاهر (Display Name):</label>
+        <input type="text" id="newName" class="bk-link-input" style="width:100%" placeholder="مثال: أحمد محمد">
+      </div>
+      <div>
+        <label style="font-size:.8rem;font-weight:700;color:var(--text)">نوع الصلاحية (Role):</label>
+        <select id="newRole" class="bk-link-input" style="width:100%">
+          <option value="operator">Operator (إدخال وعرض وتعديل الداتا)</option>
+          <option value="admin">Admin (مدير كامل الصلاحيات والتحكم)</option>
+        </select>
+      </div>
+      <div class="btns" style="margin-top:10px">
+        <button type="button" class="btn btn-clear" id="btnCancelAddUser">إلغاء</button>
+        <button type="button" class="btn btn-save" id="btnSaveNewUser">حفظ المستخدم</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ---------- Icons ---------- */
+  const ICON={
+    printer:'<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/>',
+    cloud:'<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
+    link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+    copy:'<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+    refresh:'<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
+    pdf:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M10 12h4M10 16h4M8 12h.01M8 16h.01"/>',
+    edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    table:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>',
+    dash:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+    download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+    upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/>',
+    tag:'<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+    sticker:'<path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><path d="M15 3l6 6h-4a2 2 0 0 1-2-2z"/>',
+    search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    lines:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+    cut:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>',
+    hash:'<path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/>',
+    palette:'<path d="M12 22a10 10 0 1 1 10-10c0 3-2 4-4 4h-2a2 2 0 0 0-1 3.7c.6.4.4 2.3-3 2.3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="16.5" cy="11" r="1"/>',
+    pkg:'<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
+    sum:'<path d="M18 7V4H6l6 8-6 8h12v-3"/>',
+    shirt:'<path d="M20.4 7.6 16 3l-4 2-4-2-4.4 4.6 3 3L8 9v12h8V9l1.4 1.6z"/>',
+    doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>',
+    gear:'<path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/>',
+    receipt:'<path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+    chev:'<path d="m6 9 6 6 6-6"/>',
+    save:'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+    undo:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+    check:'<path d="M20 6 9 17l-5-5"/>',
+    user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    lock:'<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    unlock:'<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+    eye:'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    eyeOff:'<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>',
+    shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    logOut:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+    power:'<path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/>'
+  };
+  const svg=(n,c)=>'<svg viewBox="0 0 24 24"'+(c?' class="'+c+'"':'')+'>'+ICON[n]+'</svg>';
+
+  /* ---------- Brands ---------- */
+  const ACETATE_BRANDS=['DECATHLON','BASS PRO'];
+  const STICKER_BRANDS=['PPJ','BASS PRO','DG 20','M265','DECATHLON','TOMMY','C K','DKNY','QVC','DEFACTO','COSTCO','FASHION OPTION'];
+  const stageBrands=k=>(k==='acetate'?ACETATE_BRANDS:STICKER_BRANDS);
+  const OTHER='__OTHER__';
+  const BRAND_COLORS={'PPJ':'#0ea5e9','BASS PRO':'#15803d','DG 20':'#9333ea','M265':'#ea580c','DECATHLON':'#0082c3','TOMMY':'#1e3a8a','C K':'#334155','DKNY':'#db2777','QVC':'#dc2626','DEFACTO':'#ca8a04','COSTCO':'#be123c','FASHION OPTION':'#0d9488'};
+  const PALETTE=['#7c3aed','#0891b2','#4d7c0f','#a21caf','#b45309','#0f766e','#6d28d9','#475569'];
+  function brandColor(b){
+    if(BRAND_COLORS[b]) return BRAND_COLORS[b];
+    let h=0; for(const c of String(b)) h=(h*31+c.charCodeAt(0))>>>0;
+    return PALETTE[h%PALETTE.length];
+  }
+  const norm=v=>String(v||'').trim().replace(/\s+/g,' ').toUpperCase();
+
+  /* ---------- Config ---------- */
+  const STAGES={
+    acetate:{
+      label:'Acetate Labels', key:'slp_acetate_v1',
+      metrics:[{f:'total',l:'Total Labels'}],
+      fields:[
+        {n:'brand',label:'BRAND',t:'brand'},
+        {n:'line',label:'LINE',t:'text',icon:'lines'},
+        {n:'cut',label:'CUT',t:'text',icon:'cut'},
+        {n:'erp',label:'ERP NO',t:'text',icon:'hash'},
+        {n:'colour',label:'COLOUR',t:'text',icon:'palette'},
+        {n:'lot',label:'LOT NO',t:'text',icon:'pkg'},
+        {n:'total',label:'TOTAL',t:'number',icon:'sum'}
+      ],
+      cols:[['brand','BRAND'],['line','LINE'],['cut','CUT'],['erp','ERP NO'],['colour','COLOUR'],['lot','LOT NO'],['total','TOTAL','num total'],['date','DATE']],
+      required:['brand','line','cut','erp','colour','lot','total','date'],
+      legacy:{f:'erp',v:['ERP-20451','ERP-20466','ERP-20472','ERP-20490','ERP-30101','ERP-30102','ERP-30103','ERP-30104','ERP-30105','ERP-30106','ERP-30107']},
+      samples:[
+        {brand:'DECATHLON',line:'Line 1',cut:'C-101',erp:'O/40101',colour:'Navy Blue',lot:'LOT-9201',total:1200,d:0},
+        {brand:'BASS PRO',line:'Line 3',cut:'C-205',erp:'O/40102',colour:'Olive',lot:'LOT-9202',total:850,d:0},
+        {brand:'DECATHLON',line:'Line 2',cut:'C-310',erp:'O/40103',colour:'Black',lot:'LOT-9203',total:2300,d:1},
+        {brand:'BASS PRO',line:'Line 5',cut:'C-118',erp:'O/40104',colour:'White',lot:'LOT-9204',total:640,d:2},
+        {brand:'DECATHLON',line:'Line 4',cut:'C-420',erp:'O/40105',colour:'Grey',lot:'LOT-9205',total:900,d:3},
+        {brand:'DECATHLON',line:'Line 1',cut:'C-150',erp:'O/40106',colour:'Red',lot:'LOT-9206',total:1500,d:9},
+        {brand:'BASS PRO',line:'Line 2',cut:'C-260',erp:'O/40107',colour:'Brown',lot:'LOT-9207',total:1100,d:17}
+      ]
+    },
+    sticker:{
+      label:'Sticker Printing Details', key:'slp_sticker_v1',
+      metrics:[{f:'totalCarton',l:'Total Cartons'},{f:'totalSticker',l:'Total Stickers'}],
+      fields:[
+        {n:'brand',label:'BRAND',t:'brand'},
+        {n:'style',label:'STYLE',t:'text',icon:'shirt'},
+        {n:'po',label:'PO',t:'text',icon:'doc'},
+        {n:'colour',label:'COLOUR',t:'text',icon:'palette'},
+        {n:'part',label:'PART',t:'text',icon:'gear'},
+        {n:'side',label:'SIDE',t:'side'},
+        {n:'totalCarton',label:'TOTAL CARTON',t:'number',icon:'pkg'},
+        {n:'totalSticker',label:'TOTAL STICKER',t:'calc',icon:'receipt',req:false}
+      ],
+      cols:[['brand','BRAND'],['style','STYLE'],['po','PO'],['colour','COLOUR'],['part','PART'],['side','SIDE','num'],['totalCarton','TOTAL CARTON','num'],['totalSticker','TOTAL STICKER','num total'],['date','DATE']],
+      required:['brand','style','po','colour','part','side','totalCarton','date'],
+      legacy:{f:'po',v:['PO-88120','PO-88145','PO-88170','PO-88203','PO-90120','PO-90145','PO-90170','PO-90203','PO-90230','PO-90260','PO-90290','PO-91120','PO-91145','PO-91170','PO-91203','PO-91230','PO-91260','PO-91290']},
+      samples:[
+        {brand:'PPJ',style:'ST-5540',po:'PO-92101',colour:'Black',part:'Part A',side:1,totalCarton:300,d:0},
+        {brand:'DEFACTO',style:'ST-6102',po:'PO-92102',colour:'Beige',part:'Part B',side:2,totalCarton:250,d:0},
+        {brand:'DG 20',style:'ST-7011',po:'PO-92103',colour:'Blue',part:'Part A',side:3,totalCarton:180,d:1},
+        {brand:'COSTCO',style:'ST-4420',po:'PO-92104',colour:'Olive',part:'Part C',side:4,totalCarton:120,d:2},
+        {brand:'M265',style:'ST-3301',po:'PO-92105',colour:'Grey',part:'Part A',side:2,totalCarton:200,d:3},
+        {brand:'C K',style:'ST-5612',po:'PO-92106',colour:'Red',part:'Part B',side:4,totalCarton:150,d:9},
+        {brand:'FASHION OPTION',style:'ST-6620',po:'PO-92107',colour:'Brown',part:'Part A',side:3,totalCarton:210,d:17}
+      ]
+    }
+  };
+  const KEYS=Object.keys(STAGES);
+
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt=n=>Number(n||0).toLocaleString('en-US');
+
+  /* Dates (week runs Saturday -> Friday) */
+  const toStr=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  const todayStr=()=>toStr(new Date());
+  const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+  const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+  function range(period,ref){
+    const d=parse(ref);
+    if(period==='day') return [ref,ref];
+    if(period==='week'){const s=addDays(d,-((d.getDay()+1)%7));return [toStr(s),toStr(addDays(s,6))]}
+    return [toStr(new Date(d.getFullYear(),d.getMonth(),1)),toStr(new Date(d.getFullYear(),d.getMonth()+1,0))];
+  }
+  const dLabel=(d,o)=>d.toLocaleDateString('en-GB',o);
+
+  /* ---------- State ---------- */
+  let stage='acetate', view='entry', returnTo=null;
+  const editing={acetate:null,sticker:null};
+  const brandFilter={acetate:'ALL',sticker:'ALL'};
+  const dash={period:'day'};
+  const data={};
+  KEYS.forEach(k=>{ try{data[k]=JSON.parse(localStorage.getItem(STAGES[k].key))}catch(e){data[k]=null} });
+
+  const save=k=>{
+    localStorage.setItem(STAGES[k].key,JSON.stringify(data[k]));
+    triggerAutoSync();
+  };
+  const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  function makeSamples(k){
+    const now=new Date();
+    return STAGES[k].samples.map(s=>{
+      const {d,...rest}=s;
+      const r={...rest,id:uid(),date:toStr(addDays(now,-d))};
+      if(k==='sticker') r.totalSticker=r.totalCarton*r.side;
+      return r;
+    });
+  }
+  /* One-time migration: drop old demo records (ZARA, H&M, MANGO ...) and seed new demo data */
+  if(!localStorage.getItem('slp_v4')){
+    KEYS.forEach(k=>{
+      const L=STAGES[k].legacy;
+      data[k]=(Array.isArray(data[k])?data[k]:[]).filter(r=>!L.v.includes(r[L.f]));
+      if(!data[k].length) data[k]=makeSamples(k);
+      save(k);
+    });
+    localStorage.setItem('slp_v4','1');
+  }
+  /* Migration v5: ensure Acetate only has DECATHLON and BASS PRO in demo data */
+  if(!localStorage.getItem('slp_v5')){
+    if(Array.isArray(data.acetate)){
+      const hasOther = data.acetate.some(r => r.erp && r.erp.startsWith('ERP-401') && !['DECATHLON','BASS PRO'].includes(r.brand));
+      if(hasOther || !data.acetate.length){
+        data.acetate = makeSamples('acetate');
+        save('acetate');
+      }
+    }
+    localStorage.setItem('slp_v5','1');
+  }
+  /* Migration v6: ensure all acetate records have O/ prefix for ERP */
+  if(!localStorage.getItem('slp_v6')){
+    if(Array.isArray(data.acetate)){
+      data.acetate.forEach(r=>{
+        if(r.erp){
+          r.erp = 'O/' + String(r.erp).trim().replace(/^(ERP-|[oO]\/\s*)/, '');
+        }
+      });
+      save('acetate');
+    }
+    localStorage.setItem('slp_v6','1');
+  }
+  KEYS.forEach(k=>{
+    if(!Array.isArray(data[k])) data[k]=[];
+    data[k].forEach(r=>{ r.brand=norm(r.brand); });
+  });
+
+  /* All brands of a stage: fixed list first, then any custom brands that were saved */
+  function brandsList(k){
+    const base=stageBrands(k);
+    const extra=[...new Set(data[k].map(r=>r.brand).filter(b=>b&&!base.includes(b)))].sort();
+    return base.concat(extra);
+  }
+  /* Brands that actually have records in the stage */
+  const dataBrands=k=>brandsList(k).filter(b=>data[k].some(r=>r.brand===b));
+  const sumF=(rows,f)=>rows.reduce((a,r)=>a+Number(r[f]||0),0);
+  function agg(rows,st){ const o={n:rows.length}; st.metrics.forEach(m=>o[m.f]=sumF(rows,m.f)); return o; }
+
+  /* ---------- Toast & confirm ---------- */
+  function toast(msg,type=''){
+    const el=document.createElement('div');
+    el.className='toast '+type;
+    el.innerHTML=svg('check')+esc(msg);
+    $('#toasts').appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';el.style.transition='.3s';setTimeout(()=>el.remove(),300)},2600);
+  }
+  function confirmBox(title,text,yesLabel){
+    return new Promise(res=>{
+      $('#confirmTitle').textContent=title; $('#confirmText').textContent=text; $('#confirmYes').textContent=yesLabel||'Yes, Delete';
+      const box=$('#confirm'); box.classList.remove('hidden');
+      const done=v=>{box.classList.add('hidden');$('#confirmYes').onclick=$('#confirmNo').onclick=null;res(v)};
+      $('#confirmYes').onclick=()=>done(true); $('#confirmNo').onclick=()=>done(false);
+    });
+  }
+
+  /* ---------- Build forms ---------- */
+  function buildForm(k){
+    const st=STAGES[k]; let h='<div class="grid">';
+    st.fields.forEach((f,i)=>{
+      const lab='<label><span class="n">'+(i+1)+'</span>'+f.label+(f.req===false?'':' <em>*</em>')+'</label>';
+      if(f.t==='brand'){
+        h+='<div class="field">'+lab+'<div class="input">'+svg('tag')+'<select name="brandSel"></select>'+svg('chev','chev')+'</div>'+
+           '<div class="input other hidden">'+svg('tag')+'<input name="brandOther" type="text" aria-label="New brand name"></div></div>';
+      }else if(f.t==='side'){
+        h+='<div class="field span-all">'+lab+'<div class="sides">'+[1,2,3,4].map(n=>'<input type="radio" name="side" id="'+k+'-s'+n+'" value="'+n+'"><label for="'+k+'-s'+n+'">'+n+' SIDE</label>').join('')+'</div></div>';
+      }else if(f.t==='calc'){
+        h+='<div class="field">'+lab+'<div class="input">'+svg(f.icon)+'<input name="'+f.n+'" type="text" readonly></div><div class="formula" id="formula">= TOTAL CARTON × SIDE</div></div>';
+      }else{
+        h+='<div class="field">'+lab+'<div class="input">'+svg(f.icon)+'<input name="'+f.n+'" type="'+(f.t==='number'?'number" min="0" step="1':'text')+'"></div></div>';
+      }
+    });
+    h+='</div><div class="form-foot"><div class="field"><label>'+svg('cal')+'DATE <em>*</em></label><div class="input">'+svg('cal')+'<input name="date" type="date"></div></div>'+
+       '<div class="btns">'+
+       '<button type="button" class="btn btn-clear" data-act="clear">'+svg('undo')+'Clear</button>'+
+       '<button type="button" class="btn btn-update hidden" data-act="update">'+svg('check')+'Update Record</button>'+
+       '<button type="submit" class="btn btn-save" data-act="save">'+svg('save')+'Save Record</button></div></div>';
+    $('#form-'+k).innerHTML=h;
+  }
+  // replace <i data-i> placeholders with icons
+  const hydrate=()=>$$('[data-i]').forEach(e=>{ e.outerHTML=svg(e.dataset.i); });
+  KEYS.forEach(buildForm);
+  hydrate();
+
+  /* ---------- Form handling ---------- */
+  const form=k=>$('#form-'+k);
+  function fillBrandOptions(k){
+    const sel=form(k).elements.brandSel, keep=sel.value;
+    const base=stageBrands(k);
+    const extra=[...new Set(data[k].map(r=>r.brand).filter(b=>b&&!base.includes(b)))].sort();
+    sel.innerHTML='<option value="" hidden></option>'+
+      '<optgroup label="Brands">'+base.map(b=>'<option value="'+esc(b)+'">'+esc(b)+'</option>').join('')+'</optgroup>'+
+      (extra.length?'<optgroup label="Saved brands">'+extra.map(b=>'<option value="'+esc(b)+'">'+esc(b)+'</option>').join('')+'</optgroup>':'')+
+      '<option value="'+OTHER+'">+ Add new brand...</option>';
+    sel.value=[...sel.options].some(o=>o.value===keep)?keep:'';
+  }
+  function getVal(k,name){
+    const f=form(k);
+    if(name==='side'){const c=$('input[name=side]:checked',f);return c?Number(c.value):''}
+    if(name==='brand'){
+      const v=f.elements.brandSel.value;
+      if(!v) return '';
+      return v===OTHER?norm(f.elements.brandOther.value):v;
+    }
+    return f.elements[name].value.trim();
+  }
+  function syncBrand(k){
+    const f=form(k), isOther=f.elements.brandSel.value===OTHER;
+    $('.other',f).classList.toggle('hidden',!isOther);
+    if(!isOther) f.elements.brandOther.value='';
+    return isOther;
+  }
+  function calcSticker(){
+    const f=form('sticker');
+    const side=getVal('sticker','side'), c=Number(f.elements.totalCarton.value);
+    const out=f.elements.totalSticker;
+    if(side && f.elements.totalCarton.value!==''){
+      out.value=fmt(c*side);
+      $('#formula').innerHTML='= <b>'+fmt(c)+'</b> × <b>'+side+'</b> SIDE';
+    }else{
+      out.value='';
+      $('#formula').textContent='= TOTAL CARTON × SIDE';
+    }
+  }
+  function clearMarks(k){
+    const f=form(k);
+    $$('input,select',f).forEach(i=>i.classList.remove('invalid'));
+    $$('.sides',f).forEach(e=>e.style.outline='');
+  }
+  function mark(k,n){
+    const f=form(k);
+    if(n==='side') $('.sides',f).style.outline='2px solid var(--danger)';
+    else if(n==='brand'){
+      if(!f.elements.brandSel.value) f.elements.brandSel.classList.add('invalid');
+      else f.elements.brandOther.classList.add('invalid');
+    } else f.elements[n].classList.add('invalid');
+  }
+  function collect(k){
+    const st=STAGES[k], r={}; let ok=true;
+    clearMarks(k);
+    st.cols.forEach(([name])=>{ if(name!=='totalSticker') r[name]=getVal(k,name); });
+    st.required.forEach(n=>{ if(r[n]===''||r[n]===undefined){ ok=false; mark(k,n); } });
+    ['total','totalCarton'].forEach(n=>{
+      if(r[n]!==undefined && r[n]!==''){
+        const v=Number(r[n]);
+        if(isNaN(v)||v<0){ok=false;mark(k,n)} else r[n]=v;
+      }
+    });
+    if(k==='acetate' && r.erp){
+      let v = String(r.erp).trim().replace(/^[oO]\/\s*/, '');
+      r.erp = 'O/' + v;
+    }
+    if(k==='sticker' && ok) r.totalSticker=r.totalCarton*r.side;
+    return ok?r:null;
+  }
+  function resetForm(k,keepBrandDate){
+    const f=form(k), d=f.elements.date.value;
+    const bv=f.elements.brandSel.value, bo=f.elements.brandOther.value;
+    f.reset();
+    f.elements.date.value=keepBrandDate?(d||todayStr()):todayStr();
+    if(keepBrandDate && bv){ f.elements.brandSel.value=bv; }
+    syncBrand(k);
+    if(keepBrandDate && bv===OTHER) f.elements.brandOther.value=bo;
+    clearMarks(k);
+    editing[k]=null; setMode(k);
+    if(k==='sticker') calcSticker();
+  }
+  function setMode(k){
+    const f=form(k), isEdit=!!editing[k];
+    $('[data-act=update]',f).classList.toggle('hidden',!isEdit);
+    $('[data-act=save]',f).classList.toggle('hidden',isEdit);
+    const b=$('#mode-'+k);
+    b.textContent=isEdit?'Editing Record':'New Record';
+    b.style.background=isEdit?'#fef3c7':''; b.style.color=isEdit?'#b45309':'';
+    render();
+  }
+  function fillForm(k,rec){
+    const f=form(k);
+    fillBrandOptions(k);
+    STAGES[k].cols.forEach(([n])=>{
+      if(n==='totalSticker')return;
+      if(n==='brand'){
+        const sel=f.elements.brandSel;
+        sel.value=rec.brand;
+        if(sel.value!==rec.brand){ sel.value=OTHER; syncBrand(k); f.elements.brandOther.value=rec.brand; }
+        else syncBrand(k);
+        return;
+      }
+      if(n==='side'){const r=$('input[name=side][value="'+rec.side+'"]',f);if(r)r.checked=true;return}
+      f.elements[n].value=rec[n];
+    });
+    clearMarks(k);
+    if(k==='sticker') calcSticker();
+  }
+
+  KEYS.forEach(k=>{
+    const f=form(k);
+    f.addEventListener('submit',e=>{
+      e.preventDefault();
+      const r=collect(k);
+      if(!r){toast('Please complete all required fields','err');return}
+      r.id=uid(); data[k].push(r); save(k);
+      toast('Record saved successfully');
+      resetForm(k,true);
+    });
+    $('[data-act=update]',f).addEventListener('click',()=>{
+      const r=collect(k);
+      if(!r){toast('Please complete all required fields','err');return}
+      const i=data[k].findIndex(x=>x.id===editing[k]);
+      if(i>-1){ r.id=editing[k]; data[k][i]=r; save(k); toast('Record updated successfully','warn'); }
+      resetForm(k,true);
+      if(returnTo){ const v=returnTo; returnTo=null; setView(v); }
+    });
+    $('[data-act=clear]',f).addEventListener('click',()=>{ returnTo=null; resetForm(k,false); });
+    f.addEventListener('input',e=>{ if(e.target.classList) e.target.classList.remove('invalid'); });
+    f.elements.brandSel.addEventListener('change',()=>{
+      f.elements.brandSel.classList.remove('invalid');
+      if(syncBrand(k)) f.elements.brandOther.focus();
+    });
+  });
+
+  const erpInput = form('acetate').elements.erp;
+  if(erpInput){
+    erpInput.addEventListener('blur',()=>{
+      let v = erpInput.value.trim();
+      if(v){
+        v = v.replace(/^[oO]\/\s*/, '');
+        erpInput.value = 'O/' + v;
+      }
+    });
+  }
+  $$('#form-sticker input[name=side], #form-sticker input[name=totalCarton]').forEach(i=>i.addEventListener('input',calcSticker));
+  $$('#form-sticker input[name=side]').forEach(i=>i.addEventListener('change',()=>{ $('#form-sticker .sides').style.outline='';calcSticker(); }));
+
+  /* ---------- Entry view ---------- */
+  const stat=(i,l,v)=>'<div class="stat"><div class="si">'+svg(i)+'</div><div><small>'+l+'</small><b>'+v+'</b></div></div>';
+  function renderEntry(){
+    const st=STAGES[stage], all=data[stage], today=all.filter(r=>r.date===todayStr());
+    let s=stat('list','Total Records',fmt(all.length))+
+      st.metrics.map(m=>stat(m.f==='totalCarton'?'pkg':'sum',m.l,fmt(sumF(all,m.f)))).join('')+
+      stat('cal',"Today's Records",fmt(today.length));
+    if(st.metrics.length===1) s+=stat('pkg',"Today's Total",fmt(sumF(today,st.metrics[0].f)));
+    $('#stats').innerHTML=s;
+  }
+
+  /* ---------- Records view (grouped by brand) ---------- */
+  function filtered(){
+    const q=$('#search').value.trim().toLowerCase(), d=$('#filterDate').value, b=brandFilter[stage];
+    return data[stage].filter(r=>{
+      if(b!=='ALL' && r.brand!==b) return false;
+      if(d && r.date!==d) return false;
+      if(q && !Object.values(r).some(v=>String(v).toLowerCase().includes(q))) return false;
+      return true;
+    }).sort((a,b)=> (b.date||'').localeCompare(a.date||'') || b.id.localeCompare(a.id));
+  }
+  function renderBrandBar(){
+    const k=stage, brands=dataBrands(k);
+    if(brandFilter[k]!=='ALL' && !brands.includes(brandFilter[k])) brandFilter[k]='ALL';
+    const chip=(b,label,n,c)=>'<button type="button" class="bchip'+(brandFilter[k]===b?' on':'')+'" data-b="'+esc(b)+'" style="--c:'+c+'"><i></i>'+esc(label)+'<b>'+n+'</b></button>';
+    $('#brandBar').innerHTML=chip('ALL','ALL BRANDS',data[k].length,'#334155')+
+      brands.map(b=>chip(b,b,data[k].filter(r=>r.brand===b).length,brandColor(b))).join('');
+  }
+  function groupsHTML(rows,st){
+    const brands=brandsList(stage).filter(b=>rows.some(r=>r.brand===b));
+    const cols=st.cols.filter(c=>c[0]!=='brand');
+    const firstMetricIdx=cols.findIndex(([k])=>st.metrics.some(m=>m.f===k));
+    const colspan=firstMetricIdx+1; // includes '#' column
+
+    let out='';
+    brands.forEach(b=>{
+      const rs=rows.filter(r=>r.brand===b), a=agg(rs,st);
+      out+='<div class="grp" style="--c:'+brandColor(b)+'"><div class="grp-head">'+
+        '<div class="grp-head-left">'+
+          '<h3>'+esc(b)+'</h3>'+
+          '<span class="pill">'+rs.length+' record'+(rs.length===1?'':'s')+'</span>'+
+          st.metrics.map(m=>'<span class="pill main">'+m.l+': '+fmt(a[m.f])+'</span>').join('')+
+          '<button type="button" class="btn btn-clear-brand" data-brand="'+esc(b)+'" title="Clear all '+esc(b)+' data">'+
+            svg('trash')+'Clear Data'+
+          '</button>'+
+        '</div>'+
+        '</div>'+
+        '<div class="table-wrap"><table><thead><tr><th class="num">#</th>'+cols.map(c=>'<th class="'+(c[2]||'').replace('total','')+'">'+c[1]+'</th>').join('')+'<th class="col-act">ACTIONS</th></tr></thead><tbody>';
+      rs.forEach((r,i)=>{
+        out+='<tr class="'+(editing[stage]===r.id?'editing':'')+'"><td class="num">'+(i+1)+'</td>'+
+          cols.map(([n,,cls])=>{
+            let v;
+            if(n==='side') v='<span class="chip">'+esc(r[n])+' SIDE</span>';
+            else if(cls&&cls.includes('num')) v=esc(fmt(r[n]));
+            else v=esc(r[n]);
+            return '<td class="'+(cls||'')+'">'+v+'</td>';
+          }).join('')+
+          '<td class="col-act"><div class="row-act">'+
+          '<button class="btn btn-update btn-sm" data-edit="'+r.id+'" title="Edit">'+svg('edit')+'Edit</button>'+
+          '<button class="btn btn-danger btn-sm" data-del="'+r.id+'" title="Delete">'+svg('trash')+'Delete</button>'+
+          '</div></td></tr>';
+      });
+      out+='</tbody><tfoot><tr><td colspan="'+colspan+'" style="text-align:center;font-weight:800;letter-spacing:1.5px;color:var(--accent-d);white-space:nowrap">TOTAL</td>'+
+        cols.slice(firstMetricIdx).map(c=>{
+          const m=st.metrics.find(m=>m.f===c[0]);
+          return '<td class="'+(m?'num':'')+'" style="white-space:nowrap">'+(m?fmt(a[m.f]):'')+'</td>';
+        }).join('')+'<td class="col-act"></td></tr></tfoot></table></div></div>';
+    });
+    if(brands.length>1){
+      const a=agg(rows,st);
+      out+='<div class="grand"><span>ALL BRANDS</span><span>'+rows.length+' records</span>'+st.metrics.map(m=>'<span>'+m.l+': '+fmt(a[m.f])+'</span>').join('')+'</div>';
+    }
+    return out;
+  }
+  function renderRecords(){
+    const st=STAGES[stage], rows=filtered();
+    $('#tableTitle').textContent=st.label+' — Records Report';
+    const tb=$('#tableBadge'); if(tb) tb.textContent=rows.length+' record'+(rows.length===1?'':'s');
+    renderBrandBar();
+    const wrap=$('#tableWrap');
+    if(!rows.length){
+      wrap.innerHTML='<div class="empty">'+svg('pkg')+'<div><b>No records found</b></div><small>Register data from the Data Entry page.</small></div>';
+      return;
+    }
+    wrap.innerHTML=groupsHTML(rows,st);
+  }
+
+  /* ---------- Dashboard view ---------- */
+  function renderDash(){
+    const k=stage, st=STAGES[k], ref=$('#dashDate').value||todayStr();
+    const main=st.metrics[st.metrics.length-1];
+    const brands=dataBrands(k);
+    const [from,to]=range(dash.period,ref);
+    const inR=(r,a,b)=>r.date>=a&&r.date<=b;
+    const rows=data[k].filter(r=>inR(r,from,to));
+    const tot=agg(rows,st);
+
+    $('#dashBadge').textContent=st.label+' — '+data[k].length+' records in total';
+    const pName={day:'Daily',week:'Weekly',month:'Monthly'}[dash.period];
+    let label;
+    if(dash.period==='day') label=dLabel(parse(ref),{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
+    else if(dash.period==='week') label=dLabel(parse(from),{day:'2-digit',month:'short'})+' → '+dLabel(parse(to),{day:'2-digit',month:'short',year:'numeric'})+'  (Sat–Fri)';
+    else label=dLabel(parse(ref),{month:'long',year:'numeric'});
+    $('#dashLabel').textContent=pName+': '+label;
+
+    const active=brands.filter(b=>rows.some(r=>r.brand===b)).length;
+    $('#dashKpis').innerHTML=stat('list','Records',fmt(tot.n))+st.metrics.map(m=>stat(m.f==='totalCarton'?'pkg':'sum',m.l,fmt(tot[m.f]))).join('')+stat('tag','Active Brands',active+' / '+brands.length);
+
+    $('#dashBrands').innerHTML=brands.length?brands.map(b=>{
+      const rs=rows.filter(r=>r.brand===b), a=agg(rs,st);
+      const share=tot[main.f]?a[main.f]/tot[main.f]*100:0;
+      return '<div class="bcard" style="--c:'+brandColor(b)+'"><h4><i></i>'+esc(b)+'</h4>'+
+        '<div class="row"><span>Records</span><b>'+fmt(a.n)+'</b></div>'+
+        st.metrics.map(m=>'<div class="row"><span>'+m.l+'</span><b>'+fmt(a[m.f])+'</b></div>').join('')+
+        '<div class="bar"><span style="width:'+share.toFixed(1)+'%"></span></div><div class="bshare">'+share.toFixed(1)+'% of '+main.l+'</div></div>';
+    }).join(''):'<div class="empty" style="grid-column:1/-1"><b>No data yet</b><br><small>Register data from the Data Entry page.</small></div>';
+
+    let start,n;
+    if(dash.period==='day'){start=addDays(parse(ref),-6);n=7}
+    else if(dash.period==='week'){start=parse(from);n=7}
+    else{start=parse(from);n=parse(to).getDate()}
+    const days=Array.from({length:n},(_,i)=>toStr(addDays(start,i)));
+    const per=days.map(ds=>{
+      const rs=data[k].filter(r=>r.date===ds);
+      return {ds,parts:brands.map(b=>[b,sumF(rs.filter(r=>r.brand===b),main.f)]),total:sumF(rs,main.f)};
+    });
+    const max=Math.max(1,...per.map(p=>p.total));
+    $('#chartTitle').textContent=main.l+' — '+(dash.period==='day'?'Last 7 days':dash.period==='week'?'Days of the week':'Days of the month');
+    $('#dashChart').innerHTML='<div class="chart">'+per.map(p=>{
+      const h=p.total?Math.max(4,Math.round(p.total/max*170)):0;
+      const segs=p.parts.filter(x=>x[1]>0).map(x=>'<span style="flex:'+x[1]+' 1 0;background:'+brandColor(x[0])+'" title="'+esc(x[0])+': '+fmt(x[1])+'"></span>').join('');
+      const d=parse(p.ds);
+      const xl=(n<=7?dLabel(d,{weekday:'short'})+'<br>':'')+String(d.getDate()).padStart(2,'0');
+      return '<div class="col'+(p.ds===ref?' sel':'')+'" title="'+p.ds+' — '+fmt(p.total)+'">'+
+        (n<=10&&p.total?'<div class="val">'+fmt(p.total)+'</div>':'')+
+        '<div class="stack" style="height:'+h+'px">'+segs+'</div><div class="xl">'+xl+'</div></div>';
+    }).join('')+'</div>';
+    $('#dashLegend').innerHTML=brands.map(b=>'<span><i style="background:'+brandColor(b)+'"></i>'+esc(b)+'</span>').join('');
+
+    const periods=[['day','Daily'],['week','Weekly'],['month','Monthly']].map(([p,l])=>{
+      const [a,b]=range(p,ref); return {p,l,a,b,rows:data[k].filter(r=>inR(r,a,b))};
+    });
+    $('#matrixBadge').textContent='Reference: '+dLabel(parse(ref),{day:'2-digit',month:'short',year:'numeric'});
+    const cols=1+st.metrics.length;
+    let h='<table class="matrix"><thead><tr><th rowspan="2">BRAND</th>'+periods.map(p=>'<th class="gth" colspan="'+cols+'">'+p.l.toUpperCase()+'<br><small style="font-weight:500;opacity:.8">'+(p.p==='day'?p.a:p.p==='month'?dLabel(parse(ref),{month:'short',year:'numeric'}):p.a.slice(5)+' → '+p.b.slice(5))+'</small></th>').join('')+'</tr><tr>'+
+      periods.map(()=>'<th class="num sep">RECORDS</th>'+st.metrics.map(m=>'<th class="num">'+m.l.replace('Total ','').toUpperCase()+'</th>').join('')).join('')+'</tr></thead><tbody>';
+    const rowHTML=(name,fn,cls)=>'<tr class="'+cls+'"><td>'+name+'</td>'+periods.map(p=>{
+      const a=agg(fn(p.rows),st);
+      return '<td class="num sep">'+fmt(a.n)+'</td>'+st.metrics.map(m=>'<td class="num total">'+fmt(a[m.f])+'</td>').join('');
+    }).join('')+'</tr>';
+    brands.forEach(b=>{ h+=rowHTML('<span class="bname" style="--c:'+brandColor(b)+'"><i></i>'+esc(b)+'</span>',rs=>rs.filter(r=>r.brand===b),''); });
+    h+=rowHTML('ALL BRANDS',rs=>rs,'all')+'</tbody></table>';
+    $('#dashMatrix').innerHTML=h;
+  }
+
+  /* ---------- Navigation ---------- */
+  const VIEW_INFO={
+    entry:['Data Entry','Register new data'],
+    records:['Records Report','Browse, edit and delete saved records by brand'],
+    dashboard:['Dashboard','Daily, weekly and monthly totals by brand']
+  };
+  function render(){
+    KEYS.forEach(fillBrandOptions);
+    const nc=$('#navCount'); if(nc) nc.textContent=data[stage].length;
+    $('#pageTitle').textContent=VIEW_INFO[view][0];
+    $('#pageSub').textContent=VIEW_INFO[view][1]+' — '+STAGES[stage].label;
+    if(view==='entry') renderEntry();
+    else if(view==='records') renderRecords();
+    else renderDash();
+  }
+  function setView(v){
+    view=v;
+    $$('.view').forEach(x=>x.classList.toggle('hidden',x.id!=='view-'+v));
+    $$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+    render(); window.scrollTo(0,0);
+  }
+  function setStage(k){
+    stage=k;
+    const sw=$('#stageSwitch'); sw.dataset.stage=k;
+    $$('button',sw).forEach(b=>b.classList.toggle('on',b.dataset.stage===k));
+    document.body.className='theme-'+k;
+    $('#entry-acetate').classList.toggle('hidden',k!=='acetate');
+    $('#entry-sticker').classList.toggle('hidden',k!=='sticker');
+    $('#search').value=''; $('#filterDate').value='';
+    render();
+  }
+  $$('.nav-item[data-view]').forEach(b=>b.addEventListener('click',()=>{ returnTo=null; setView(b.dataset.view); }));
+  $('#stageSwitch').addEventListener('click',e=>{ const b=e.target.closest('[data-stage]'); if(b) setStage(b.dataset.stage); });
+
+  /* ---------- Records actions ---------- */
+  $('#tableWrap').addEventListener('click',async e=>{
+    const cb=e.target.closest('.btn-clear-brand');
+    if(cb){
+      const b=cb.dataset.brand;
+      if(!b) return;
+      const cnt=data[stage].filter(r=>r.brand===b).length;
+      if(!cnt){ toast('No data to clear for '+b,'warn'); return; }
+      if(await confirmBox(
+        'Clear '+b+' Data?',
+        'All '+cnt+' records for '+b+' will be permanently deleted from '+STAGES[stage].label+'. Other brands will not be affected.',
+        'Yes, Clear '+b
+      )){
+        data[stage]=data[stage].filter(r=>r.brand!==b);
+        save(stage);
+        resetForm(stage,true);
+        render();
+        syncToPublic(false);
+        toast('All records for '+b+' cleared successfully');
+      }
+      return;
+    }
+    const eb=e.target.closest('[data-edit]'), db=e.target.closest('[data-del]');
+    if(eb){
+      const rec=data[stage].find(r=>r.id===eb.dataset.edit); if(!rec)return;
+      editing[stage]=rec.id; returnTo='records';
+      setView('entry'); fillForm(stage,rec); setMode(stage);
+      toast('Editing mode — change data then press Update','warn');
+    }
+    if(db){
+      const id=db.dataset.del;
+      if(await confirmBox('Delete this record?','This action cannot be undone.')){
+        data[stage]=data[stage].filter(r=>r.id!==id); save(stage);
+        if(editing[stage]===id) resetForm(stage,true);
+        render(); toast('Record deleted','err');
+      }
+    }
+  });
+  $('#brandBar').addEventListener('click',e=>{
+    const c=e.target.closest('[data-b]'); if(!c)return;
+    brandFilter[stage]=c.dataset.b; render();
+  });
+  $('#search').addEventListener('input',render);
+  $('#filterDate').addEventListener('change',render);
+  $('#btnResetFilter').addEventListener('click',()=>{$('#search').value='';$('#filterDate').value='';brandFilter[stage]='ALL';render()});
+  $('#btnPrint').addEventListener('click',()=>window.print());
+  $('#dashPrint').addEventListener('click',()=>window.print());
+
+  /* Dashboard controls */
+  $('#dashPeriod').addEventListener('click',e=>{
+    const b=e.target.closest('[data-p]'); if(!b)return;
+    dash.period=b.dataset.p;
+    $$('#dashPeriod button').forEach(x=>x.classList.toggle('on',x===b));
+    renderDash();
+  });
+  $('#dashDate').addEventListener('change',()=>{ if(!$('#dashDate').value) $('#dashDate').value=todayStr(); renderDash(); });
+  $('#dashToday').addEventListener('click',()=>{ $('#dashDate').value=todayStr(); renderDash(); });
+
+  /* ---------- Export PDF ---------- */
+  function exportPdf(){
+    const st=STAGES[stage], rows=filtered();
+    if(!rows.length){toast('No data to export','warn');return}
+
+    const isAcetate=(stage==='acetate');
+    const brandName=(brandFilter[stage]==='ALL')?'ALL BRANDS':brandFilter[stage];
+    const today=todayStr();
+    const now=new Date();
+    const timeStr=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+    const dateStr=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+    if(window.jspdf && window.jspdf.jsPDF){
+      try{
+        const {jsPDF}=window.jspdf;
+        const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+
+        const primary=isAcetate?[79,70,229]:[13,148,136];
+        const secondary=[15,23,42];
+        const lightBg=isAcetate?[238,242,255]:[240,253,250];
+
+        // Header Banner
+        doc.setFillColor(secondary[0],secondary[1],secondary[2]);
+        doc.rect(0,0,297,24,'F');
+        doc.setFillColor(primary[0],primary[1],primary[2]);
+        doc.rect(0,24,297,2,'F');
+
+        doc.setTextColor(255,255,255);
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(15);
+        doc.text('SYSTEM LABEL PRINTING',14,11);
+
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(9);
+        doc.setTextColor(203,213,225);
+        doc.text(st.label.toUpperCase()+' — PRODUCTION RECORDS REPORT',14,18);
+
+        doc.setFontSize(8);
+        doc.setTextColor(255,255,255);
+        doc.text('Generated: '+dateStr+' '+timeStr,283,10,{align:'right'});
+        doc.text('Filter: '+brandName+'   |   Total Records: '+rows.length,283,16,{align:'right'});
+
+        // Summary Bar
+        const grandTot=agg(rows,st);
+        const totalsSummary=st.metrics.map(m=>m.l+': '+fmt(grandTot[m.f])).join('    |    ');
+
+        doc.setFillColor(lightBg[0],lightBg[1],lightBg[2]);
+        doc.roundedRect(14,30,269,10,2,2,'F');
+        doc.setDrawColor(primary[0],primary[1],primary[2]);
+        doc.roundedRect(14,30,269,10,2,2,'D');
+
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(9);
+        doc.setTextColor(primary[0],primary[1],primary[2]);
+        doc.text('REPORT SUMMARY ('+brandName+')',18,36.5);
+        doc.setTextColor(secondary[0],secondary[1],secondary[2]);
+        doc.text(totalsSummary,279,36.5,{align:'right'});
+
+        const headers=['#',...st.cols.map(c=>c[1])];
+        const body=rows.map((r,i)=>[
+          String(i+1),
+          ...st.cols.map(([key,,cls])=>{
+            let v=r[key];
+            if(key==='side') return v+' SIDE';
+            if(cls&&cls.includes('num')) return fmt(v);
+            return String(v??'');
+          })
+        ]);
+
+        const firstMetricIdx = st.cols.findIndex(([k]) => st.metrics.some(m => m.f === k));
+        const colspan = firstMetricIdx + 1; // including '#' column
+        const totalRow = [
+          { content: 'TOTAL', colSpan: colspan, styles: { halign: 'center', fontStyle: 'bold', fontSize: 9, textColor: primary } },
+          ...st.cols.slice(firstMetricIdx).map(([key]) => {
+            const m = st.metrics.find(x => x.f === key);
+            return m ? { content: fmt(grandTot[m.f]), styles: { halign: 'center', fontStyle: 'bold', fontSize: 9 } } : '';
+          })
+        ];
+        body.push(totalRow);
+
+        doc.autoTable({
+          startY:44,
+          head:[headers],
+          body:body,
+          theme:'grid',
+          styles:{
+            font:'helvetica',
+            fontSize:8.5,
+            cellPadding:2.6,
+            overflow:'linebreak',
+            valign:'middle',
+            lineColor:[226,232,240],
+            lineWidth:0.2
+          },
+          headStyles:{
+            fillColor:secondary,
+            textColor:[255,255,255],
+            fontStyle:'bold',
+            halign:'left',
+            fontSize:8.5
+          },
+          alternateRowStyles:{
+            fillColor:[248,250,252]
+          },
+          columnStyles:isAcetate?{
+            0:{halign:'center',cellWidth:12},
+            1:{fontStyle:'bold'},
+            4:{fontStyle:'bold',textColor:primary},
+            7:{halign:'center',fontStyle:'bold',textColor:primary},
+            8:{halign:'center'}
+          }:{
+            0:{halign:'center',cellWidth:10},
+            1:{fontStyle:'bold'},
+            6:{halign:'center'},
+            7:{halign:'center',fontStyle:'bold'},
+            8:{halign:'center',fontStyle:'bold',textColor:primary},
+            9:{halign:'center'}
+          },
+          didParseCell:function(data){
+            if(data.row.index===body.length-1){
+              data.cell.styles.fillColor=lightBg;
+              data.cell.styles.fontStyle='bold';
+              data.cell.styles.textColor=primary;
+              if(data.column.index===0) data.cell.styles.halign='center';
+            }
+          },
+          didDrawPage:function(data){
+            const pageCount=doc.internal.getNumberOfPages();
+            doc.setFontSize(8);
+            doc.setTextColor(148,163,184);
+            doc.text('System Label Printing • Production Data Record • Confidential',14,203);
+            doc.text('Page '+data.pageNumber+' of '+pageCount,283,203,{align:'right'});
+          },
+          margin:{top:44,left:14,right:14,bottom:14}
+        });
+
+        const filename='SLP_'+st.label.replace(/\s+/g,'_')+'_'+today+'.pdf';
+        doc.save(filename);
+        toast('PDF report downloaded successfully');
+        return;
+      }catch(err){
+        console.error('jsPDF error, falling back to print dialog:',err);
+      }
+    }
+
+    printFallbackPdf(st,rows,brandName,dateStr,timeStr);
+  }
+
+  function printFallbackPdf(st,rows,brandName,dateStr,timeStr){
+    const isAcetate=(stage==='acetate');
+    const primary=isAcetate?'#4f46e5':'#0d9488';
+    const primaryDark=isAcetate?'#4338ca':'#0f766e';
+    const primaryLight=isAcetate?'#eef2ff':'#f0fdfa';
+    const grandTot=agg(rows,st);
+    const totalsSummary=st.metrics.map(m=>'<span><b>'+m.l+':</b> '+fmt(grandTot[m.f])+'</span>').join('');
+
+    const cols=st.cols;
+    let tableHtml='<table class="report-table"><thead><tr><th style="width:44px;text-align:center">#</th>'+cols.map(c=>'<th class="'+(c[2]||'')+'">'+c[1]+'</th>').join('')+'</tr></thead><tbody>';
+    rows.forEach((r,idx)=>{
+      tableHtml+='<tr><td class="num" style="width:44px;text-align:center">'+(idx+1)+'</td>'+cols.map(([key,,cls])=>{
+        let v=r[key];
+        if(key==='side') v='<span class="chip">'+esc(v)+' SIDE</span>';
+        else if(cls&&cls.includes('num')) v=esc(fmt(v));
+        else v=esc(v);
+        return '<td class="'+(cls||'')+'">'+v+'</td>';
+      }).join('')+'</tr>';
+    });
+
+    const firstMetricIdx = cols.findIndex(([k]) => st.metrics.some(m => m.f === k));
+    const colspan = firstMetricIdx + 1; // including '#' column
+
+    tableHtml+='</tbody><tfoot><tr><td colspan="'+colspan+'" class="tfoot-total-label">TOTAL</td>'+cols.slice(firstMetricIdx).map(([key])=>{
+      const m=st.metrics.find(x=>x.f===key);
+      return '<td class="'+(m?'num total':'')+'">'+(m?fmt(grandTot[m.f]):'')+'</td>';
+    }).join('')+'</tr></tfoot></table>';
+
+    const w=window.open('','_blank');
+    if(!w){ toast('Please allow popups to export PDF','err'); return; }
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SLP_'+st.label.replace(/\\s+/g,'_')+'_'+todayStr()+'</title>'+
+      '<style>@page{size:A4 landscape;margin:10mm 12mm;}*{box-sizing:border-box;margin:0;padding:0}body{font-family:\"Segoe UI\",Arial,sans-serif;color:#0f172a;background:#fff;padding:12px;line-height:1.4}.banner{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:16px 20px;border-radius:12px;margin-bottom:14px;border-bottom:4px solid '+primary+';display:flex;justify-content:space-between;align-items:center}.banner h1{font-size:1.3rem;letter-spacing:1px}.banner p{font-size:.82rem;color:#cbd5e1;margin-top:2px}.banner-meta{text-align:right;font-size:.78rem;color:#e2e8f0}.summary-bar{background:'+primaryLight+';border:1.5px solid '+primary+';border-radius:10px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:.86rem;font-weight:700;color:'+primaryDark+'}.summary-bar .tot{display:flex;gap:18px}.summary-bar .tot span b{color:#0f172a}table.report-table{width:100%;border-collapse:collapse;font-size:.84rem}table.report-table th{background:#0f172a;color:#fff;padding:8px 10px;font-size:.72rem;letter-spacing:.5px;text-align:left;border:1px solid #334155}table.report-table td{padding:7px 10px;border:1px solid #e2e8f0;white-space:nowrap}table.report-table tr:nth-child(even){background:#f8fafc}table.report-table td.num,table.report-table th.num{text-align:center}table.report-table td.total{font-weight:800;color:'+primaryDark+'}table.report-table tfoot td{background:'+primaryLight+';font-weight:800;color:'+primaryDark+';border-top:2px solid '+primary+';white-space:nowrap!important}table.report-table tfoot td.tfoot-total-label{text-align:center;font-weight:800;letter-spacing:2px;font-size:.88rem;color:'+primaryDark+';white-space:nowrap!important}.chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:.75rem;font-weight:700;background:'+primaryLight+';color:'+primaryDark+'}.footer{margin-top:16px;padding-top:10px;border-top:1px solid #cbd5e1;display:flex;justify-content:space-between;font-size:.74rem;color:#64748b}</style></head>'+
+      '<body><div class=\"banner\"><div><h1>SYSTEM LABEL PRINTING</h1><p>'+esc(st.label.toUpperCase())+' — PRODUCTION RECORDS REPORT</p></div><div class=\"banner-meta\"><div><b>Generated:</b> '+esc(dateStr)+' '+esc(timeStr)+'</div><div><b>Filter:</b> '+esc(brandName)+' | <b>Total Records:</b> '+rows.length+'</div></div></div>'+
+      '<div class=\"summary-bar\"><span>REPORT SUMMARY ('+esc(brandName)+')</span><div class=\"tot\">'+totalsSummary+'</div></div>'+tableHtml+
+      '<div class=\"footer\"><span>System Label Printing • Production Data Record • Confidential</span><span>Save as PDF from Print Dialog</span></div>'+
+      '<script>window.onload=function(){setTimeout(function(){window.print();},350);};<\/script></body></html>');
+    w.document.close();
+    toast('PDF preview opened — Save as PDF');
+  }
+
+  $('#btnExportPdf').addEventListener('click',exportPdf);
+  const elSample = $('#btnSample');
+  if(elSample) elSample.addEventListener('click',()=>{
+    data[stage]=data[stage].concat(makeSamples(stage)); save(stage); render();
+    toast('Sample data added');
+  });
+  const elClearAll = $('#btnClearAll');
+  if(elClearAll) elClearAll.addEventListener('click',async()=>{
+    if(!data[stage].length){toast('No data to clear','warn');return}
+    if(await confirmBox('Clear all '+STAGES[stage].label+' data?','All '+data[stage].length+' records of this stage will be permanently deleted.','Yes, Clear All')){
+      data[stage]=[]; save(stage); resetForm(stage,true); render(); toast('All data cleared','err');
+    }
+  });
+
+  /* ---------- Live Backup & Secret Cloud Link ---------- */
+  function getBackupPayload(){
+    return {
+      app:'SystemLabelPrinting',
+      version:2,
+      exportedAt:new Date().toISOString(),
+      lastUpdated:new Date().toISOString(),
+      stats:{
+        acetateCount:data.acetate.length,
+        stickerCount:data.sticker.length
+      },
+      acetate:data.acetate,
+      sticker:data.sticker
+    };
+  }
+
+  function downloadJsonBackup(){
+    const payload=getBackupPayload();
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+    a.download='SLP_Backup_'+todayStr()+'.json';
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Backup file downloaded');
+  }
+
+  async function createCloudLink(){
+    const payload=getBackupPayload();
+    // Try npoint.io first
+    try{
+      const res=await fetch('https://api.npoint.io',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      if(res.ok){
+        const d=await res.json();
+        if(d&&d.id) return 'https://api.npoint.io/'+d.id;
+      }
+    }catch(e){
+      console.warn('npoint.io failed:',e);
+    }
+    // Fallback jsonblob.com
+    try{
+      const res=await fetch('https://jsonblob.com/api/jsonBlob',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      if(res.ok){
+        const loc=res.headers.get('Location');
+        if(loc) return loc;
+        const id=res.headers.get('x-jsonblob-id');
+        if(id) return 'https://jsonblob.com/api/jsonBlob/'+id;
+      }
+    }catch(e){
+      console.warn('jsonblob.com failed:',e);
+    }
+    throw new Error('Could not connect to online backup service. Check your internet connection.');
+  }
+
+  async function updateCloudBackup(link, payload){
+    if(link.includes('api.npoint.io')){
+      const res=await fetch(link,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      return res.ok;
+    } else {
+      const res=await fetch(link,{
+        method:'PUT',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      return res.ok;
+    }
+  }
+
+  async function fetchCloudBackup(link){
+    const res=await fetch(link,{headers:{'Accept':'application/json'}});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const json=await res.json();
+    if(!json||!Array.isArray(json.acetate)||!Array.isArray(json.sticker)){
+      throw new Error('Invalid backup file format');
+    }
+    return json;
+  }
+
+  let syncTimer=null;
+  function triggerAutoSync(){
+    const link=localStorage.getItem('slp_secret_link');
+    if(!link) return;
+    clearTimeout(syncTimer);
+    syncTimer=setTimeout(async ()=>{
+      try{
+        await updateCloudBackup(link,getBackupPayload());
+        localStorage.setItem('slp_last_cloud_sync',new Date().toISOString());
+        updateBackupUI();
+      }catch(err){
+        console.warn('Auto cloud sync background notice:',err);
+      }
+    },1200);
+  }
+
+  function updateBackupUI(){
+    const link=localStorage.getItem('slp_secret_link');
+    const noWrap=$('#noCloudLinkWrap'), hasWrap=$('#hasCloudLinkWrap'), badge=$('#cloudStatusBadge');
+    const input=$('#cloudLinkInput'), openBtn=$('#btnOpenCloudLink');
+    const detail=$('#backupStatusDetail');
+
+    if(detail){
+      detail.textContent='Protected: '+data.acetate.length+' Acetate records, '+data.sticker.length+' Sticker records';
+    }
+
+    if(link){
+      if(noWrap) noWrap.classList.add('hidden');
+      if(hasWrap) hasWrap.classList.remove('hidden');
+      if(input) input.value=link;
+      if(openBtn) openBtn.href=link;
+      const lastSync=localStorage.getItem('slp_last_cloud_sync');
+      const syncTimeText=lastSync?new Date(lastSync).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}):'Just now';
+      if(badge){
+        badge.textContent='Connected ● Synced '+syncTimeText;
+        badge.style.background='#dcfce7';
+        badge.style.color='#15803d';
+      }
+    }else{
+      if(noWrap) noWrap.classList.remove('hidden');
+      if(hasWrap) hasWrap.classList.add('hidden');
+      if(badge){
+        badge.textContent='Not Created';
+        badge.style.background='';
+        badge.style.color='';
+      }
+    }
+  }
+
+  function restoreData(p, sourceLabel){
+    const cur=data.acetate.length+data.sticker.length, inc=p.acetate.length+p.sticker.length;
+    confirmBox('Restore '+sourceLabel+'?','Current data ('+cur+' records) will be replaced by backup ('+inc+' records).','Yes, Restore').then(ok=>{
+      if(ok){
+        KEYS.forEach(k=>{
+          data[k]=p[k].filter(r=>r&&typeof r==='object').map(r=>({...r,id:r.id||uid(),brand:norm(r.brand)}));
+          save(k); brandFilter[k]='ALL'; editing[k]=null;
+        });
+        KEYS.forEach(k=>resetForm(k,false));
+        render(); toast('Backup restored successfully!');
+      }
+    });
+  }
+
+  /* ---------- Persistent C:\Users\Public & Local Storage Sync Engine ---------- */
+  const IDB_NAME='slp_db', IDB_STORE='handles';
+  function openIDB(){
+    return new Promise(res=>{
+      if(typeof indexedDB==='undefined'){ res(null); return; }
+      try{
+        const req=indexedDB.open(IDB_NAME,1);
+        req.onupgradeneeded=()=>req.result.createObjectStore(IDB_STORE);
+        req.onsuccess=()=>res(req.result);
+        req.onerror=()=>res(null);
+      }catch(e){ res(null); }
+    });
+  }
+  async function getFromIDB(key){
+    try{
+      const db=await openIDB();
+      if(!db) return null;
+      return new Promise(res=>{
+        const tx=db.transaction(IDB_STORE,'readonly');
+        const req=tx.objectStore(IDB_STORE).get(key);
+        req.onsuccess=()=>res(req.result);
+        req.onerror=()=>res(null);
+      });
+    }catch(e){ return null; }
+  }
+  async function putToIDB(key,val){
+    try{
+      const db=await openIDB();
+      if(!db) return;
+      const tx=db.transaction(IDB_STORE,'readwrite');
+      tx.objectStore(IDB_STORE).put(val,key);
+    }catch(e){}
+  }
+
+  let isLocalServiceActive=false;
+  let isHandleActive=false;
+  let savedFileHandle=null;
+
+  async function initSavedFileHandle(){
+    try{
+      const handle=await getFromIDB('public_file_handle');
+      if(handle && handle.queryPermission){
+        const perm=await handle.queryPermission({mode:'readwrite'});
+        if(perm==='granted'){
+          savedFileHandle=handle;
+          isHandleActive=true;
+        }
+      }
+    }catch(e){}
+  }
+  initSavedFileHandle();
+
+  async function syncToPublic(manualTrigger){
+    const payload=getBackupPayload();
+    const jsonStr=JSON.stringify(payload,null,2);
+
+    // 1. Keep persistent local snapshot in localStorage & secret cloud link
+    try {
+      localStorage.setItem('slp_public_backup',jsonStr);
+      localStorage.setItem('slp_last_public_sync',new Date().toISOString());
+    }catch(e){}
+
+    let synced=false;
+
+    // 2. Try Local Companion Background Service (writes to C:\Users\Public\SystemLabelPrinting_Backup.json)
+    try {
+      const controller=new AbortController();
+      const timeoutId=setTimeout(()=>controller.abort(),750);
+      const res=await fetch('http://127.0.0.1:8765/backup',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:jsonStr,
+        signal:controller.signal
+      });
+      clearTimeout(timeoutId);
+      if(res.ok){
+        isLocalServiceActive=true;
+        synced=true;
+      }
+    }catch(e){
+      isLocalServiceActive=false;
+    }
+
+    // 3. Try File System Handle if available
+    if(savedFileHandle){
+      try {
+        const writable=await savedFileHandle.createWritable();
+        await writable.write(jsonStr);
+        await writable.close();
+        isHandleActive=true;
+        synced=true;
+      }catch(e){
+        isHandleActive=false;
+      }
+    }
+
+    // 4. Auto cloud sync if secret link is active
+    const secretLink=localStorage.getItem('slp_secret_link');
+    if(secretLink){
+      try { updateCloudBackup(secretLink,payload); }catch(e){}
+    }
+
+    if(manualTrigger){
+      toast('✓ تم التحديث اللحظي للبيانات وحفظ النسخة الاحتياطية بنجاح');
+    }
+  }
+
+  // Direct instant backup on click (Strictly NO file download, NO popup/screen)
+  const elBackup=$('#btnBackup');
+  if(elBackup){
+    elBackup.addEventListener('click',()=>{
+      syncToPublic(true);
+    });
+  }
+  $('#backupClose').addEventListener('click',()=>$('#backupModal').classList.add('hidden'));
+  $('#backupModal').addEventListener('click',e=>{
+    if(e.target===$('#backupModal')) $('#backupModal').classList.add('hidden');
+  });
+
+  // Create Secret Cloud Link
+  $('#btnCreateCloudLink').addEventListener('click',async()=>{
+    const btn=$('#btnCreateCloudLink');
+    btn.disabled=true;
+    btn.innerHTML=svg('refresh')+' Creating Secret Link...';
+    try{
+      const link=await createCloudLink();
+      localStorage.setItem('slp_secret_link',link);
+      localStorage.setItem('slp_last_cloud_sync',new Date().toISOString());
+      updateBackupUI();
+      toast('Secret Link created successfully!');
+    }catch(err){
+      toast(err.message||'Failed to create link','err');
+    }finally{
+      btn.disabled=false;
+      btn.innerHTML=svg('cloud')+' إنشاء الرابط السري المباشر الآن (Create Secret Link)';
+    }
+  });
+
+  // Copy Secret Link
+  $('#btnCopyCloudLink').addEventListener('click',()=>{
+    const link=$('#cloudLinkInput').value;
+    if(link){
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(link).then(()=>toast('Secret link copied to clipboard! Keep it safe.'));
+      }else{
+        $('#cloudLinkInput').select();
+        document.execCommand('copy');
+        toast('Secret link copied to clipboard!');
+      }
+    }
+  });
+
+  // Sync Now
+  $('#btnSyncNow').addEventListener('click',async()=>{
+    const link=localStorage.getItem('slp_secret_link');
+    if(!link) return;
+    const btn=$('#btnSyncNow');
+    btn.disabled=true;
+    btn.innerHTML=svg('refresh')+' Syncing...';
+    try{
+      await updateCloudBackup(link,getBackupPayload());
+      localStorage.setItem('slp_last_cloud_sync',new Date().toISOString());
+      updateBackupUI();
+      toast('Cloud backup synced successfully!');
+    }catch(err){
+      toast('Cloud sync failed: Check internet connection','err');
+    }finally{
+      btn.disabled=false;
+      btn.innerHTML=svg('refresh')+' مزامنة وتحديث الرابط الآن (Sync Now)';
+    }
+  });
+
+  // Restore from Cloud Link
+  $('#btnRestoreFromCloud').addEventListener('click',async()=>{
+    const link=localStorage.getItem('slp_secret_link');
+    if(!link) return;
+    try{
+      toast('Fetching latest backup from secret link...');
+      const p=await fetchCloudBackup(link);
+      restoreData(p,'Secret Cloud Link');
+    }catch(err){
+      toast('Failed to fetch from secret link: '+err.message,'err');
+    }
+  });
+
+  // Reset Cloud Link
+  $('#btnResetCloudLink').addEventListener('click',async()=>{
+    if(await confirmBox('Reset or change link?','You can create a new secret link or enter an existing one.','Yes, Change')){
+      const cur=localStorage.getItem('slp_secret_link')||'';
+      const userLink=prompt('Enter new secret cloud link (leave empty to generate a fresh one):', cur);
+      if(userLink!==null){
+        if(userLink.trim()){
+          localStorage.setItem('slp_secret_link',userLink.trim());
+          toast('Link updated!');
+        }else{
+          localStorage.removeItem('slp_secret_link');
+          toast('Link cleared. You can create a new one.');
+        }
+        updateBackupUI();
+      }
+    }
+  });
+
+  // Download local JSON
+  $('#btnDownloadJson').addEventListener('click',downloadJsonBackup);
+
+  // Restore Button in Sidebar: Choice Modal
+  const elRestore=$('#btnRestore');
+  if(elRestore){
+    elRestore.addEventListener('click',()=>{
+      $('#restoreChoiceModal').classList.remove('hidden');
+    });
+  }
+
+  $('#btnRestoreFromPublicDirect').addEventListener('click',async()=>{
+    $('#restoreChoiceModal').classList.add('hidden');
+    toast('جاري البحث عن النسخة الاحتياطية في C:\\Users\\Public...');
+
+    // 1. Try local companion service first
+    try{
+      const res=await fetch('http://127.0.0.1:8765/backup');
+      if(res.ok){
+        const p=await res.json();
+        if(p&&Array.isArray(p.acetate)&&Array.isArray(p.sticker)){
+          restoreData(p,'C:\\Users\\Public Live Backup');
+          return;
+        }
+      }
+    }catch(e){}
+
+    // 2. Try File System Handle if active
+    if(savedFileHandle){
+      try{
+        const file=await savedFileHandle.getFile();
+        const text=await file.text();
+        const p=JSON.parse(text);
+        if(p&&Array.isArray(p.acetate)&&Array.isArray(p.sticker)){
+          restoreData(p,'C:\\Users\\Public File');
+          return;
+        }
+      }catch(e){}
+    }
+
+    // 3. Try Local Storage backup snapshot
+    const raw=localStorage.getItem('slp_public_backup');
+    if(raw){
+      try{
+        const p=JSON.parse(raw);
+        if(p&&Array.isArray(p.acetate)&&Array.isArray(p.sticker)){
+          restoreData(p,'Local Storage Backup');
+          return;
+        }
+      }catch(e){}
+    }
+
+    toast('لم يتم العثور على نسخة في C:\\Users\\Public، يرجى اختيار ملف يدوياً','err');
+    $('#restoreFile').click();
+  });
+
+  $('#btnRestoreFromFileDirect').addEventListener('click',()=>{
+    $('#restoreChoiceModal').classList.add('hidden');
+    $('#restoreFile').click();
+  });
+
+  $('#btnRestoreFromCloudDirect').addEventListener('click',async()=>{
+    $('#restoreChoiceModal').classList.add('hidden');
+    const link=localStorage.getItem('slp_secret_link');
+    if(!link){
+      toast('No secret cloud link found. You can create one from Backup Data settings.','err');
+      return;
+    }
+    try{
+      toast('Fetching latest backup from secret link...');
+      const p=await fetchCloudBackup(link);
+      restoreData(p,'Secret Cloud Link');
+    }catch(err){
+      toast('Failed to fetch from secret link: '+err.message,'err');
+    }
+  });
+
+  $('#btnCancelRestoreChoice').addEventListener('click',()=>{
+    $('#restoreChoiceModal').classList.add('hidden');
+  });
+
+  const elRestoreFile=$('#restoreFile');
+  if(elRestoreFile){
+    elRestoreFile.addEventListener('change',async e=>{
+      const file=e.target.files[0]; e.target.value='';
+      if(!file) return;
+      let p;
+      try{ p=JSON.parse(await file.text()); if(!Array.isArray(p.acetate)||!Array.isArray(p.sticker)) throw new Error('bad'); }
+      catch(err){ toast('Invalid backup file','err'); return; }
+      restoreData(p,'Local Backup File');
+    });
+  }
+
+  /* ---------- Authentication & GitHub Remote Master Control (المصادقة والتحكم عن بُعد) ---------- */
+  const KEY_USERS='slp_users_v2';
+  const KEY_SESSION='slp_auth_session';
+  const KEY_REMOTE_URL='slp_github_control_url';
+  const KEY_SYS_STATUS='slp_system_status';
+  const DEFAULT_ADMIN={username:'admin',password:'admin',role:'admin',name:'Master Admin',active:true};
+  const DEFAULT_USER={username:'user',password:'user123',role:'operator',name:'Standard Operator',active:true};
+
+  function getStoredUsers(){
+    try{
+      const raw=localStorage.getItem(KEY_USERS);
+      if(raw){
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)&&arr.length) return arr;
+      }
+    }catch(e){}
+    const def=[DEFAULT_ADMIN,DEFAULT_USER];
+    localStorage.setItem(KEY_USERS,JSON.stringify(def));
+    return def;
+  }
+  function saveStoredUsers(arr){
+    localStorage.setItem(KEY_USERS,JSON.stringify(arr));
+  }
+  function getAuthSession(){
+    try{
+      const s=sessionStorage.getItem(KEY_SESSION)||localStorage.getItem(KEY_SESSION);
+      if(s) return JSON.parse(s);
+    }catch(e){}
+    return null;
+  }
+
+  let currentSession=null;
+
+  function applyAuthSession(sess){
+    currentSession=sess;
+    const elName=$('#userDisplayName'), elBadge=$('#userRoleBadge');
+    if(elName) elName.textContent=sess.name||sess.username;
+    if(elBadge){
+      elBadge.textContent=(sess.role||'operator').toUpperCase();
+      elBadge.className='user-capsule-role '+(sess.role==='admin'?'admin':'');
+    }
+    const btnCtrl=$('#btnOpenAdminControl');
+    if(btnCtrl){
+      btnCtrl.classList.toggle('hidden',sess.role!=='admin');
+    }
+    const scr=$('#loginScreen');
+    if(scr) scr.classList.add('hidden');
+  }
+
+  function logout(){
+    sessionStorage.removeItem(KEY_SESSION);
+    localStorage.removeItem(KEY_SESSION);
+    currentSession=null;
+    const un=$('#loginUsername'), pw=$('#loginPassword');
+    if(un) un.value='';
+    if(pw) pw.value='';
+    hideLoginError();
+    const scr=$('#loginScreen');
+    if(scr) scr.classList.remove('hidden');
+    toast('تم تسجيل الخروج بنجاح (Logged out)');
+  }
+
+  function showLoginError(msg){
+    const errEl=$('#loginError');
+    if(errEl){
+      errEl.textContent=msg;
+      errEl.classList.remove('hidden');
+    }
+  }
+  function hideLoginError(){
+    const errEl=$('#loginError');
+    if(errEl) errEl.classList.add('hidden');
+  }
+
+  function getSystemStatus(){
+    return localStorage.getItem(KEY_SYS_STATUS)||'active';
+  }
+  function setSystemStatus(st,msg){
+    localStorage.setItem(KEY_SYS_STATUS,st);
+    const badge=$('#adminLiveStatusBadge');
+    if(badge){
+      badge.textContent=st.toUpperCase();
+      badge.style.background=(st==='active'?'#10b981':'#ef4444');
+    }
+    if(st==='suspended'){
+      lockSystem(msg||'تم تعليق تشغيل هذه النسخة مؤقتاً بأمر إدارة النظام.');
+    }else{
+      unlockSystem();
+    }
+  }
+  function lockSystem(msg){
+    const scr=$('#systemLockoutScreen');
+    if(scr){
+      const m=$('#lockoutMsg');
+      if(m&&msg) m.textContent=msg;
+      scr.classList.remove('hidden');
+    }
+  }
+  function unlockSystem(){
+    const scr=$('#systemLockoutScreen');
+    if(scr) scr.classList.add('hidden');
+  }
+
+  /* Remote GitHub Control Fetcher */
+  async function checkRemoteMasterControl(){
+    const url=(localStorage.getItem(KEY_REMOTE_URL)||'').trim();
+    const badge=$('#adminGithubStatus');
+    if(!url){
+      if(badge){ badge.textContent='Not Connected'; badge.style.background='#94a3b8'; }
+      return;
+    }
+    try{
+      const sep=url.includes('?')?'&':'?';
+      const res=await fetch(url+sep+'_t='+Date.now(),{cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const cfg=await res.json();
+      if(!cfg||typeof cfg!=='object') throw new Error('Invalid JSON');
+
+      if(badge){ badge.textContent='Connected (Online)'; badge.style.background='#10b981'; badge.style.color='#fff'; }
+
+      // 1. Kill Switch status
+      if(cfg.system_status==='suspended'){
+        setSystemStatus('suspended',cfg.status_message);
+      }else if(cfg.system_status==='active'){
+        setSystemStatus('active');
+      }
+
+      // 2. Remote Wipe
+      if(cfg.remote_wipe_id){
+        const lastWipe=localStorage.getItem('slp_last_wipe_id');
+        if(lastWipe&&lastWipe!==cfg.remote_wipe_id){
+          data.acetate=[];
+          data.sticker=[];
+          save('acetate');
+          save('sticker');
+          render();
+          toast('تم تنفيذ أمر المسح عن بُعد من الإدارة (Data wiped)','warn');
+        }
+        localStorage.setItem('slp_last_wipe_id',cfg.remote_wipe_id);
+      }
+
+      // 3. User Accounts Sync
+      if(Array.isArray(cfg.users)&&cfg.users.length){
+        saveStoredUsers(cfg.users);
+        if(currentSession){
+          const me=cfg.users.find(u=>u.username.toLowerCase()===currentSession.username.toLowerCase());
+          if(!me||me.active===false){
+            logout();
+            showLoginError('تم تعطيل أو حذف هذا الحساب عن بُعد بواسطة الإدارة');
+          }
+        }
+      }
+    }catch(err){
+      if(badge){ badge.textContent='Sync Error'; badge.style.background='#ef4444'; badge.style.color='#fff'; }
+      console.warn('GitHub control check error:',err);
+    }
+  }
+
+  function renderAdminUsersList(){
+    const wrap=$('#adminUsersList');
+    if(!wrap) return;
+    const users=getStoredUsers();
+    wrap.innerHTML=users.map(u=>{
+      const isMe=currentSession&&currentSession.username.toLowerCase()===u.username.toLowerCase();
+      return '<div class="user-table-row">'+
+        '<div>'+
+          '<b>'+esc(u.name||u.username)+'</b> '+
+          '<span class="user-badge-role '+(u.role==='admin'?'admin':'operator')+'">'+esc(u.role||'operator')+'</span>'+
+          '<div style="font-size:.74rem;color:var(--muted)">Username: <code>'+esc(u.username)+'</code> • Status: '+(u.active!==false?'<span style="color:#10b981;font-weight:700">Active</span>':'<span style="color:#ef4444;font-weight:700">Suspended</span>')+'</div>'+
+        '</div>'+
+        '<div style="display:flex;gap:6px">'+
+          (!isMe?'<button type="button" class="btn btn-clear btn-sm btn-toggle-user" data-user="'+esc(u.username)+'">'+(u.active!==false?'تعطيل':'تفعيل')+'</button>':'')+
+          (!isMe&&u.username!=='admin'?'<button type="button" class="btn btn-danger btn-sm btn-del-user" data-user="'+esc(u.username)+'">حذف</button>':'')+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  /* Wire Auth & Admin Event Listeners */
+  $('#loginForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const un=$('#loginUsername').value.trim();
+    const pw=$('#loginPassword').value;
+    const rem=$('#loginRemember').checked;
+    const users=getStoredUsers();
+    const user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
+    if(!user){
+      showLoginError('اسم المستخدم أو كلمة المرور غير صحيحة (Invalid credentials)');
+      return;
+    }
+    if(user.active===false){
+      showLoginError('هذا الحساب موقوف من قبل الإدارة (Account suspended)');
+      return;
+    }
+    if(getSystemStatus()==='suspended'&&user.role!=='admin'){
+      showLoginError('النظام موقوف حالياً من قبل الإدارة');
+      return;
+    }
+
+    const sess={username:user.username,name:user.name||user.username,role:user.role||'operator',loginAt:Date.now()};
+    sessionStorage.setItem(KEY_SESSION,JSON.stringify(sess));
+    if(rem) localStorage.setItem(KEY_SESSION,JSON.stringify(sess));
+    else localStorage.removeItem(KEY_SESSION);
+
+    hideLoginError();
+    applyAuthSession(sess);
+    toast('مرحباً بك '+sess.name+' في نظام System Label Printing');
+  });
+
+  $('#btnTogglePass').addEventListener('click',()=>{
+    const inp=$('#loginPassword');
+    const isPass=inp.type==='password';
+    inp.type=isPass?'text':'password';
+    const ico=$('#passEyeIcon');
+    if(ico) ico.outerHTML='<i data-i="'+(isPass?'eyeOff':'eye')+'" id="passEyeIcon">'+svg(isPass?'eyeOff':'eye')+'</i>';
+  });
+
+  $('#btnLogout').addEventListener('click',logout);
+
+  /* Admin Control Hub */
+  const elBtnOpenAdmin=$('#btnOpenAdminControl');
+  if(elBtnOpenAdmin){
+    elBtnOpenAdmin.addEventListener('click',()=>{
+      if(!currentSession||currentSession.role!=='admin'){
+        toast('هذا القسم خاص بالمدير فقط (Admin Only)','err');
+        return;
+      }
+      $('#adminGithubUrlInput').value=localStorage.getItem(KEY_REMOTE_URL)||'';
+      const st=getSystemStatus();
+      const badge=$('#adminLiveStatusBadge');
+      if(badge){ badge.textContent=st.toUpperCase(); badge.style.background=(st==='active'?'#10b981':'#ef4444'); }
+      renderAdminUsersList();
+      $('#adminControlModal').classList.remove('hidden');
+    });
+  }
+  $('#adminControlClose').addEventListener('click',()=>$('#adminControlModal').classList.add('hidden'));
+
+  $('#btnSetSystemActive').addEventListener('click',()=>{
+    setSystemStatus('active');
+    toast('تم تفعيل النظام بنجاح (System Active)');
+  });
+  $('#btnSetSystemSuspend').addEventListener('click',()=>{
+    setSystemStatus('suspended','تم إيقاف النسخة عن بُعد بواسطة إدارة النظام.');
+    toast('تم تعليق تشغيل النسخة بنجاح (System Suspended)','warn');
+  });
+  $('#btnEmergencyWipe').addEventListener('click',async()=>{
+    if(await confirmBox(
+      'EMERGENCY DATA WIPE?',
+      'تحذير: سيتم مسح كافة سجلات Acetate Labels و Sticker Printing المحفوظة على هذا الجهاز بشكل نهائي وفوري.',
+      'Yes, Wipe All Data'
+    )){
+      data.acetate=[];
+      data.sticker=[];
+      save('acetate');
+      save('sticker');
+      render();
+      toast('تم مسح جميع البيانات المخزنة بنجاح (Data wiped)','warn');
+    }
+  });
+
+  /* User Management in Admin Hub */
+  $('#btnOpenAddUser').addEventListener('click',()=>{
+    $('#newUsername').value=''; $('#newPassword').value=''; $('#newName').value=''; $('#newRole').value='operator';
+    $('#addUserModal').classList.remove('hidden');
+  });
+  $('#btnCancelAddUser').addEventListener('click',()=>$('#addUserModal').classList.add('hidden'));
+  $('#btnSaveNewUser').addEventListener('click',()=>{
+    const un=$('#newUsername').value.trim();
+    const pw=$('#newPassword').value;
+    const nm=$('#newName').value.trim();
+    const rl=$('#newRole').value;
+    if(!un||!pw){ toast('يرجى كتابة اسم المستخدم وكلمة المرور','warn'); return; }
+    const users=getStoredUsers();
+    if(users.some(u=>u.username.toLowerCase()===un.toLowerCase())){
+      toast('اسم المستخدم موجود بالفعل! اختر اسماً آخر','err');
+      return;
+    }
+    users.push({username:un,password:pw,name:nm||un,role:rl,active:true});
+    saveStoredUsers(users);
+    renderAdminUsersList();
+    $('#addUserModal').classList.add('hidden');
+    toast('تمت إضافة المستخدم بنجاح: '+un);
+  });
+
+  $('#adminUsersList').addEventListener('click',e=>{
+    const tb=e.target.closest('.btn-toggle-user'), db=e.target.closest('.btn-del-user');
+    const users=getStoredUsers();
+    if(tb){
+      const u=users.find(x=>x.username===tb.dataset.user);
+      if(u){
+        u.active=!(u.active!==false);
+        saveStoredUsers(users);
+        renderAdminUsersList();
+        toast('تم '+(u.active?'تفعيل':'تعطيل')+' حساب '+u.username);
+      }
+    }
+    if(db){
+      const filtered=users.filter(x=>x.username!==db.dataset.user);
+      saveStoredUsers(filtered);
+      renderAdminUsersList();
+      toast('تم حذف حساب '+db.dataset.user);
+    }
+  });
+
+  /* GitHub Remote Sync Configuration */
+  $('#btnSaveGithubUrl').addEventListener('click',()=>{
+    const val=$('#adminGithubUrlInput').value.trim();
+    localStorage.setItem(KEY_REMOTE_URL,val);
+    checkRemoteMasterControl();
+    toast('تم حفظ رابط GitHub للتحكم بنجاح');
+  });
+  $('#btnSyncRemoteNow').addEventListener('click',async()=>{
+    toast('جاري المزامنة مع GitHub...');
+    await checkRemoteMasterControl();
+    toast('تم فحص وتحديث الحالة من GitHub');
+  });
+  $('#btnCopyGistJson').addEventListener('click',()=>{
+    const users=getStoredUsers();
+    const tpl={
+      system_status:getSystemStatus(),
+      status_message:"السيستم يعمل بصورة طبيعية",
+      remote_wipe_id:"wipe_none",
+      users:users
+    };
+    navigator.clipboard.writeText(JSON.stringify(tpl,null,2)).then(()=>{
+      toast('تم نسخ كود JSON للتحكم بنجاح! الصقه في GitHub Gist');
+    }).catch(()=>{
+      toast('يرجى نسخ الكود يدوياً');
+    });
+  });
+
+  /* Lockout Screen Buttons */
+  $('#btnCheckStatusNow').addEventListener('click',async()=>{
+    toast('جاري فحص حالة النظام...');
+    await checkRemoteMasterControl();
+    if(getSystemStatus()==='active'){
+      unlockSystem();
+      toast('النظام متاح الآن! مرحباً بك');
+    }else{
+      toast('النظام ما زال موقوفاً بأمر الإدارة','warn');
+    }
+  });
+  $('#btnAdminUnlock').addEventListener('click',()=>{
+    const pass=prompt('أدخل كلمة مرور المدير لفك التعليق (Admin Password):');
+    if(!pass) return;
+    const users=getStoredUsers();
+    const isAdmin=users.some(u=>u.role==='admin'&&u.password===pass);
+    if(isAdmin){
+      setSystemStatus('active');
+      toast('تم فك تعليق النظام بنجاح بواسطة المدير');
+    }else{
+      alert('كلمة المرور غير صحيحة!');
+    }
+  });
+
+  /* ---------- Init ---------- */
+  function updateClock(){
+    const now=new Date();
+    let hours=now.getHours();
+    const ampm=hours>=12?'PM':'AM';
+    hours=hours%12||12;
+    const h=String(hours).padStart(2,'0');
+    const m=String(now.getMinutes()).padStart(2,'0');
+    const s=String(now.getSeconds()).padStart(2,'0');
+    const timeStr=`${h}:${m}:${s}`;
+
+    const elTime=$('#clockTime'), elAmpm=$('#clockAmpm'), elDay=$('#clockDay'), elDate=$('#clockDate');
+    if(elTime) elTime.textContent=timeStr;
+    if(elAmpm) elAmpm.textContent=ampm;
+    if(elDay) elDay.textContent=now.toLocaleDateString('en-GB',{weekday:'long'});
+    if(elDate) elDate.textContent=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+    // Update Live Backup status in sidebar every second
+    const elNavBk=$('#navBackupTime'), elNavPill=$('#navCloudPill');
+    if(elNavBk) elNavBk.textContent='Auto-Saved • '+timeStr;
+    if(elNavPill){
+      if(isLocalServiceActive || isHandleActive){
+        elNavPill.textContent='SYNCED';
+        elNavPill.className='backup-cloud-pill synced';
+      }else{
+        elNavPill.textContent='LIVE';
+        elNavPill.className='backup-cloud-pill local';
+      }
+    }
+    const elModalTime=$('#backupLastTime');
+    if(elModalTime) elModalTime.textContent=timeStr+' '+ampm;
+
+    // Silent continuous live auto-sync tick every second
+    syncToPublic(false);
+  }
+  updateClock();
+  setInterval(updateClock,1000);
+
+  // Authentication & Remote status startup
+  if(getSystemStatus()==='suspended'){
+    lockSystem();
+  }
+  const existingSess=getAuthSession();
+  if(existingSess && getSystemStatus()!=='suspended'){
+    applyAuthSession(existingSess);
+  }else{
+    $('#loginScreen').classList.remove('hidden');
+  }
+
+  checkRemoteMasterControl();
+  setInterval(checkRemoteMasterControl,30000);
+
+  KEYS.forEach(k=>{form(k).elements.date.value=todayStr()});
+  $('#dashDate').value=todayStr();
+  setMode('acetate'); setMode('sticker');
+  setStage('acetate'); setView('entry');   // opens on Acetate Labels
+})();
+</script>
+</body>
+</html>
