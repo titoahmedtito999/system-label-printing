@@ -557,6 +557,8 @@
       <button class="nav-item active" data-view="entry" type="button"><i data-i="edit"></i>Data Entry</button>
       <button class="nav-item" data-view="records" type="button"><i data-i="table"></i>Records Report</button>
       <button class="nav-item" data-view="dashboard" type="button"><i data-i="dash"></i>Dashboard</button>
+      <button class="nav-item" id="navBtnBackup" type="button" title="Take a backup of all production data"><i data-i="download"></i>Backup Data</button>
+      <button class="nav-item" id="navBtnRestore" type="button" title="Restore production data from backup"><i data-i="upload"></i>Restore Data</button>
     </nav>
     <div class="side-foot">Data is saved automatically in this browser.</div>
   </aside>
@@ -2111,6 +2113,21 @@
   // Download local JSON
   $('#btnDownloadJson').addEventListener('click',downloadJsonBackup);
 
+  // Backup & Restore Buttons in Sidebar Navigation (تحت Dashboard)
+  const elNavBackup=$('#navBtnBackup');
+  if(elNavBackup){
+    elNavBackup.addEventListener('click',()=>{
+      downloadJsonBackup();
+    });
+  }
+
+  const elNavRestore=$('#navBtnRestore');
+  if(elNavRestore){
+    elNavRestore.addEventListener('click',()=>{
+      $('#restoreChoiceModal').classList.remove('hidden');
+    });
+  }
+
   // Restore Button in Sidebar: Choice Modal
   const elRestore=$('#btnRestore');
   if(elRestore){
@@ -2261,7 +2278,29 @@
     }
     const scr=$('#loginScreen');
     if(scr) scr.classList.add('hidden');
+
+    // Reload unified production dataset & render so all users see all data
+    KEYS.forEach(k=>{
+      try{
+        const stored=localStorage.getItem(STAGES[k].key);
+        if(stored) data[k]=JSON.parse(stored);
+      }catch(e){}
+    });
+    render();
   }
+
+  // Live cross-tab / cross-window synchronization for unified data across all users
+  window.addEventListener('storage',e=>{
+    if(KEYS.some(k=>STAGES[k].key===e.key)){
+      KEYS.forEach(k=>{
+        try{
+          const val=localStorage.getItem(STAGES[k].key);
+          if(val) data[k]=JSON.parse(val);
+        }catch(err){}
+      });
+      render();
+    }
+  });
 
   function logout(){
     sessionStorage.removeItem(KEY_SESSION);
