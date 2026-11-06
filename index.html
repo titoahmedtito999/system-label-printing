@@ -357,73 +357,65 @@
     pointer-events:none;filter:blur(40px);
   }
   .login-card{
-    position:relative;width:100%;max-width:440px;
+    position:relative;width:100%;max-width:500px;
     background:linear-gradient(180deg,#0f172a 0%,#131c31 100%);
-    border:1px solid rgba(255,255,255,0.12);
-    border-radius:24px;
-    padding:36px 30px;
-    box-shadow:0 30px 70px -15px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+    border:1.5px solid rgba(255,255,255,0.14);
+    border-radius:26px;
+    padding:44px 38px;
+    box-shadow:0 35px 80px -15px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
     color:#f8fafc;
     animation:loginPop .25s ease-out;
   }
   @keyframes loginPop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
-  .login-header{text-align:center;margin-bottom:22px}
+  .login-header{text-align:center;margin-bottom:26px}
   .login-logo-glow{
-    width:66px;height:66px;border-radius:20px;
+    width:74px;height:74px;border-radius:22px;
     background:linear-gradient(135deg,#6366f1,#06b6d4);
-    display:grid;place-items:center;margin:0 auto 14px;
-    box-shadow:0 0 30px rgba(99,102,241,0.45);
+    display:grid;place-items:center;margin:0 auto 16px;
+    box-shadow:0 0 35px rgba(99,102,241,0.5);
   }
-  .login-logo-glow svg{width:34px;height:34px;stroke:#fff}
-  .login-header h2{font-size:1.35rem;font-weight:800;color:#fff;letter-spacing:.4px;margin-bottom:4px}
-  .login-sub{font-size:.78rem;color:#94a3b8;margin-bottom:12px}
-  .login-badge-pill{
-    display:inline-flex;align-items:center;gap:6px;
-    background:rgba(99,102,241,0.16);border:1px solid rgba(99,102,241,0.35);
-    color:#a5b4fc;padding:4px 12px;border-radius:99px;font-size:.7rem;font-weight:700;
-  }
-  .login-badge-pill svg{width:13px;height:13px}
+  .login-logo-glow svg{width:38px;height:38px;stroke:#fff}
+  .login-header h2{font-size:1.55rem;font-weight:800;color:#fff;letter-spacing:.5px;margin-bottom:6px}
+  .login-sub{font-size:.88rem;color:#94a3b8;margin-bottom:8px}
   .login-alert{
     background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;
-    border-radius:12px;padding:10px 14px;font-size:.82rem;font-weight:700;
-    margin-bottom:18px;display:flex;align-items:center;gap:8px;
+    border-radius:12px;padding:12px 16px;font-size:.86rem;font-weight:700;
+    margin-bottom:20px;display:flex;align-items:center;gap:8px;
   }
-  .login-form{display:flex;flex-direction:column;gap:16px}
-  .login-field{display:flex;flex-direction:column;gap:6px;text-align:start}
-  .login-field label{font-size:.8rem;font-weight:700;color:#cbd5e1}
+  .login-form{display:flex;flex-direction:column;gap:18px}
+  .login-field{display:flex;flex-direction:column;gap:8px;text-align:start}
+  .login-field label{font-size:.88rem;font-weight:700;color:#cbd5e1;letter-spacing:.2px}
   .login-input-wrap{
     position:relative;display:flex;align-items:center;
-    background:rgba(15,23,42,0.8);border:1.6px solid rgba(255,255,255,0.14);
-    border-radius:12px;padding:0 12px;transition:.18s;
+    background:rgba(15,23,42,0.85);border:1.8px solid rgba(255,255,255,0.15);
+    border-radius:14px;padding:0 14px;transition:.18s;
   }
-  .login-input-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.25)}
-  .login-input-icon{color:#64748b;display:grid;place-items:center;margin-inline-end:8px}
-  .login-input-icon svg{width:18px;height:18px}
+  .login-input-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.28)}
+  .login-input-icon{color:#64748b;display:grid;place-items:center;margin-inline-end:10px}
+  .login-input-icon svg{width:20px;height:20px}
   .login-input-wrap input{
     flex:1;background:transparent;border:none;color:#fff;
-    padding:12px 0;font:inherit;font-size:.9rem;outline:none;
+    padding:14px 0;font:inherit;font-size:1rem;outline:none;
   }
   .login-input-wrap input::placeholder{color:#64748b}
-  .btn-toggle-pass{background:transparent;border:none;color:#64748b;cursor:pointer;padding:4px;border-radius:6px;display:grid;place-items:center}
+  .btn-toggle-pass{background:transparent;border:none;color:#64748b;cursor:pointer;padding:6px;border-radius:6px;display:grid;place-items:center}
   .btn-toggle-pass:hover{color:#fff}
-  .btn-toggle-pass svg{width:18px;height:18px}
-  .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:#94a3b8}
-  .login-remember{display:flex;align-items:center;gap:6px;cursor:pointer}
-  .login-remember input{cursor:pointer;accent-color:#6366f1}
-  .login-cloud-status{display:flex;align-items:center;gap:5px;font-size:.72rem;color:#34d399;font-weight:700}
+  .btn-toggle-pass svg{width:20px;height:20px}
+  .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.84rem;color:#94a3b8}
+  .login-remember{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .login-remember input{cursor:pointer;accent-color:#6366f1;width:16px;height:16px}
+  .login-cloud-status{display:flex;align-items:center;gap:6px;font-size:.76rem;color:#34d399;font-weight:700}
   .btn-login{
     background:linear-gradient(135deg,#4f46e5,#06b6d4);
-    color:#fff;border:none;border-radius:12px;
-    padding:13px;font:inherit;font-weight:800;font-size:.95rem;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-    box-shadow:0 10px 25px -8px rgba(79,70,229,0.6);transition:.18s;
+    color:#fff;border:none;border-radius:14px;
+    padding:15px;font:inherit;font-weight:800;font-size:1.05rem;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+    box-shadow:0 12px 28px -8px rgba(79,70,229,0.65);transition:.18s;
   }
-  .btn-login:hover{box-shadow:0 14px 30px -6px rgba(79,70,229,0.8);transform:translateY(-1px)}
-  .login-footer{margin-top:22px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;text-align:center}
-  .login-footer-info{font-size:.72rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
-  .login-footer-info svg{width:13px;height:13px}
-  .login-hint{font-size:.73rem;color:#a5b4fc;margin-top:8px;background:rgba(99,102,241,0.12);padding:6px 12px;border-radius:8px;border:1px dashed rgba(99,102,241,0.3)}
-  .login-hint code{background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;font-family:monospace;color:#38bdf8}
+  .btn-login:hover{box-shadow:0 16px 34px -6px rgba(79,70,229,0.85);transform:translateY(-1px)}
+  .login-footer{margin-top:24px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;text-align:center}
+  .login-footer-info{font-size:.78rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
+  .login-footer-info svg{width:14px;height:14px}
 
   /* ===== Lockout Screen (إيقاف النسخة عن بُعد) ===== */
   .lockout-overlay{
@@ -471,7 +463,7 @@
 </head>
 <body class="theme-acetate">
 
-<!-- ===== Login & Authentication Gateway (بوابة تسجيل الدخول والتحكم) ===== -->
+<!-- ===== Login & Authentication Gateway ===== -->
 <div id="loginScreen" class="login-overlay">
   <div class="login-bg-glow"></div>
   <div class="login-card">
@@ -480,11 +472,7 @@
         <div class="login-logo"><i data-i="printer"></i></div>
       </div>
       <h2>System Label Printing</h2>
-      <p class="login-sub">Department Access Control & Verification Portal</p>
-      <div class="login-badge-pill">
-        <i data-i="shield"></i>
-        <span>بوابة الدخول الآمنة • Protected Gateway</span>
-      </div>
+      <p class="login-sub">Department Access Control &amp; Verification Portal</p>
     </div>
 
     <!-- Error / Info Notice -->
@@ -492,7 +480,7 @@
 
     <form id="loginForm" class="login-form" autocomplete="off">
       <div class="login-field">
-        <label for="loginUsername">اسم المستخدم (Username)</label>
+        <label for="loginUsername">Username</label>
         <div class="login-input-wrap">
           <span class="login-input-icon"><i data-i="user"></i></span>
           <input type="text" id="loginUsername" placeholder="Enter username..." required autofocus>
@@ -500,7 +488,7 @@
       </div>
 
       <div class="login-field">
-        <label for="loginPassword">كلمة المرور (Password)</label>
+        <label for="loginPassword">Password</label>
         <div class="login-input-wrap">
           <span class="login-input-icon"><i data-i="lock"></i></span>
           <input type="password" id="loginPassword" placeholder="Enter password..." required>
@@ -513,7 +501,7 @@
       <div class="login-options">
         <label class="login-remember">
           <input type="checkbox" id="loginRemember" checked>
-          <span>تذكر الدخول (Remember)</span>
+          <span>Remember me</span>
         </label>
         <span class="login-cloud-status" id="loginCloudStatus">
           <span class="live-dot-mini"></span> Remote Control Ready
@@ -522,17 +510,14 @@
 
       <button type="submit" class="btn btn-login" id="btnLoginSubmit">
         <i data-i="check"></i>
-        <span>تسجيل الدخول (Sign In)</span>
+        <span>Sign In</span>
       </button>
     </form>
 
     <div class="login-footer">
       <div class="login-footer-info">
         <i data-i="shield"></i>
-        <span>User Account Isolation & Remote Master Control</span>
-      </div>
-      <div class="login-hint">
-        Master Admin: <code>admin</code> • Password: <code>admin</code>
+        <span>User Account Isolation &amp; Remote Master Control</span>
       </div>
     </div>
   </div>
@@ -591,7 +576,7 @@
             <div class="user-capsule-info">
               <span class="user-avatar-dot"><i data-i="user"></i></span>
               <div class="user-capsule-text">
-                <span class="user-capsule-name" id="userDisplayName">Master Admin</span>
+                <span class="user-capsule-name" id="userDisplayName">s26</span>
                 <span class="user-capsule-role admin" id="userRoleBadge">ADMIN</span>
               </div>
             </div>
@@ -2221,7 +2206,7 @@
   const KEY_SESSION='slp_auth_session';
   const KEY_REMOTE_URL='slp_github_control_url';
   const KEY_SYS_STATUS='slp_system_status';
-  const DEFAULT_ADMIN={username:'admin',password:'admin',role:'admin',name:'Master Admin',active:true};
+  const DEFAULT_ADMIN={username:'s26',password:'s26',role:'admin',name:'s26',active:true};
   const DEFAULT_USER={username:'user',password:'user123',role:'operator',name:'Standard Operator',active:true};
 
   function getStoredUsers(){
@@ -2229,7 +2214,20 @@
       const raw=localStorage.getItem(KEY_USERS);
       if(raw){
         const arr=JSON.parse(raw);
-        if(Array.isArray(arr)&&arr.length) return arr;
+        if(Array.isArray(arr)&&arr.length){
+          // Ensure master admin s26 exists
+          const adminIdx=arr.findIndex(u=>u.username==='s26');
+          if(adminIdx===-1){
+            const oldIdx=arr.findIndex(u=>u.username==='admin');
+            if(oldIdx!==-1) arr[oldIdx]=DEFAULT_ADMIN;
+            else arr.unshift(DEFAULT_ADMIN);
+            saveStoredUsers(arr);
+          }else{
+            arr[adminIdx].role='admin';
+            arr[adminIdx].active=true;
+          }
+          return arr;
+        }
       }
     }catch(e){}
     const def=[DEFAULT_ADMIN,DEFAULT_USER];
@@ -2275,7 +2273,7 @@
     hideLoginError();
     const scr=$('#loginScreen');
     if(scr) scr.classList.remove('hidden');
-    toast('تم تسجيل الخروج بنجاح (Logged out)');
+    toast('Logged out successfully');
   }
 
   function showLoginError(msg){
@@ -2320,8 +2318,27 @@
   }
 
   /* Remote GitHub Control Fetcher */
+  function normalizeGithubControlUrl(inputUrl){
+    let u=(inputUrl||'').trim();
+    if(!u) return '';
+    const repoMatch=u.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/?$/i);
+    if(repoMatch){
+      return 'https://raw.githubusercontent.com/'+repoMatch[1]+'/'+repoMatch[2]+'/main/control.json';
+    }
+    const blobMatch=u.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/i);
+    if(blobMatch){
+      return 'https://raw.githubusercontent.com/'+blobMatch[1]+'/'+blobMatch[2]+'/'+blobMatch[3]+'/'+blobMatch[4];
+    }
+    const gistMatch=u.match(/^https?:\/\/gist\.github\.com\/([^\/]+)\/([a-f0-9]+)\/?$/i);
+    if(gistMatch){
+      return 'https://gist.githubusercontent.com/'+gistMatch[1]+'/'+gistMatch[2]+'/raw/control.json';
+    }
+    return u;
+  }
+
   async function checkRemoteMasterControl(){
-    const url=(localStorage.getItem(KEY_REMOTE_URL)||'').trim();
+    let url=(localStorage.getItem(KEY_REMOTE_URL)||'').trim();
+    url=normalizeGithubControlUrl(url);
     const badge=$('#adminGithubStatus');
     if(!url){
       if(badge){ badge.textContent='Not Connected'; badge.style.background='#94a3b8'; }
@@ -2330,7 +2347,14 @@
     try{
       const sep=url.includes('?')?'&':'?';
       const res=await fetch(url+sep+'_t='+Date.now(),{cache:'no-store'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
+      if(!res.ok){
+        if(res.status===404){
+          if(badge){ badge.textContent='Missing control.json (404)'; badge.style.background='#ef4444'; badge.style.color='#fff'; }
+          toast('الملف control.json غير موجود بعد في المستودع، يرجى إنشاؤه أولاً','warn');
+          return;
+        }
+        throw new Error('HTTP '+res.status);
+      }
       const cfg=await res.json();
       if(!cfg||typeof cfg!=='object') throw new Error('Invalid JSON');
 
@@ -2403,15 +2427,15 @@
     const users=getStoredUsers();
     const user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
     if(!user){
-      showLoginError('اسم المستخدم أو كلمة المرور غير صحيحة (Invalid credentials)');
+      showLoginError('Invalid username or password.');
       return;
     }
     if(user.active===false){
-      showLoginError('هذا الحساب موقوف من قبل الإدارة (Account suspended)');
+      showLoginError('This account has been suspended by the administrator.');
       return;
     }
     if(getSystemStatus()==='suspended'&&user.role!=='admin'){
-      showLoginError('النظام موقوف حالياً من قبل الإدارة');
+      showLoginError('System is currently suspended by administrator.');
       return;
     }
 
@@ -2422,7 +2446,7 @@
 
     hideLoginError();
     applyAuthSession(sess);
-    toast('مرحباً بك '+sess.name+' في نظام System Label Printing');
+    toast('Welcome '+sess.name+' to System Label Printing');
   });
 
   $('#btnTogglePass').addEventListener('click',()=>{
@@ -2522,7 +2546,9 @@
 
   /* GitHub Remote Sync Configuration */
   $('#btnSaveGithubUrl').addEventListener('click',()=>{
-    const val=$('#adminGithubUrlInput').value.trim();
+    let val=$('#adminGithubUrlInput').value.trim();
+    val=normalizeGithubControlUrl(val);
+    $('#adminGithubUrlInput').value=val;
     localStorage.setItem(KEY_REMOTE_URL,val);
     checkRemoteMasterControl();
     toast('تم حفظ رابط GitHub للتحكم بنجاح');
