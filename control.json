@@ -1,0 +1,23 @@
+{
+  "system_status": "active",
+  "status_message": "السيستم يعمل بصورة طبيعية ومحمي",
+  "remote_wipe_id": "wipe_none",
+  "users": [
+    {
+      "username": "s26",
+      "password": "s26",
+      "role": "admin",
+      "name": "s26",
+      "active": true
+    },
+    {
+      "username": "user",
+      "password": "user123",
+      "role": "operator",
+      "name": "Standard Operator",
+      "active": true
+    }
+  ],
+  "updated_at": "2026-11-07T04:48:00.000Z"
+}
+
