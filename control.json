@@ -37,7 +37,14 @@
       "name": "khan",
       "role": "operator",
       "active": true
+    },
+    {
+      "username": "hwaida",
+      "password": "2026",
+      "name": "hwaida",
+      "role": "operator",
+      "active": true
     }
   ],
-  "updated_at": "2026-11-08T18:45:14.477Z"
+  "updated_at": "2026-11-08T18:45:31.215Z"
 }
