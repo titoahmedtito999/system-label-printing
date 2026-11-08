@@ -18,12 +18,19 @@
       "active": true
     },
     {
-      "username": "ahmed",
+      "username": "AHMED",
       "password": "2026",
-      "name": "ahmed",
+      "name": "AHMED",
+      "role": "operator",
+      "active": true
+    },
+    {
+      "username": "samy",
+      "password": "2026",
+      "name": "samy",
       "role": "operator",
       "active": true
     }
   ],
-  "updated_at": "2026-11-08T18:44:36.445Z"
+  "updated_at": "2026-11-08T18:44:54.436Z"
 }
