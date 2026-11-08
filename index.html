@@ -364,6 +364,7 @@
     padding:44px 38px;
     box-shadow:0 35px 80px -15px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
     color:#f8fafc;
+    color-scheme:dark;
     animation:loginPop .25s ease-out;
   }
   @keyframes loginPop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
@@ -387,18 +388,41 @@
   .login-field label{font-size:.88rem;font-weight:700;color:#cbd5e1;letter-spacing:.2px}
   .login-input-wrap{
     position:relative;display:flex;align-items:center;
-    background:rgba(15,23,42,0.85);border:1.8px solid rgba(255,255,255,0.15);
+    background:#0b1120;border:1.8px solid rgba(255,255,255,0.15);
     border-radius:14px;padding:0 14px;transition:.18s;
+    overflow:hidden;
   }
-  .login-input-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.28)}
-  .login-input-icon{color:#64748b;display:grid;place-items:center;margin-inline-end:10px}
+  .login-input-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.28);background:#0b1120}
+  .login-input-icon{color:#64748b;display:grid;place-items:center;margin-inline-end:10px;z-index:2}
   .login-input-icon svg{width:20px;height:20px}
   .login-input-wrap input{
-    flex:1;background:transparent;border:none;color:#fff;
-    padding:14px 0;font:inherit;font-size:1rem;outline:none;
+    flex:1;background:transparent !important;background-color:transparent !important;
+    border:none !important;color:#ffffff !important;
+    padding:14px 0;font:inherit;font-size:1rem;font-weight:500;outline:none;
+    color-scheme:dark;
   }
   .login-input-wrap input::placeholder{color:#64748b}
-  .btn-toggle-pass{background:transparent;border:none;color:#64748b;cursor:pointer;padding:6px;border-radius:6px;display:grid;place-items:center}
+  /* Prevent browser autofill from rendering white rectangular background in dark login */
+  .login-input-wrap input:-webkit-autofill,
+  .login-input-wrap input:-webkit-autofill:hover,
+  .login-input-wrap input:-webkit-autofill:focus,
+  .login-input-wrap input:-webkit-autofill:active{
+    -webkit-box-shadow:0 0 0 1000px #0b1120 inset !important;
+    box-shadow:0 0 0 1000px #0b1120 inset !important;
+    -webkit-text-fill-color:#f8fafc !important;
+    color:#f8fafc !important;
+    caret-color:#ffffff !important;
+    transition:background-color 50000s ease-in-out 0s !important;
+  }
+  .login-input-wrap input:-moz-autofill,
+  .login-input-wrap input:-moz-autofill:hover,
+  .login-input-wrap input:-moz-autofill:focus{
+    box-shadow:0 0 0 1000px #0b1120 inset !important;
+    -moz-text-fill-color:#f8fafc !important;
+    color:#f8fafc !important;
+    filter:none !important;
+  }
+  .btn-toggle-pass{background:transparent;border:none;color:#64748b;cursor:pointer;padding:6px;border-radius:6px;display:grid;place-items:center;z-index:2}
   .btn-toggle-pass:hover{color:#fff}
   .btn-toggle-pass svg{width:20px;height:20px}
   .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.84rem;color:#94a3b8}
@@ -849,54 +873,62 @@
       <div class="admin-users-list" id="adminUsersList"></div>
     </div>
 
-    <!-- Smart GitHub Integration Hub (الربط السحابي والتحكم عن بُعد عبر GitHub) -->
+    <!-- Smart Multi-Device & GitHub Cloud Hub (مزامنة أجهزة العالم والتحكم السحابي) -->
     <div class="bk-card accent" style="border-color:#38bdf8;background:#f0f9ff">
       <div class="bk-card-head">
-        <h4><i data-i="cloud" style="color:#0284c7"></i>الربط السحابي والتحكم عن بُعد عبر GitHub</h4>
+        <h4><i data-i="cloud" style="color:#0284c7"></i>مزامنة جميع أجهزة العالم (Global Multi-Device Sync)</h4>
         <span class="badge" id="adminGithubStatus" style="background:#10b981;color:#fff">Active</span>
       </div>
       <p class="bk-desc">
-        يعمل النظام سحابياً عبر <b>GitHub Pages</b> للوصول الفوري من أي جهاز بالعالم. للتحكم عن بُعد في إيقاف وتشغيل النسخة وتعديل المستخدمين، يمكنك تنزيل ملف <code>control.json</code> ورفعه للمستودع، أو التحديث المباشر برمز GitHub.
+        لربط جميع أجهزة الكمبيوتر والهواتف في العالم: أي مستخدم (Operator أو Admin) تضيفه أو تعدله هنا سينتقل تلقائياً لجميع أجهزة العالم فور حفظ رمز <b>GitHub Token</b> أدناه دون الحاجة لرفع أي ملفات يدوياً!
       </p>
 
-      <!-- Connected Repo Status -->
+      <!-- Connected Repo Status Banner -->
       <div style="background:#ffffff;border:1.5px solid #bae6fd;border-radius:10px;padding:11px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:#0369a1">
           <i data-i="link"></i>
           <span>المستودع المتصل: <strong id="adminConnectedRepoText">titoahmedtito999/system-label-printing</strong></span>
         </div>
-        <span style="font-size:.78rem;font-weight:700;color:#059669;display:flex;align-items:center;gap:6px">
+        <span id="adminSyncModeBadge" style="font-size:.78rem;font-weight:700;color:#059669;display:flex;align-items:center;gap:6px">
           <span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block"></span>
-          اتصال سحابي آمن
+          جاهز للمزامنة العالمية
         </span>
+      </div>
+
+      <!-- GitHub Token Setup Box (Prominent & User-Friendly) -->
+      <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+          <label style="font-size:.84rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:6px">
+            <i data-i="key"></i>رمز المزامنة التلقائية العالمية (GitHub Personal Access Token):
+          </label>
+          <span id="tokenStatusText" style="font-size:.75rem;font-weight:700;color:#64748b">لم يتم الحفظ</span>
+        </div>
+        <p style="font-size:.76rem;color:#64748b;margin-bottom:10px;line-height:1.45">
+          ألصق الرمز مرة واحدة فقط هنا واضغط <b>حفظ وتفعيل المزامنة</b>. سيتم إرسال أي مستخدم أو تعديل تلقائياً وفورياً إلى السحابة ليعمل على أي جهاز أو هاتف في العالم في نفس اللحظة!
+        </p>
+        <div class="bk-link-row">
+          <input type="password" class="bk-link-input" id="adminGithubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+          <button type="button" class="btn btn-save btn-sm" id="btnSaveGithubToken">
+            <i data-i="check"></i>حفظ وتفعيل المزامنة التلقائية
+          </button>
+        </div>
       </div>
 
       <!-- Action Buttons -->
       <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn btn-info btn-sm" id="btnPushToGithub" style="background:#0284c7;color:#fff">
+          <i data-i="upload"></i>🚀 نشر وتحديث الحسابات لجميع أجهزة العالم الآن
+        </button>
         <button type="button" class="btn btn-save btn-sm" id="btnDownloadControlJson">
           <i data-i="download"></i>تحميل ملف control.json المباشر
         </button>
         <button type="button" class="btn btn-clear btn-sm" id="btnCopyControlJson">
-          <i data-i="copy"></i>نسخ كود التحكم السريع (JSON)
+          <i data-i="copy"></i>نسخ كود JSON السريع
         </button>
-        <button type="button" class="btn btn-info btn-sm" id="btnSyncRemoteNow">
+        <button type="button" class="btn btn-clear btn-sm" id="btnSyncRemoteNow">
           <i data-i="refresh"></i>مزامنة وتحديث الحالة الآن
         </button>
       </div>
-
-      <!-- Optional GitHub Direct API Push -->
-      <details style="margin-top:12px;font-size:.82rem;color:#475569">
-        <summary style="cursor:pointer;font-weight:700;color:#0284c7">⚡ تحديث مباشر تلقائي بضغطة زر عبر GitHub Token (اختياري)</summary>
-        <div style="margin-top:8px;padding:12px;background:#fff;border-radius:10px;border:1px dashed #93c5fd">
-          <p style="margin-bottom:8px;font-size:.78rem;color:#64748b;line-height:1.4">
-            لتحديث مستودع GitHub مباشرة بضغطة زر واحدة دون تحميل ملفات أو فتح موقع GitHub، أدخل رمز GitHub Personal Access Token هنا:
-          </p>
-          <div class="bk-link-row">
-            <input type="password" class="bk-link-input" id="adminGithubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (GitHub Token)">
-            <button type="button" class="btn btn-save btn-sm" id="btnPushToGithub">تحديث GitHub الآن</button>
-          </div>
-        </div>
-      </details>
     </div>
   </div>
 </div>
@@ -2247,6 +2279,8 @@
 
   /* ---------- Authentication & GitHub Remote Master Control (المصادقة والتحكم عن بُعد) ---------- */
   const KEY_USERS='slp_users_v2';
+  const KEY_DELETED_USERS='slp_deleted_users';
+  const KEY_USERS_UPDATED='slp_users_updated';
   const KEY_SESSION='slp_auth_session';
   const GITHUB_REPO_DEFAULT='titoahmedtito999/system-label-printing';
   const KEY_GITHUB_REPO='slp_github_repo';
@@ -2254,6 +2288,62 @@
   const KEY_SYS_STATUS='slp_system_status';
   const DEFAULT_ADMIN={username:'s26',password:'s26',role:'admin',name:'s26',active:true};
   const DEFAULT_USER={username:'user',password:'user123',role:'operator',name:'Standard Operator',active:true};
+
+  function getDeletedUsers(){
+    try{
+      const raw=localStorage.getItem(KEY_DELETED_USERS);
+      if(raw){
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)) return arr;
+      }
+    }catch(e){}
+    return [];
+  }
+  function recordDeletedUser(username){
+    const list=getDeletedUsers();
+    const un=(username||'').toLowerCase();
+    if(un&&!list.includes(un)){
+      list.push(un);
+      localStorage.setItem(KEY_DELETED_USERS,JSON.stringify(list));
+    }
+  }
+  function clearDeletedUser(username){
+    const list=getDeletedUsers();
+    const un=(username||'').toLowerCase();
+    const filtered=list.filter(x=>x!==un);
+    localStorage.setItem(KEY_DELETED_USERS,JSON.stringify(filtered));
+  }
+  function smartMergeUsers(localUsers, remoteUsers, deletedUsers){
+    const map=new Map();
+    const delSet=new Set((deletedUsers||[]).map(x=>x.toLowerCase()));
+    (localUsers||[]).forEach(u=>{
+      if(u&&u.username) map.set(u.username.toLowerCase(),{...u});
+    });
+    (remoteUsers||[]).forEach(ru=>{
+      if(!ru||!ru.username) return;
+      const key=ru.username.toLowerCase();
+      if(delSet.has(key)) return;
+      if(map.has(key)){
+        const existing=map.get(key);
+        map.set(key,{
+          ...existing,
+          ...ru,
+          active: ru.active!==undefined ? ru.active : existing.active
+        });
+      }else{
+        map.set(key,{...ru});
+      }
+    });
+    const merged=Array.from(map.values());
+    const adminIdx=merged.findIndex(u=>u.username.toLowerCase()==='s26');
+    if(adminIdx===-1){
+      merged.unshift(DEFAULT_ADMIN);
+    }else{
+      merged[adminIdx].role='admin';
+      merged[adminIdx].active=true;
+    }
+    return merged;
+  }
 
   function getStoredUsers(){
     try{
@@ -2277,11 +2367,12 @@
       }
     }catch(e){}
     const def=[DEFAULT_ADMIN,DEFAULT_USER];
-    localStorage.setItem(KEY_USERS,JSON.stringify(def));
+    saveStoredUsers(def);
     return def;
   }
   function saveStoredUsers(arr){
     localStorage.setItem(KEY_USERS,JSON.stringify(arr));
+    localStorage.setItem(KEY_USERS_UPDATED,Date.now().toString());
   }
   function getAuthSession(){
     try{
@@ -2440,7 +2531,8 @@
       body:JSON.stringify({
         message:'Update remote control & users [System Label Printing]',
         content:b64,
-        sha:sha
+        sha:sha,
+        branch:'main'
       })
     });
 
@@ -2451,18 +2543,42 @@
     return await putRes.json();
   }
 
+  function updateTokenStatusUI(){
+    const tok=localStorage.getItem(KEY_GITHUB_TOKEN);
+    const inp=$('#adminGithubTokenInput');
+    const txt=$('#tokenStatusText');
+    const badge=$('#adminSyncModeBadge');
+    if(inp&&tok) inp.value=tok;
+    if(txt){
+      if(tok){
+        txt.innerHTML='<span style="color:#10b981">🟢 متصل ومفعل (المزامنة التلقائية نشطة)</span>';
+      }else{
+        txt.innerHTML='<span style="color:#f59e0b">⚠️ غير مدخل (الحفظ محلي فقط)</span>';
+      }
+    }
+    if(badge){
+      if(tok){
+        badge.innerHTML='<span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block"></span> مزامنة تلقائية لجميع أجهزة العالم';
+        badge.style.color='#059669';
+      }else{
+        badge.innerHTML='<span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span> حفظ محلي (يحتاج ربط الرمز للمزامنة)';
+        badge.style.color='#d97706';
+      }
+    }
+  }
+
   async function checkRemoteMasterControl(isUserAction=false){
     const badge=$('#adminGithubStatus');
     const repo=getConnectedRepo();
     const elRepoText=$('#adminConnectedRepoText');
     if(elRepoText) elRepoText.textContent=repo;
 
-    // Probe 2 candidate paths gracefully:
-    // 1. Same-origin relative path './control.json' (100% native on GitHub Pages)
-    // 2. Direct raw URL from GitHub repo
+    // Probe 2 candidate paths gracefully with cache-busting:
+    // 1. Direct raw URL from GitHub repo (always fresh on GitHub)
+    // 2. Same-origin relative path './control.json' (Native on GitHub Pages)
     const candidates=[
-      './control.json',
-      `https://raw.githubusercontent.com/${repo}/main/control.json`
+      `https://raw.githubusercontent.com/${repo}/main/control.json`,
+      './control.json'
     ];
 
     let loadedCfg=null;
@@ -2509,11 +2625,15 @@
         localStorage.setItem('slp_last_wipe_id',loadedCfg.remote_wipe_id);
       }
 
-      // 3. User Accounts Sync
+      // 3. User Accounts Sync (Smart merge: local users are NEVER wiped or lost)
       if(Array.isArray(loadedCfg.users)&&loadedCfg.users.length){
-        saveStoredUsers(loadedCfg.users);
+        const currentLocal=getStoredUsers();
+        const deleted=getDeletedUsers();
+        const merged=smartMergeUsers(currentLocal,loadedCfg.users,deleted);
+        saveStoredUsers(merged);
+        renderAdminUsersList();
         if(currentSession){
-          const me=loadedCfg.users.find(u=>u.username.toLowerCase()===currentSession.username.toLowerCase());
+          const me=merged.find(u=>u.username.toLowerCase()===currentSession.username.toLowerCase());
           if(!me||me.active===false){
             logout();
             showLoginError('This account has been suspended or deleted by the administrator.');
@@ -2554,13 +2674,38 @@
   }
 
   /* Wire Auth & Admin Event Listeners */
-  $('#loginForm').addEventListener('submit',e=>{
+  $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const un=$('#loginUsername').value.trim();
     const pw=$('#loginPassword').value;
     const rem=$('#loginRemember').checked;
-    const users=getStoredUsers();
-    const user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
+    if(!un||!pw) return;
+
+    let users=getStoredUsers();
+    let user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
+
+    // If credentials not found locally on this device, check Cloud / GitHub before showing error!
+    if(!user){
+      const btnSubmit=$('#btnLoginSubmit');
+      const origHtml=btnSubmit?btnSubmit.innerHTML:'';
+      if(btnSubmit){
+        btnSubmit.disabled=true;
+        btnSubmit.innerHTML='<span class="live-dot-mini" style="background:#fff"></span> Checking Cloud...';
+      }
+      try{
+        await checkRemoteMasterControl(false);
+        users=getStoredUsers();
+        user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
+      }catch(err){
+        console.warn('Realtime cloud auth sync error:',err);
+      }finally{
+        if(btnSubmit){
+          btnSubmit.disabled=false;
+          btnSubmit.innerHTML=origHtml;
+        }
+      }
+    }
+
     if(!user){
       showLoginError('Invalid username or password.');
       return;
@@ -2604,8 +2749,7 @@
       }
       const repoText=$('#adminConnectedRepoText');
       if(repoText) repoText.textContent=getConnectedRepo();
-      const tokInput=$('#adminGithubTokenInput');
-      if(tokInput) tokInput.value=localStorage.getItem(KEY_GITHUB_TOKEN)||'';
+      updateTokenStatusUI();
       const st=getSystemStatus();
       const badge=$('#adminLiveStatusBadge');
       if(badge){ badge.textContent=st.toUpperCase(); badge.style.background=(st==='active'?'#10b981':'#ef4444'); }
@@ -2644,7 +2788,7 @@
     $('#addUserModal').classList.remove('hidden');
   });
   $('#btnCancelAddUser').addEventListener('click',()=>$('#addUserModal').classList.add('hidden'));
-  $('#btnSaveNewUser').addEventListener('click',()=>{
+  $('#btnSaveNewUser').addEventListener('click',async()=>{
     const un=$('#newUsername').value.trim();
     const pw=$('#newPassword').value;
     const nm=$('#newName').value.trim();
@@ -2655,11 +2799,29 @@
       toast('اسم المستخدم موجود بالفعل! اختر اسماً آخر','err');
       return;
     }
+    clearDeletedUser(un);
     users.push({username:un,password:pw,name:nm||un,role:rl,active:true});
     saveStoredUsers(users);
     renderAdminUsersList();
     $('#addUserModal').classList.add('hidden');
-    toast('تمت إضافة المستخدم بنجاح: '+un);
+
+    // Auto-sync to GitHub in the background if Token is saved!
+    const token=localStorage.getItem(KEY_GITHUB_TOKEN);
+    if(token){
+      toast('تم حفظ المستخدم... جاري النشر السحابي لجميع أجهزة العالم...');
+      const repo=getConnectedRepo();
+      const payload=getControlConfigPayload();
+      try{
+        await pushControlToGitHub(token,repo,payload);
+        toast('🚀 تم نشر المستخدم عالمياً بنجاح! يستطيع الآن الدخول من أي جهاز في العالم.');
+        checkRemoteMasterControl(false);
+      }catch(err){
+        console.warn('Auto GitHub push error:',err);
+        toast('تم الحفظ محلياً ولكن تعذر النشر السحابي: '+(err.message||'خطأ في الاتصال'),'warn');
+      }
+    } else {
+      toast('تم حفظ المستخدم محلياً. لتفعيله على الأجهزة الأخرى: احفظ رمز GitHub Token أو اضغط نشر لجميع الأجهزة','warn');
+    }
   });
 
   $('#adminUsersList').addEventListener('click',e=>{
@@ -2675,10 +2837,19 @@
       }
     }
     if(db){
-      const filtered=users.filter(x=>x.username!==db.dataset.user);
+      const delUser=db.dataset.user;
+      recordDeletedUser(delUser);
+      const filtered=users.filter(x=>x.username!==delUser);
       saveStoredUsers(filtered);
       renderAdminUsersList();
-      toast('تم حذف حساب '+db.dataset.user);
+      toast('تم حذف حساب '+delUser);
+
+      const token=localStorage.getItem(KEY_GITHUB_TOKEN);
+      if(token){
+        const repo=getConnectedRepo();
+        const payload=getControlConfigPayload();
+        pushControlToGitHub(token,repo,payload).catch(e=>console.warn('Sync delete error:',e));
+      }
     }
   });
 
@@ -2707,23 +2878,47 @@
     await checkRemoteMasterControl(true);
   });
 
-  $('#btnPushToGithub').addEventListener('click',async()=>{
+  $('#btnSaveGithubToken').addEventListener('click',async()=>{
     const tok=($('#adminGithubTokenInput').value||'').trim();
     if(!tok){
-      toast('يرجى إدخال رمز GitHub Token أولاً','warn');
+      toast('يرجى كتابة أو لصق رمز GitHub Token أولاً','warn');
       return;
     }
     localStorage.setItem(KEY_GITHUB_TOKEN,tok);
-    const repo=getConnectedRepo();
-    const payload=getControlConfigPayload();
-    toast('جاري إرسال التحديث إلى GitHub...');
+    updateTokenStatusUI();
+    toast('تم حفظ الرمز بنجاح! جاري مزامنة ونشر الحسابات الحالية لجميع أجهزة العالم...');
     try{
+      const repo=getConnectedRepo();
+      const payload=getControlConfigPayload();
       await pushControlToGitHub(tok,repo,payload);
-      toast('تم تحديث ملف control.json على GitHub بنجاح! تم نشر الأوامر عالمياً');
+      toast('🚀 تمت المزامنة بنجاح! جميع الحسابات تعمل الآن على أي جهاز في العالم.');
       await checkRemoteMasterControl(true);
     }catch(err){
       console.error(err);
-      toast('تعذر التحديث المباشر: '+(err.message||'خطأ في الاتصال'),'err');
+      toast('تم حفظ الرمز ولكن حدث خطأ في الاتصال بـ GitHub: '+(err.message||'تأكد من صلاحية الرمز'),'err');
+    }
+  });
+
+  $('#btnPushToGithub').addEventListener('click',async()=>{
+    let tok=($('#adminGithubTokenInput').value||'').trim()||localStorage.getItem(KEY_GITHUB_TOKEN);
+    if(!tok){
+      tok=prompt('أدخل رمز GitHub Personal Access Token لنشر الحسابات لجميع أجهزة العالم:');
+      if(!tok) return;
+      tok=tok.trim();
+      $('#adminGithubTokenInput').value=tok;
+      localStorage.setItem(KEY_GITHUB_TOKEN,tok);
+      updateTokenStatusUI();
+    }
+    toast('جاري نشر وتحديث الحسابات على مستودع GitHub...');
+    try{
+      const repo=getConnectedRepo();
+      const payload=getControlConfigPayload();
+      await pushControlToGitHub(tok,repo,payload);
+      toast('🚀 تم تحديث مستودع GitHub بنجاح! تم نشر الحسابات لجميع أجهزة العالم.');
+      await checkRemoteMasterControl(true);
+    }catch(err){
+      console.error(err);
+      toast('تعذر النشر: '+(err.message||'خطأ في الاتصال'),'err');
     }
   });
 

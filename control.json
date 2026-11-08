@@ -11,13 +11,12 @@
       "active": true
     },
     {
-      "username": "user",
-      "password": "user123",
+      "username": "AHMED",
+      "password": "2026",
+      "name": "AHMED",
       "role": "operator",
-      "name": "Standard Operator",
       "active": true
     }
   ],
-  "updated_at": "2026-11-07T04:48:00.000Z"
+  "updated_at": "2026-11-08T17:49:33.194Z"
 }
-
