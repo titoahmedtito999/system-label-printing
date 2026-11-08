@@ -16,14 +16,7 @@
       "name": "abdo",
       "role": "operator",
       "active": true
-    },
-    {
-      "username": "ahmed",
-      "password": "2026",
-      "name": "ahmed",
-      "role": "operator",
-      "active": true
     }
   ],
-  "updated_at": "2026-11-08T18:44:15.398Z"
+  "updated_at": "2026-11-08T18:44:26.225Z"
 }
