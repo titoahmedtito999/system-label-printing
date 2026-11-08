@@ -6,6 +6,7 @@
 <title>System Label Printing</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js"></script>
 <style>
   :root{
     --bg:#f1f5f9; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
@@ -50,6 +51,24 @@
   .topbar-right{margin-inline-start:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
   .topbar h1{font-size:1.4rem;line-height:1.2}
   .topbar p{color:var(--muted);font-size:.84rem}
+
+  /* Real-time Multi-Operator Live Sync Capsule */
+  .topbar-live-sync{
+    display:inline-flex;align-items:center;gap:7px;
+    background:#ffffff;border:1.5px solid #a7f3d0;border-radius:999px;
+    padding:5px 12px;font-size:.74rem;font-weight:700;color:#065f46;
+    box-shadow:0 3px 10px -2px rgba(16,185,129,.15);
+    user-select:none;transition:all .25s ease;
+  }
+  .topbar-live-sync.disconnected{border-color:#fca5a5;color:#991b1b;background:#fff5f5}
+  .tls-dot{
+    width:7px;height:7px;border-radius:50%;background:#10b981;
+    box-shadow:0 0 8px #10b981;animation:tlsPulse 1.8s infinite ease-in-out;
+  }
+  .topbar-live-sync.disconnected .tls-dot{background:#ef4444;box-shadow:0 0 6px #ef4444;animation:none}
+  @keyframes tlsPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.75);opacity:.45}}
+  .topbar-live-sync.flash{animation:tlsFlash .6s ease}
+  @keyframes tlsFlash{0%{transform:scale(1.08);background:#d1fae5}100%{transform:scale(1);background:#ffffff}}
 
   /* Masterpiece Live Clock & Date Capsule */
   .topbar-clock-card{
@@ -616,6 +635,12 @@
             </div>
           </div>
 
+          <!-- Real-time Multi-Operator Live Sync Capsule -->
+          <div class="topbar-live-sync" id="topbarLiveSync" title="مزامنة فورية لحظية في أقل من ثانية بين جميع أجهزة الـ Operators">
+            <span class="tls-dot"></span>
+            <span class="tls-text" id="tlsStatusText">LIVE SYNC ACTIVE</span>
+          </div>
+
           <!-- Masterpiece Live Clock & Date Capsule -->
           <div class="topbar-clock-card" title="Live System Time & Date">
             <div class="tcc-live">
@@ -1108,9 +1133,12 @@
   const data={};
   KEYS.forEach(k=>{ try{data[k]=JSON.parse(localStorage.getItem(STAGES[k].key))}catch(e){data[k]=null} });
 
-  const save=k=>{
+  const save=(k,shouldBroadcast=true)=>{
     localStorage.setItem(STAGES[k].key,JSON.stringify(data[k]));
     triggerAutoSync();
+    if(shouldBroadcast&&!isApplyingRemoteChange){
+      broadcastRealtimeChange('SYNC_STAGE',k);
+    }
   };
   const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
   function makeSamples(k){
@@ -2277,6 +2305,177 @@
     });
   }
 
+  /* ==========================================================================
+     ULTRA-FAST REALTIME WEBSOCKET SYNC (< 1s LIVE OPERATOR SYNCHRONIZATION)
+     ========================================================================== */
+  const REALTIME_TOPIC='slp/titoahmedtito999/live_data_v2';
+  const CLIENT_INSTANCE_ID='cli_'+Math.random().toString(36).substring(2,9)+'_'+Date.now();
+  let realtimeClient=null;
+  let realtimeConnected=false;
+  let isApplyingRemoteChange=false;
+
+  function updateLiveSyncUI(connected,text){
+    const el=$('#topbarLiveSync');
+    const txt=$('#tlsStatusText');
+    if(!el) return;
+    if(connected){
+      el.classList.remove('disconnected');
+      if(txt) txt.textContent=text||'LIVE SYNC ACTIVE';
+    }else{
+      el.classList.add('disconnected');
+      if(txt) txt.textContent=text||'RECONNECTING...';
+    }
+  }
+
+  function flashLiveSyncUI(senderName){
+    const el=$('#topbarLiveSync');
+    if(el){
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+    if(senderName){
+      toast('⚡ مزامنة فورية: تم تحديث البيانات بواسطة '+senderName);
+    }
+  }
+
+  function broadcastRealtimeChange(action,stage){
+    if(!realtimeClient||!realtimeConnected||isApplyingRemoteChange) return;
+    try{
+      const payload={
+        action:action,
+        stage:stage,
+        data:data[stage],
+        sender:currentSession?(currentSession.name||currentSession.username):'Operator',
+        senderId:CLIENT_INSTANCE_ID,
+        timestamp:Date.now()
+      };
+      realtimeClient.publish(REALTIME_TOPIC,JSON.stringify(payload),{qos:0});
+    }catch(err){
+      console.warn('Realtime publish error:',err);
+    }
+  }
+
+  function broadcastFullSync(targetId=null){
+    if(!realtimeClient||!realtimeConnected||isApplyingRemoteChange) return;
+    try{
+      const payload={
+        action:'FULL_SYNC',
+        targetId:targetId,
+        payload:{
+          acetate:data.acetate,
+          sticker:data.sticker
+        },
+        sender:currentSession?(currentSession.name||currentSession.username):'Operator',
+        senderId:CLIENT_INSTANCE_ID,
+        timestamp:Date.now()
+      };
+      realtimeClient.publish(REALTIME_TOPIC,JSON.stringify(payload),{qos:0});
+    }catch(err){
+      console.warn('Full sync broadcast error:',err);
+    }
+  }
+
+  function initRealtimeSync(){
+    if(typeof mqtt==='undefined'){
+      console.warn('MQTT library not loaded. Retrying in 2s...');
+      setTimeout(initRealtimeSync,2000);
+      return;
+    }
+
+    // Connect to high-speed public secure WebSocket broker (SSL)
+    const brokerUrl='wss://broker.emqx.io:8084/mqtt';
+    try{
+      realtimeClient=mqtt.connect(brokerUrl,{
+        clientId:'slp_'+Math.random().toString(16).substr(2,8),
+        clean:true,
+        connectTimeout:6000,
+        reconnectPeriod:3000
+      });
+
+      realtimeClient.on('connect',()=>{
+        realtimeConnected=true;
+        updateLiveSyncUI(true,'LIVE SYNC ACTIVE');
+        realtimeClient.subscribe(REALTIME_TOPIC,{qos:0});
+
+        // Announce presence and request latest state from any active operator online
+        realtimeClient.publish(REALTIME_TOPIC,JSON.stringify({
+          action:'REQUEST_LATEST_STATE',
+          senderId:CLIENT_INSTANCE_ID,
+          timestamp:Date.now()
+        }),{qos:0});
+      });
+
+      realtimeClient.on('reconnect',()=>{
+        updateLiveSyncUI(false,'RECONNECTING...');
+      });
+
+      realtimeClient.on('close',()=>{
+        realtimeConnected=false;
+        updateLiveSyncUI(false,'CONNECTING...');
+      });
+
+      realtimeClient.on('error',(err)=>{
+        console.warn('MQTT connection notice:',err);
+        updateLiveSyncUI(false,'SYNC OFFLINE');
+      });
+
+      realtimeClient.on('message',(topic,rawMessage)=>{
+        try{
+          const msg=JSON.parse(rawMessage.toString());
+          if(!msg||typeof msg!=='object') return;
+          if(msg.senderId===CLIENT_INSTANCE_ID) return; // Ignore own echoes
+
+          // 1. Stage update (Add row, delete row, edit row, clear brand, etc.)
+          if(msg.action==='SYNC_STAGE'&&msg.stage&&Array.isArray(msg.data)){
+            isApplyingRemoteChange=true;
+            try{
+              data[msg.stage]=msg.data;
+              localStorage.setItem(STAGES[msg.stage].key,JSON.stringify(msg.data));
+              render();
+              flashLiveSyncUI(msg.sender);
+            }finally{
+              isApplyingRemoteChange=false;
+            }
+          }
+
+          // 2. Request for latest state by a newly opened operator screen
+          else if(msg.action==='REQUEST_LATEST_STATE'){
+            if((data.acetate&&data.acetate.length>0)||(data.sticker&&data.sticker.length>0)){
+              broadcastFullSync(msg.senderId);
+            }
+          }
+
+          // 3. Full sync payload received from peer
+          else if(msg.action==='FULL_SYNC'){
+            if(msg.targetId&&msg.targetId!==CLIENT_INSTANCE_ID) return; // Not targeted for us
+            if(msg.payload&&typeof msg.payload==='object'){
+              isApplyingRemoteChange=true;
+              try{
+                if(Array.isArray(msg.payload.acetate)){
+                  data.acetate=msg.payload.acetate;
+                  localStorage.setItem(STAGES.acetate.key,JSON.stringify(msg.payload.acetate));
+                }
+                if(Array.isArray(msg.payload.sticker)){
+                  data.sticker=msg.payload.sticker;
+                  localStorage.setItem(STAGES.sticker.key,JSON.stringify(msg.payload.sticker));
+                }
+                render();
+                flashLiveSyncUI(msg.sender);
+              }finally{
+                isApplyingRemoteChange=false;
+              }
+            }
+          }
+        }catch(e){
+          console.warn('Error handling realtime message:',e);
+        }
+      });
+    }catch(err){
+      console.warn('Realtime init error:',err);
+    }
+  }
+
   /* ---------- Authentication & GitHub Remote Master Control (المصادقة والتحكم عن بُعد) ---------- */
   const KEY_USERS='slp_users_v2';
   const KEY_DELETED_USERS='slp_deleted_users';
@@ -2995,6 +3194,7 @@
     $('#loginScreen').classList.remove('hidden');
   }
 
+  initRealtimeSync();
   checkRemoteMasterControl();
   setInterval(checkRemoteMasterControl,30000);
 
