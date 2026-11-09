@@ -11,47 +11,12 @@
       "active": true
     },
     {
-      "username": "abdo",
-      "password": "2026",
-      "name": "abdo",
+      "username": "user",
+      "password": "user123",
       "role": "operator",
-      "active": true
-    },
-    {
-      "username": "AHMED",
-      "password": "2026",
-      "name": "AHMED",
-      "role": "operator",
-      "active": true
-    },
-    {
-      "username": "samy",
-      "password": "2026",
-      "name": "samy",
-      "role": "operator",
-      "active": true
-    },
-    {
-      "username": "khan",
-      "password": "2026",
-      "name": "khan",
-      "role": "operator",
-      "active": true
-    },
-    {
-      "username": "hwaida",
-      "password": "2026",
-      "name": "hwaida",
-      "role": "operator",
-      "active": true
-    },
-    {
-      "username": "abo",
-      "password": "2026",
-      "name": "abo",
-      "role": "operator",
+      "name": "Standard Operator",
       "active": true
     }
   ],
-  "updated_at": "2026-11-08T18:46:22.990Z"
+  "updated_at": "2026-11-08T18:00:00.000Z"
 }
