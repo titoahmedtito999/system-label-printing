@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>System Label Printing</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -110,7 +110,7 @@
   .tcc-date{font-size:.70rem;font-weight:600;color:#64748b;letter-spacing:.2px}
 
   /* Stage switch (modern segmented toggle) */
-  .stage-switch{margin-inline-start:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;background:#e2e8f0;border-radius:15px;padding:5px;min-width:460px;box-shadow:inset 0 2px 4px rgba(15,23,42,.08)}
+  .stage-switch{margin-inline-start:auto;position:relative;display:grid;grid-template-columns:1fr 1fr;background:#e2e8f0;border-radius:15px;padding:5px;min-width:0;width:100%;max-width:520px;box-shadow:inset 0 2px 4px rgba(15,23,42,.08)}
   .stage-switch .thumb{position:absolute;top:5px;bottom:5px;inset-inline-start:5px;width:calc(50% - 5px);border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-d));box-shadow:0 8px 18px -8px var(--accent);transition:transform .32s cubic-bezier(.4,0,.2,1),background .3s}
   .stage-switch[data-stage=sticker] .thumb{transform:translateX(100%)}
   .stage-switch button{position:relative;z-index:1;border:none;background:transparent;padding:11px 14px;font:inherit;font-weight:700;font-size:.88rem;color:#475569;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:color .2s;border-radius:11px}
@@ -509,6 +509,404 @@
     .stage-switch .step{display:none}
     .brandbar,.card-head,.card-body{padding-inline:14px}
   }
+  /* ==========================================================================
+     ULTRA-RESPONSIVE MOBILE PHONE & TABLET PERFECTION (iOS & Android)
+     ========================================================================== */
+  @media(max-width: 768px){
+    body{ -webkit-text-size-adjust:100%; }
+    .app{ flex-direction:column !important; min-height:100vh; }
+    
+    /* Sleek Mobile Bottom Navigation Bar */
+    .sidebar{
+      position:fixed !important;
+      bottom:0 !important;
+      left:0 !important;
+      right:0 !important;
+      top:auto !important;
+      width:100% !important;
+      height:auto !important;
+      background:rgba(15,23,42,0.96) !important;
+      backdrop-filter:blur(16px) !important;
+      -webkit-backdrop-filter:blur(16px) !important;
+      border-top:1.5px solid rgba(255,255,255,0.12) !important;
+      box-shadow:0 -4px 25px rgba(0,0,0,0.4) !important;
+      padding:4px 6px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
+      z-index:9999 !important;
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      overflow:visible !important;
+    }
+    .sidebar .logo-wrap,
+    .sidebar .nav-label,
+    .sidebar .side-foot,
+    .sidebar .nav-count,
+    .sidebar .side-clock{
+      display:none !important;
+    }
+    .nav{
+      display:flex !important;
+      flex-direction:row !important;
+      width:100% !important;
+      gap:4px !important;
+      justify-content:space-around !important;
+      align-items:center !important;
+      margin:0 !important;
+    }
+    .nav-item{
+      flex:1 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:3px !important;
+      padding:7px 2px !important;
+      font-size:0.65rem !important;
+      font-weight:700 !important;
+      border-radius:10px !important;
+      color:#94a3b8 !important;
+      background:transparent !important;
+      text-align:center !important;
+      transition:all 0.18s ease !important;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .nav-item svg{
+      width:20px !important;
+      height:20px !important;
+    }
+    .nav-item.active{
+      color:#ffffff !important;
+      background:var(--accent) !important;
+      box-shadow:0 4px 14px -2px var(--accent) !important;
+    }
+    .content{
+      padding-bottom:86px !important; /* Space for fixed bottom bar */
+      min-width:0 !important;
+      width:100% !important;
+    }
+
+    /* Mobile Topbar & Stage Switcher */
+    .topbar{
+      padding:8px 12px !important;
+      gap:8px !important;
+      position:sticky !important;
+      top:0 !important;
+      z-index:30 !important;
+      background:rgba(241,245,249,0.96) !important;
+      backdrop-filter:blur(14px) !important;
+      -webkit-backdrop-filter:blur(14px) !important;
+      border-bottom:1.5px solid var(--border) !important;
+      flex-direction:column !important;
+      align-items:stretch !important;
+    }
+    .topbar-title-wrap{
+      min-width:0 !important;
+      flex:1 !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      width:100% !important;
+    }
+    .topbar h1{
+      font-size:1.12rem !important;
+      line-height:1.2 !important;
+    }
+    .topbar p{
+      display:none !important; /* Hide long subtitle on phones */
+    }
+    .topbar-right{
+      width:100% !important;
+      margin:0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      gap:6px !important;
+    }
+    .topbar-upper-row{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      width:100% !important;
+      gap:6px !important;
+    }
+    .tls-clock{
+      display:none !important; /* Hide desktop clock on mobile to give space to profile */
+    }
+    .user-capsule{
+      padding:2px 8px !important;
+      gap:6px !important;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06) !important;
+    }
+    .user-avatar-dot{
+      width:24px !important;
+      height:24px !important;
+      font-size:0.65rem !important;
+    }
+    .user-capsule-name{
+      font-size:0.75rem !important;
+      max-width:90px !important;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+    }
+    .user-capsule-role{
+      font-size:0.56rem !important;
+    }
+    .btn-user-act{
+      padding:3px 7px !important;
+      font-size:0.68rem !important;
+    }
+    .topbar-live-sync{
+      padding:3px 9px !important;
+      font-size:0.68rem !important;
+      gap:5px !important;
+      cursor:pointer;
+    }
+    .tls-dot{
+      width:6px !important;
+      height:6px !important;
+    }
+    .stage-switch{
+      min-width:0 !important;
+      width:100% !important;
+      margin:2px 0 0 !important;
+      border-radius:12px !important;
+      padding:3px !important;
+    }
+    .stage-switch button{
+      padding:8px 6px !important;
+      font-size:0.78rem !important;
+      gap:6px !important;
+    }
+    .stage-switch .step{
+      display:none !important; /* Hide tiny step text on phones */
+    }
+    .stage-switch .nm{
+      font-size:0.82rem !important;
+      font-weight:800 !important;
+    }
+
+    /* Mobile Views, Cards, and Forms */
+    .view{
+      padding:12px 10px 40px !important;
+      max-width:100% !important;
+    }
+    .card{
+      border-radius:14px !important;
+      margin-bottom:14px !important;
+      box-shadow:0 4px 14px rgba(0,0,0,0.05) !important;
+    }
+    .card-head{
+      padding:12px 14px !important;
+      gap:8px !important;
+    }
+    .card-head h2{
+      font-size:0.96rem !important;
+    }
+    .card-body{
+      padding:14px !important;
+    }
+    .grid{
+      grid-template-columns:1fr !important; /* Single column on phones */
+      gap:12px !important;
+    }
+    .field label{
+      font-size:0.8rem !important;
+      margin-bottom:5px !important;
+    }
+    .input input, .input select{
+      font-size:16px !important; /* Prevents auto-zoom in Safari & Chrome */
+      padding:10px 12px 10px 38px !important;
+      height:44px !important;
+      border-radius:8px !important;
+    }
+    .sides{
+      grid-template-columns:repeat(4,1fr) !important;
+      gap:5px !important;
+    }
+    .sides label{
+      padding:9px 2px !important;
+      font-size:0.76rem !important;
+    }
+    .form-foot{
+      margin-top:14px !important;
+      padding-top:14px !important;
+      flex-direction:column !important;
+      align-items:stretch !important;
+      gap:12px !important;
+    }
+    .form-foot .field{
+      width:100% !important;
+      min-width:0 !important;
+    }
+    .btns{
+      display:grid !important;
+      grid-template-columns:1fr 1fr !important;
+      gap:8px !important;
+      width:100% !important;
+      margin:0 !important;
+    }
+    .btns .btn-save,
+    .btns .btn-update{
+      grid-column:1 / -1 !important;
+      padding:13px !important;
+      font-size:0.96rem !important;
+      justify-content:center !important;
+      border-radius:10px !important;
+    }
+    .btns .btn-word,
+    .btns .btn-pdf,
+    .btns .btn-clear{
+      padding:10px !important;
+      font-size:0.84rem !important;
+      justify-content:center !important;
+      border-radius:10px !important;
+    }
+    .btns .btn-clear{
+      grid-column:1 / -1 !important;
+    }
+
+    /* Mobile Records Report, Brandbar & Table */
+    .toolbar{
+      width:100% !important;
+      margin:8px 0 0 !important;
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:stretch !important;
+      gap:8px !important;
+    }
+    .toolbar .input{
+      width:100% !important;
+    }
+    .toolbar .input input{
+      width:100% !important;
+      min-width:0 !important;
+      font-size:16px !important;
+      height:40px !important;
+    }
+    .toolbar .btn{
+      padding:8px 12px !important;
+      font-size:0.8rem !important;
+    }
+    .brandbar{
+      padding:10px 12px !important;
+      overflow-x:auto !important;
+      flex-wrap:nowrap !important;
+      -webkit-overflow-scrolling:touch !important;
+      scrollbar-width:none !important;
+    }
+    .brandbar::-webkit-scrollbar{
+      display:none !important;
+    }
+    .bchip{
+      flex-shrink:0 !important;
+      padding:5px 12px !important;
+      font-size:0.76rem !important;
+    }
+    .table-wrap{
+      overflow-x:auto !important;
+      -webkit-overflow-scrolling:touch !important;
+      border-radius:8px !important;
+      border:1px solid var(--border) !important;
+    }
+    table{
+      min-width:640px !important;
+      font-size:0.82rem !important;
+    }
+    thead th, tbody td{
+      padding:8px 10px !important;
+    }
+    .grp-head{
+      padding:10px 12px !important;
+    }
+    .grp-head-left{
+      gap:6px !important;
+    }
+    .grp-head h3{
+      font-size:0.92rem !important;
+    }
+
+    /* Mobile Dashboard */
+    .stats{
+      grid-template-columns:1fr 1fr !important;
+      gap:8px !important;
+    }
+    .stat{
+      padding:12px 10px !important;
+      gap:8px !important;
+    }
+    .stat .si{
+      width:34px !important;
+      height:34px !important;
+    }
+    .stat .si svg{
+      width:17px !important;
+      height:17px !important;
+    }
+    .stat b{
+      font-size:1.2rem !important;
+    }
+    .stat small{
+      font-size:0.65rem !important;
+    }
+    .dash-ctrl{
+      flex-direction:column !important;
+      align-items:stretch !important;
+      gap:8px !important;
+    }
+    .seg{
+      width:100% !important;
+      display:flex !important;
+    }
+    .seg button{
+      flex:1 !important;
+      padding:8px 4px !important;
+      font-size:0.76rem !important;
+      text-align:center !important;
+    }
+    .bcards{
+      grid-template-columns:1fr !important;
+      gap:10px !important;
+    }
+
+    /* Mobile Login & Modals */
+    .login-overlay{
+      padding:12px !important;
+    }
+    .login-card{
+      padding:26px 18px !important;
+      border-radius:20px !important;
+      max-width:100% !important;
+    }
+    .login-logo-glow{
+      width:56px !important;
+      height:56px !important;
+      border-radius:16px !important;
+      margin-bottom:12px !important;
+    }
+    .login-logo-glow svg{
+      width:28px !important;
+      height:28px !important;
+    }
+    .login-header h2{
+      font-size:1.25rem !important;
+    }
+    .login-sub{
+      font-size:0.76rem !important;
+    }
+    .login-input-wrap input{
+      font-size:16px !important;
+      padding:12px 0 !important;
+    }
+    .btn-login{
+      padding:13px !important;
+      font-size:0.96rem !important;
+    }
+    .modal.modal-wide{
+      padding:18px 14px !important;
+      max-height:88vh !important;
+      border-radius:16px !important;
+    }
+  }
+
   @media print{
     .sidebar,.stage-switch,.toolbar,.row-act,.col-act,#toasts,.brandbar,.dash-ctrl button,.dash-ctrl .seg,.dash-ctrl .input,.login-overlay,.lockout-overlay,.user-capsule{display:none!important}
     body{background:#fff} .view{padding:0} .card{box-shadow:none} .topbar{position:static;background:#fff}
@@ -1384,11 +1782,74 @@
 
   KEYS.forEach(k=>{ try{data[k]=JSON.parse(localStorage.getItem(STAGES[k].key))}catch(e){data[k]=null} });
 
+  function smartMergeRecords(currentList, incomingList){
+    if(!Array.isArray(incomingList)) return currentList || [];
+    if(!Array.isArray(currentList) || currentList.length === 0) return incomingList.filter(Boolean);
+    const map = new Map();
+    // 1. Load incoming records
+    incomingList.forEach(r => { if(r && r.id) map.set(String(r.id), r); });
+    // 2. Preserve any local records not present in incoming
+    currentList.forEach(r => {
+      if(r && r.id && !map.has(String(r.id))){
+        map.set(String(r.id), r);
+      }
+    });
+    return Array.from(map.values());
+  }
+
+  // Cross-tab zero-millisecond synchronization
+  const localSyncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('slp_local_sync') : null;
+  if(localSyncChannel){
+    localSyncChannel.onmessage = e => {
+      const msg = e.data;
+      if(!msg || msg.senderId === CLIENT_INSTANCE_ID) return;
+      if(msg.action === 'SYNC_STAGE' && msg.stage && Array.isArray(msg.data)){
+        isApplyingRemoteChange = true;
+        try{
+          data[msg.stage] = smartMergeRecords(data[msg.stage], msg.data);
+          localStorage.setItem(STAGES[msg.stage].key, JSON.stringify(data[msg.stage]));
+          render();
+          flashLiveSyncUI(msg.sender);
+        }finally{
+          isApplyingRemoteChange = false;
+        }
+      }else if(msg.action === 'FULL_SYNC' && msg.payload){
+        isApplyingRemoteChange = true;
+        try{
+          if(Array.isArray(msg.payload.acetate)){
+            data.acetate = smartMergeRecords(data.acetate, msg.payload.acetate);
+            localStorage.setItem(STAGES.acetate.key, JSON.stringify(data.acetate));
+          }
+          if(Array.isArray(msg.payload.sticker)){
+            data.sticker = smartMergeRecords(data.sticker, msg.payload.sticker);
+            localStorage.setItem(STAGES.sticker.key, JSON.stringify(data.sticker));
+          }
+          render();
+          flashLiveSyncUI(msg.sender);
+        }finally{
+          isApplyingRemoteChange = false;
+        }
+      }
+    };
+  }
+
   const save=(k,shouldBroadcast=true)=>{
     localStorage.setItem(STAGES[k].key,JSON.stringify(data[k]));
     triggerAutoSync();
-    if(shouldBroadcast&&!isApplyingRemoteChange){
+    if(shouldBroadcast && !isApplyingRemoteChange){
+      if(localSyncChannel){
+        try{
+          localSyncChannel.postMessage({
+            action:'SYNC_STAGE',
+            stage:k,
+            data:data[k],
+            senderId:CLIENT_INSTANCE_ID,
+            sender:currentSession?(currentSession.name||currentSession.username):'Operator'
+          });
+        }catch(e){}
+      }
       broadcastRealtimeChange('SYNC_STAGE',k);
+      broadcastRetainedVault();
     }
   };
   const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -1407,7 +1868,7 @@
       const L=STAGES[k].legacy;
       data[k]=(Array.isArray(data[k])?data[k]:[]).filter(r=>!L.v.includes(r[L.f]));
       if(!data[k].length) data[k]=makeSamples(k);
-      save(k);
+      save(k,false);
     });
     localStorage.setItem('slp_v4','1');
   }
@@ -1417,7 +1878,7 @@
       const hasOther = data.acetate.some(r => r.erp && r.erp.startsWith('ERP-401') && !['DECATHLON','BASS PRO'].includes(r.brand));
       if(hasOther || !data.acetate.length){
         data.acetate = makeSamples('acetate');
-        save('acetate');
+        save('acetate',false);
       }
     }
     localStorage.setItem('slp_v5','1');
@@ -1430,7 +1891,7 @@
           r.erp = 'O/' + String(r.erp).trim().replace(/^(ERP-|[oO]\/\s*)/, '');
         }
       });
-      save('acetate');
+      save('acetate',false);
     }
     localStorage.setItem('slp_v6','1');
   }
@@ -1621,7 +2082,7 @@
       e.preventDefault();
       const r=collect(k);
       if(!r){toast('Please complete all required fields','err');return}
-      r.id=uid(); data[k].push(r); save(k);
+      r.id=uid(); data[k].push(r); save(k,false);
       if(k==='acetate') lastAcetatePoRecord = Object.assign({}, r);
       toast('Record saved successfully');
       resetForm(k,true);
@@ -1630,7 +2091,7 @@
       const r=collect(k);
       if(!r){toast('Please complete all required fields','err');return}
       const i=data[k].findIndex(x=>x.id===editing[k]);
-      if(i>-1){ r.id=editing[k]; data[k][i]=r; save(k); if(k==='acetate') lastAcetatePoRecord = Object.assign({}, r); toast('Record updated successfully','warn'); }
+      if(i>-1){ r.id=editing[k]; data[k][i]=r; save(k,false); if(k==='acetate') lastAcetatePoRecord = Object.assign({}, r); toast('Record updated successfully','warn'); }
       resetForm(k,true);
       if(returnTo){ const v=returnTo; returnTo=null; setView(v); }
     });
@@ -2389,7 +2850,7 @@
       if(ok){
         KEYS.forEach(k=>{
           data[k]=p[k].filter(r=>r&&typeof r==='object').map(r=>({...r,id:r.id||uid(),brand:norm(r.brand)}));
-          save(k); brandFilter[k]='ALL'; editing[k]=null;
+          save(k,false); brandFilter[k]='ALL'; editing[k]=null;
         });
         KEYS.forEach(k=>resetForm(k,false));
         render();
@@ -2616,8 +3077,10 @@
 
   /* ==========================================================================
      ULTRA-FAST REALTIME WEBSOCKET SYNC (< 1s LIVE OPERATOR SYNCHRONIZATION)
+     WITH PERSISTENT RETAINED VAULT STORAGE
      ========================================================================== */
   const REALTIME_TOPIC='slp/titoahmedtito999/live_data_v2';
+  const RETAIN_VAULT_TOPIC='slp/titoahmedtito999/vault_state_v3';
   const CLIENT_INSTANCE_ID='cli_'+Math.random().toString(36).substring(2,9)+'_'+Date.now();
   let realtimeClient=null;
   let realtimeConnected=false;
@@ -2632,7 +3095,7 @@
       if(txt) txt.textContent=text||'LIVE SYNC ACTIVE';
     }else{
       el.classList.add('disconnected');
-      if(txt) txt.textContent=text||'RECONNECTING...';
+      if(txt) txt.textContent=text||'CONNECTING...';
     }
   }
 
@@ -2665,6 +3128,22 @@
     }
   }
 
+  function broadcastRetainedVault(){
+    if(!realtimeClient||!realtimeConnected||isApplyingRemoteChange) return;
+    try{
+      const vaultPayload={
+        acetate:data.acetate||[],
+        sticker:data.sticker||[],
+        sender:currentSession?(currentSession.name||currentSession.username):'Operator',
+        senderId:CLIENT_INSTANCE_ID,
+        timestamp:Date.now()
+      };
+      realtimeClient.publish(RETAIN_VAULT_TOPIC,JSON.stringify(vaultPayload),{qos:1,retain:true});
+    }catch(err){
+      console.warn('Retained vault publish error:',err);
+    }
+  }
+
   function broadcastFullSync(targetId=null){
     if(!realtimeClient||!realtimeConnected||isApplyingRemoteChange) return;
     try{
@@ -2680,6 +3159,7 @@
         timestamp:Date.now()
       };
       realtimeClient.publish(REALTIME_TOPIC,JSON.stringify(payload),{qos:0});
+      broadcastRetainedVault();
     }catch(err){
       console.warn('Full sync broadcast error:',err);
     }
@@ -2687,8 +3167,8 @@
 
   function initRealtimeSync(){
     if(typeof mqtt==='undefined'){
-      console.warn('MQTT library not loaded. Retrying in 2s...');
-      setTimeout(initRealtimeSync,2000);
+      console.warn('MQTT library not loaded. Retrying in 1.5s...');
+      setTimeout(initRealtimeSync,1500);
       return;
     }
 
@@ -2699,15 +3179,16 @@
         clientId:'slp_'+Math.random().toString(16).substr(2,8),
         clean:true,
         connectTimeout:6000,
-        reconnectPeriod:3000
+        reconnectPeriod:2500
       });
 
       realtimeClient.on('connect',()=>{
         realtimeConnected=true;
         updateLiveSyncUI(true,'LIVE SYNC ACTIVE');
         realtimeClient.subscribe(REALTIME_TOPIC,{qos:0});
+        realtimeClient.subscribe(RETAIN_VAULT_TOPIC,{qos:1});
 
-        // Announce presence and request latest state from any active operator online
+        // Request latest state immediately from any online peer
         realtimeClient.publish(REALTIME_TOPIC,JSON.stringify({
           action:'REQUEST_LATEST_STATE',
           senderId:CLIENT_INSTANCE_ID,
@@ -2726,7 +3207,7 @@
 
       realtimeClient.on('error',(err)=>{
         console.warn('MQTT connection notice:',err);
-        updateLiveSyncUI(false,'SYNC OFFLINE');
+        updateLiveSyncUI(false,'CONNECTING...');
       });
 
       realtimeClient.on('message',(topic,rawMessage)=>{
@@ -2735,12 +3216,34 @@
           if(!msg||typeof msg!=='object') return;
           if(msg.senderId===CLIENT_INSTANCE_ID) return; // Ignore own echoes
 
-          // 1. Stage update (Add row, delete row, edit row, clear brand, etc.)
+          // Case A: Retained Vault State pushed by broker on connect
+          if(topic===RETAIN_VAULT_TOPIC){
+            if(Array.isArray(msg.acetate)||Array.isArray(msg.sticker)){
+              isApplyingRemoteChange=true;
+              try{
+                if(Array.isArray(msg.acetate)){
+                  data.acetate=smartMergeRecords(data.acetate, msg.acetate);
+                  localStorage.setItem(STAGES.acetate.key,JSON.stringify(data.acetate));
+                }
+                if(Array.isArray(msg.sticker)){
+                  data.sticker=smartMergeRecords(data.sticker, msg.sticker);
+                  localStorage.setItem(STAGES.sticker.key,JSON.stringify(data.sticker));
+                }
+                render();
+                flashLiveSyncUI(msg.sender||'Cloud');
+              }finally{
+                isApplyingRemoteChange=false;
+              }
+            }
+            return;
+          }
+
+          // Case B: Live Stage update (Add row, delete row, edit row)
           if(msg.action==='SYNC_STAGE'&&msg.stage&&Array.isArray(msg.data)){
             isApplyingRemoteChange=true;
             try{
-              data[msg.stage]=msg.data;
-              localStorage.setItem(STAGES[msg.stage].key,JSON.stringify(msg.data));
+              data[msg.stage]=smartMergeRecords(data[msg.stage], msg.data);
+              localStorage.setItem(STAGES[msg.stage].key,JSON.stringify(data[msg.stage]));
               render();
               flashLiveSyncUI(msg.sender);
             }finally{
@@ -2748,26 +3251,26 @@
             }
           }
 
-          // 2. Request for latest state by a newly opened operator screen
+          // Case C: Request for latest state by newly opened device
           else if(msg.action==='REQUEST_LATEST_STATE'){
             if((data.acetate&&data.acetate.length>0)||(data.sticker&&data.sticker.length>0)){
               broadcastFullSync(msg.senderId);
             }
           }
 
-          // 3. Full sync payload received from peer
+          // Case D: Full sync payload received from peer
           else if(msg.action==='FULL_SYNC'){
             if(msg.targetId&&msg.targetId!==CLIENT_INSTANCE_ID) return; // Not targeted for us
             if(msg.payload&&typeof msg.payload==='object'){
               isApplyingRemoteChange=true;
               try{
                 if(Array.isArray(msg.payload.acetate)){
-                  data.acetate=msg.payload.acetate;
-                  localStorage.setItem(STAGES.acetate.key,JSON.stringify(msg.payload.acetate));
+                  data.acetate=smartMergeRecords(data.acetate, msg.payload.acetate);
+                  localStorage.setItem(STAGES.acetate.key,JSON.stringify(data.acetate));
                 }
                 if(Array.isArray(msg.payload.sticker)){
-                  data.sticker=msg.payload.sticker;
-                  localStorage.setItem(STAGES.sticker.key,JSON.stringify(msg.payload.sticker));
+                  data.sticker=smartMergeRecords(data.sticker, msg.payload.sticker);
+                  localStorage.setItem(STAGES.sticker.key,JSON.stringify(data.sticker));
                 }
                 render();
                 flashLiveSyncUI(msg.sender);
@@ -2783,6 +3286,42 @@
     }catch(err){
       console.warn('Realtime init error:',err);
     }
+  }
+
+  // Mobile wake-up & resync handler (when phone is unlocked or tab is switched back)
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible'){
+      if(!realtimeClient||!realtimeConnected){
+        initRealtimeSync();
+      }else{
+        try{
+          realtimeClient.publish(REALTIME_TOPIC,JSON.stringify({
+            action:'REQUEST_LATEST_STATE',
+            senderId:CLIENT_INSTANCE_ID,
+            timestamp:Date.now()
+          }),{qos:0});
+        }catch(e){}
+      }
+    }
+  });
+
+  // Tap on Live Sync pill to force manual instant re-sync
+  const elLivePill=$('#topbarLiveSync');
+  if(elLivePill){
+    elLivePill.addEventListener('click',()=>{
+      toast('⚡ جاري إعادة المزامنة اللحظية لجميع البيانات...');
+      if(!realtimeClient||!realtimeConnected){
+        initRealtimeSync();
+      }else{
+        try{
+          realtimeClient.publish(REALTIME_TOPIC,JSON.stringify({
+            action:'REQUEST_LATEST_STATE',
+            senderId:CLIENT_INSTANCE_ID,
+            timestamp:Date.now()
+          }),{qos:0});
+        }catch(e){}
+      }
+    });
   }
 
   /* ---------- Authentication & GitHub Remote Master Control (المصادقة والتحكم عن بُعد) ---------- */
@@ -3125,7 +3664,7 @@
         if(lastWipe&&lastWipe!==loadedCfg.remote_wipe_id){
           data.acetate=[];
           data.sticker=[];
-          save('acetate');
+          save('acetate',false);
           save('sticker');
           render();
           toast('تم تنفيذ أمر المسح عن بُعد من الإدارة (Data wiped)','warn');
@@ -3283,7 +3822,7 @@
     )){
       data.acetate=[];
       data.sticker=[];
-      save('acetate');
+      save('acetate',false);
       save('sticker');
       render();
       toast('تم مسح جميع البيانات المخزنة بنجاح (Data wiped)','warn');
