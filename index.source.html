@@ -373,104 +373,179 @@
   .btn-user-act.danger:hover{background:#fee2e2;color:#dc2626}
   .admin-only.hidden{display:none!important}
 
-  /* ===== Login Screen Gateway ===== */
+  /* ===== Login Screen Gateway (Luxury High-End Redesign) ===== */
   .login-overlay{
     position:fixed;inset:0;z-index:99999;
-    background:#070b14;
+    background:#080c16;
     display:flex;align-items:center;justify-content:center;
-    padding:20px;overflow-y:auto;
+    padding:24px 16px;overflow-y:auto;
     transition:opacity .25s ease, visibility .25s ease;
   }
   .login-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .login-bg-glow{
-    position:absolute;width:600px;height:600px;border-radius:50%;
-    background:radial-gradient(circle,rgba(99,102,241,0.22) 0%,rgba(14,165,233,0.12) 40%,transparent 70%);
-    pointer-events:none;filter:blur(40px);
+  .login-mesh-bg{
+    position:absolute;inset:0;
+    background-image:radial-gradient(rgba(56,189,248,0.07) 1px, transparent 1px);
+    background-size:24px 24px;
+    pointer-events:none;
+    mask-image:radial-gradient(ellipse at center, #000 40%, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse at center, #000 40%, transparent 80%);
   }
+  .login-ambient-glow{
+    position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px);
+  }
+  .glow-cyan{
+    width:520px;height:520px;top:-100px;right:-100px;
+    background:radial-gradient(circle,rgba(6,182,212,0.18) 0%,rgba(14,165,233,0.06) 50%,transparent 70%);
+  }
+  .glow-indigo{
+    width:560px;height:560px;bottom:-120px;left:-120px;
+    background:radial-gradient(circle,rgba(99,102,241,0.2) 0%,rgba(79,70,229,0.06) 50%,transparent 70%);
+  }
+
   .login-card{
-    position:relative;width:100%;max-width:500px;
-    background:linear-gradient(180deg,#0f172a 0%,#131c31 100%);
-    border:1.5px solid rgba(255,255,255,0.14);
-    border-radius:26px;
-    padding:44px 38px;
-    box-shadow:0 35px 80px -15px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
+    position:relative;width:100%;max-width:480px;
+    background:linear-gradient(180deg,rgba(15,23,42,0.92) 0%,rgba(10,15,30,0.96) 100%);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border:1.5px solid rgba(255,255,255,0.13);
+    border-radius:28px;
+    padding:42px 38px 36px;
+    box-shadow:0 35px 90px -15px rgba(0,0,0,0.85), 0 0 50px -10px rgba(56,189,248,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
     color:#f8fafc;
     color-scheme:dark;
-    animation:loginPop .25s ease-out;
+    animation:loginCardPop .3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  @keyframes loginPop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
-  .login-header{text-align:center;margin-bottom:26px}
-  .login-logo-glow{
-    width:74px;height:74px;border-radius:22px;
-    background:linear-gradient(135deg,#6366f1,#06b6d4);
-    display:grid;place-items:center;margin:0 auto 16px;
-    box-shadow:0 0 35px rgba(99,102,241,0.5);
+  @keyframes loginCardPop{
+    from{transform:scale(.95) translateY(10px);opacity:0}
+    to{transform:none;opacity:1}
   }
-  .login-logo-glow svg{width:38px;height:38px;stroke:#fff}
-  .login-header h2{font-size:1.55rem;font-weight:800;color:#fff;letter-spacing:.5px;margin-bottom:6px}
-  .login-sub{font-size:.88rem;color:#94a3b8;margin-bottom:8px}
+
+  /* Logo Emblem */
+  .login-header{text-align:center;margin-bottom:24px}
+  .login-emblem-wrap{
+    position:relative;display:inline-block;margin:0 auto 16px;
+  }
+  .login-emblem-halo{
+    position:absolute;inset:-12px;border-radius:32px;
+    background:radial-gradient(circle,rgba(6,182,212,0.3) 0%,transparent 70%);
+    filter:blur(14px);pointer-events:none;
+  }
+  .login-emblem-svg{
+    width:82px;height:82px;display:block;position:relative;z-index:2;
+    transition:transform .3s ease;
+  }
+  .login-emblem-wrap:hover .login-emblem-svg{transform:scale(1.04)}
+
+  .login-brand-meta{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .login-brand-title{
+    font-size:1.45rem;font-weight:900;letter-spacing:1px;margin:0;
+    background:linear-gradient(135deg,#ffffff 30%,#93c5fd 80%,#38bdf8 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    text-shadow:0 2px 10px rgba(56,189,248,0.2);
+  }
+  .login-badge-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);
+    border-radius:99px;padding:3px 10px;font-size:.68rem;font-weight:800;
+    letter-spacing:.8px;color:#38bdf8;margin-top:2px;
+  }
+  .login-beacon-dot{
+    width:6px;height:6px;border-radius:50%;background:#10b981;
+    box-shadow:0 0 8px #10b981;animation:beaconPulse 1.8s infinite ease-in-out;
+  }
+  @keyframes beaconPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.4}}
+  .login-brand-sub{font-size:.82rem;color:#94a3b8;margin-top:2px}
+
+  /* Error Alert */
   .login-alert{
-    background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;
-    border-radius:12px;padding:12px 16px;font-size:.86rem;font-weight:700;
-    margin-bottom:20px;display:flex;align-items:center;gap:8px;
+    background:rgba(239,68,68,0.12);
+    border:1.5px solid rgba(239,68,68,0.4);
+    color:#fca5a5;border-radius:14px;
+    padding:12px 16px;font-size:.86rem;font-weight:700;
+    margin-bottom:20px;display:flex;align-items:center;gap:10px;
+    box-shadow:0 6px 20px -2px rgba(239,68,68,0.25);
+    animation:alertSlideIn .25s ease-out;
   }
+  @keyframes alertSlideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .login-alert.shake{animation:alertShake .4s cubic-bezier(.36,.07,.19,.97) both}
+  @keyframes alertShake{
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+    40%, 60% { transform: translate3d(3px, 0, 0); }
+  }
+
+  /* Form Controls */
   .login-form{display:flex;flex-direction:column;gap:18px}
-  .login-field{display:flex;flex-direction:column;gap:8px;text-align:start}
-  .login-field label{font-size:.88rem;font-weight:700;color:#cbd5e1;letter-spacing:.2px}
+  .login-field{display:flex;flex-direction:column;gap:7px;text-align:start}
+  .login-field label{
+    font-size:.82rem;font-weight:800;color:#94a3b8;letter-spacing:.6px;
+    text-transform:uppercase;display:flex;align-items:center;gap:6px;
+  }
   .login-input-wrap{
     position:relative;display:flex;align-items:center;
-    background:#0b1120;border:1.8px solid rgba(255,255,255,0.15);
-    border-radius:14px;padding:0 14px;transition:.18s;
+    background:rgba(4,9,20,0.85);border:1.5px solid rgba(255,255,255,0.12);
+    border-radius:14px;padding:0 14px;transition:all .2s ease;
     overflow:hidden;
   }
-  .login-input-wrap:focus-within{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.28);background:#0b1120}
-  .login-input-icon{color:#64748b;display:grid;place-items:center;margin-inline-end:10px;z-index:2}
-  .login-input-icon svg{width:20px;height:20px}
+  .login-input-wrap:focus-within{
+    border-color:#38bdf8;
+    background:rgba(8,15,31,0.95);
+    box-shadow:0 0 0 3px rgba(56,189,248,0.22), 0 0 25px rgba(56,189,248,0.12);
+  }
+  .login-input-icon{color:#38bdf8;display:grid;place-items:center;margin-inline-end:10px;z-index:2}
+  .login-input-icon svg{width:18px;height:18px}
   .login-input-wrap input{
     flex:1;background:transparent !important;background-color:transparent !important;
     border:none !important;color:#ffffff !important;
-    padding:14px 0;font:inherit;font-size:1rem;font-weight:500;outline:none;
+    padding:14px 0;font:inherit;font-size:.98rem;font-weight:600;outline:none;
     color-scheme:dark;
   }
-  .login-input-wrap input::placeholder{color:#64748b}
-  /* Prevent browser autofill from rendering white rectangular background in dark login */
+  .login-input-wrap input::placeholder{color:#475569;font-weight:400}
   .login-input-wrap input:-webkit-autofill,
   .login-input-wrap input:-webkit-autofill:hover,
   .login-input-wrap input:-webkit-autofill:focus,
   .login-input-wrap input:-webkit-autofill:active{
-    -webkit-box-shadow:0 0 0 1000px #0b1120 inset !important;
-    box-shadow:0 0 0 1000px #0b1120 inset !important;
+    -webkit-box-shadow:0 0 0 1000px #080f1f inset !important;
+    box-shadow:0 0 0 1000px #080f1f inset !important;
     -webkit-text-fill-color:#f8fafc !important;
     color:#f8fafc !important;
     caret-color:#ffffff !important;
     transition:background-color 50000s ease-in-out 0s !important;
   }
-  .login-input-wrap input:-moz-autofill,
-  .login-input-wrap input:-moz-autofill:hover,
-  .login-input-wrap input:-moz-autofill:focus{
-    box-shadow:0 0 0 1000px #0b1120 inset !important;
-    -moz-text-fill-color:#f8fafc !important;
-    color:#f8fafc !important;
-    filter:none !important;
+
+  .btn-toggle-pass{
+    background:transparent;border:none;color:#64748b;cursor:pointer;
+    padding:6px;border-radius:6px;display:grid;place-items:center;z-index:2;
+    transition:color .18s ease;
   }
-  .btn-toggle-pass{background:transparent;border:none;color:#64748b;cursor:pointer;padding:6px;border-radius:6px;display:grid;place-items:center;z-index:2}
-  .btn-toggle-pass:hover{color:#fff}
-  .btn-toggle-pass svg{width:20px;height:20px}
-  .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.84rem;color:#94a3b8}
-  .login-remember{display:flex;align-items:center;gap:8px;cursor:pointer}
-  .login-remember input{cursor:pointer;accent-color:#6366f1;width:16px;height:16px}
+  .btn-toggle-pass:hover{color:#38bdf8}
+  .btn-toggle-pass svg{width:18px;height:18px}
+
+  .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.82rem;color:#94a3b8;margin-top:2px}
+  .login-remember{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+  .login-remember input{cursor:pointer;accent-color:#38bdf8;width:16px;height:16px}
   .login-cloud-status{display:flex;align-items:center;gap:6px;font-size:.76rem;color:#34d399;font-weight:700}
+
+  /* Sign In Button */
   .btn-login{
-    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    background:linear-gradient(135deg,#2563eb 0%,#0ea5e9 60%,#06b6d4 100%);
     color:#fff;border:none;border-radius:14px;
-    padding:15px;font:inherit;font-weight:800;font-size:1.05rem;
+    padding:14px 20px;font:inherit;font-weight:800;font-size:1.02rem;letter-spacing:.4px;
     cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
-    box-shadow:0 12px 28px -8px rgba(79,70,229,0.65);transition:.18s;
+    box-shadow:0 12px 28px -6px rgba(14,165,233,0.5), inset 0 1px 0 rgba(255,255,255,0.35);
+    transition:all .2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top:6px;
   }
-  .btn-login:hover{box-shadow:0 16px 34px -6px rgba(79,70,229,0.85);transform:translateY(-1px)}
-  .login-footer{margin-top:24px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;text-align:center}
-  .login-footer-info{font-size:.78rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
-  .login-footer-info svg{width:14px;height:14px}
+  .btn-login:hover{
+    box-shadow:0 16px 36px -6px rgba(6,182,212,0.7), inset 0 1px 0 rgba(255,255,255,0.45);
+    transform:translateY(-2px);filter:brightness(1.05);
+  }
+  .btn-login:active{transform:translateY(0);box-shadow:0 6px 16px -4px rgba(14,165,233,0.4)}
+  .btn-login:disabled{opacity:.75;cursor:not-allowed;transform:none}
+
+  .login-footer{margin-top:22px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;text-align:center}
+  .login-footer-info{font-size:.76rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
+  .login-footer-info svg{width:13px;height:13px;color:#38bdf8}
 
   /* ===== Lockout Screen (إيقاف النسخة عن بُعد) ===== */
   .lockout-overlay{
@@ -918,34 +993,265 @@
 
 <!-- ===== Login & Authentication Gateway ===== -->
 <div id="loginScreen" class="login-overlay">
-  <div class="login-bg-glow"></div>
+  <div class="login-mesh-bg"></div>
+  <div class="login-ambient-glow glow-cyan"></div>
+  <div class="login-ambient-glow glow-indigo"></div>
+
   <div class="login-card">
     <div class="login-header">
-      <div class="login-logo-glow">
-        <div class="login-logo"><i data-i="printer"></i></div>
+      <!-- High-Tier Custom Industrial Label Printing Emblem -->
+      <div class="login-emblem-wrap">
+        <div class="login-emblem-halo"></div>
+        <svg class="login-emblem-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background 3D Podium Gradients -->
+    <radialGradient id="zpBackGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#6366f1" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#080c16" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="zpBasePlate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="zpPlateBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="40%" stop-color="#818cf8"/>
+      <stop offset="70%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+
+    <!-- Metallic Silver/Platinum Casing (Side & Top) -->
+    <linearGradient id="zpMetalTop" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="35%" stop-color="#e2e8f0"/>
+      <stop offset="75%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="zpMetalSide" x1="0%" y1="0%" x2="100%" y2="10%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="15%" stop-color="#cbd5e1"/>
+      <stop offset="70%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+
+    <!-- Charcoal / Black Matte Casing (Front Face) -->
+    <linearGradient id="zpFrontCharcoal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="40%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="zpFrontDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+
+    <!-- Touchscreen Display -->
+    <linearGradient id="zpTouchScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="40%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#0c4a6e"/>
+    </linearGradient>
+
+    <!-- Side Window Tint & Label Roll -->
+    <clipPath id="zpWindowClip">
+      <path d="M84 48 L126 40 C129 39 131 41 131 44 L131 82 C131 85 129 87 126 88 L84 96 C81 97 79 95 79 92 L79 54 C79 51 81 49 84 48 Z"/>
+    </clipPath>
+    <linearGradient id="zpWindowTint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="zpWindowGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="zpRollSpindle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="zpLabelPaper" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+
+    <!-- Laser & Holographic Scan Light -->
+    <linearGradient id="zpLaserGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#00f2fe" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="70%" stop-color="#00f2fe" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#00f2fe" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Soft 3D Drop Shadow Filters -->
+    <filter id="zpShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.65"/>
+    </filter>
+    <filter id="zpGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0284c7" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- 1. Ambient 3D Podium Backplate -->
+  <rect x="8" y="8" width="144" height="144" rx="36" fill="url(#zpBasePlate)" stroke="url(#zpPlateBorder)" stroke-width="2.2" filter="url(#zpGlow)"/>
+
+  <!-- Subtle High-Tech Blueprint Grid inside Backplate -->
+  <g opacity="0.14" stroke="#38bdf8" stroke-width="1">
+    <line x1="20" y1="50" x2="140" y2="50"/>
+    <line x1="20" y1="80" x2="140" y2="80"/>
+    <line x1="20" y1="110" x2="140" y2="110"/>
+    <line x1="50" y1="20" x2="50" y2="140"/>
+    <line x1="80" y1="20" x2="80" y2="140"/>
+    <line x1="110" y1="20" x2="110" y2="140"/>
+  </g>
+
+  <!-- 2. Cast Ground Shadow Under Printer -->
+  <ellipse cx="80" cy="132" rx="52" ry="11" fill="#000000" opacity="0.75" filter="blur(6px)"/>
+
+  <!-- 3. MAIN 3D PRINTER (Zebra ZT411 Industrial Body) -->
+  <!-- Base Chassis / Rubber Feet -->
+  <path d="M28 122 L70 134 L132 118 L90 106 Z" fill="#0b0f19"/>
+
+  <!-- RIGHT SIDE PANEL (Metallic Silver Aluminum) -->
+  <!-- Main Side Face: Extends from front edge (X:70, Y:42 to Y:133) to rear corner (X:134, Y:30 to Y:116) -->
+  <path d="M70 42 L134 30 L134 116 L70 133 Z" fill="url(#zpMetalSide)"/>
+
+  <!-- Rounded Corner Chamfer at Rear of Side -->
+  <path d="M130 30 C133 30 135 32 135 35 L135 113 C135 115 133 117 130 117" stroke="#cbd5e1" stroke-width="1" fill="none" opacity="0.5"/>
+
+  <!-- TOP ROOF PANEL (Bi-fold Silver Lid) -->
+  <!-- Top Face: (Front-Left: 26, 49) -> (Front-Center: 70, 42) -> (Rear-Right: 134, 30) -> (Rear-Left: 90, 22) -->
+  <path d="M26 49 L70 42 L134 30 L90 22 Z" fill="url(#zpMetalTop)"/>
+  <!-- Longitudinal Hinge Seams on Top Cover -->
+  <line x1="79" y1="24" x2="123" y2="32" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="48" y1="46" x2="112" y2="34" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+
+  <!-- SIDE INSPECTION WINDOW (Zebra ZT411 Signature Window) -->
+  <!-- Positioned on the Silver Side: reveals media roll & yellow spindle -->
+  <path d="M84 48 L126 40 C129 39 131 41 131 44 L131 82 C131 85 129 87 126 88 L84 96 C81 97 79 95 79 92 L79 54 C79 51 81 49 84 48 Z"
+        fill="url(#zpWindowTint)" stroke="#1e293b" stroke-width="2.5"/>
+
+  <!-- Inside Window: Thermal Label Roll & Yellow Core Spindle -->
+  <g clip-path="url(#zpWindowClip)">
+    <!-- White Paper Roll Contour -->
+    <ellipse cx="112" cy="62" rx="14" ry="18" fill="url(#zpLabelPaper)"/>
+    <ellipse cx="112" cy="62" rx="11" ry="15" fill="#e2e8f0"/>
+    <ellipse cx="112" cy="62" rx="7" ry="10" fill="#94a3b8"/>
+    <!-- Yellow / Amber Spindle Gear Hub (Iconic Zebra ZT411 feature) -->
+    <ellipse cx="94" cy="66" rx="8" ry="11" fill="url(#zpRollSpindle)" stroke="#b45309" stroke-width="1"/>
+    <ellipse cx="94" cy="66" rx="4" ry="6" fill="#78350f"/>
+    <circle cx="94" cy="66" r="2" fill="#fde68a"/>
+    <!-- Window Gloss Reflection Streak -->
+    <path d="M81 52 L120 44 L114 86 L81 92 Z" fill="url(#zpWindowGloss)" opacity="0.28"/>
+  </g>
+
+  <!-- Lower Handle Indentation on Side -->
+  <path d="M96 112 L124 106 L124 114 L96 120 Z" fill="#1e293b" rx="2"/>
+
+  <!-- FRONT PANEL (Charcoal / Black Console & Dispenser) -->
+  <!-- Left Console Tower Face: (26, 49) down to (26, 118) and across to (48, 126) & (48, 46) -->
+  <path d="M26 49 L48 46 L48 126 L26 118 Z" fill="url(#zpFrontCharcoal)"/>
+
+  <!-- Front Dispensing Chamber / Right Section of Front: (48, 46) to (70, 42) down to (70, 133) & (48, 126) -->
+  <path d="M48 46 L70 42 L70 133 L48 126 Z" fill="url(#zpFrontDark)"/>
+
+  <!-- Front Bevel Highlight Line -->
+  <line x1="48" y1="46" x2="48" y2="126" stroke="#475569" stroke-width="1.2"/>
+
+  <!-- 4. FRONT CONSOLE DETAILS (Zebra ZT411 Interface) -->
+  <!-- Status LEDs (Top of Console) -->
+  <circle cx="31" cy="54" r="1.3" fill="#22c55e"/>
+  <circle cx="35" cy="54.8" r="1.3" fill="#f59e0b"/>
+  <circle cx="39" cy="55.5" r="1.3" fill="#38bdf8"/>
+
+  <!-- Color Touchscreen Display -->
+  <path d="M30 60 L45 57 L45 88 L30 85 Z" fill="#0369a1" stroke="#0284c7" stroke-width="1.2"/>
+  <path d="M31 62 L44 59 L44 86 L31 83 Z" fill="url(#zpTouchScreen)"/>
+  <!-- UI Icons on Screen (Simulating Zebra OS Touch UI) -->
+  <rect x="33" y="65" width="8" height="6" rx="1" fill="#38bdf8" opacity="0.8"/>
+  <line x1="33" y1="74" x2="42" y2="72" stroke="#ffffff" stroke-width="1" opacity="0.9"/>
+  <line x1="33" y1="77" x2="40" y2="75.5" stroke="#93c5fd" stroke-width="0.8"/>
+  <rect x="33" y="80" width="3" height="3" rx="0.5" fill="#38bdf8"/>
+  <rect x="38" y="79" width="3" height="3" rx="0.5" fill="#38bdf8"/>
+
+  <!-- Keypad Buttons (Pause ||, Feed, Cancel X) -->
+  <rect x="30" y="90" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
+  <rect x="35.5" y="91" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
+  <rect x="41" y="92" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
+
+  <!-- ZEBRA Model Label Text -->
+  <line x1="31" y1="99" x2="42" y2="101" stroke="#94a3b8" stroke-width="1.2"/>
+
+  <!-- USB Port Door at Bottom of Console -->
+  <rect x="33" y="106" width="7" height="8" rx="1.5" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+
+  <!-- 5. LABEL DISPENSING MOUTH & FRESHLY PRINTED BARCODE LABEL -->
+  <!-- Zebra Head Logo Emblem on Upper Door -->
+  <path d="M56 50 L62 49 L60 55 L54 56 Z" fill="#ffffff" opacity="0.85"/>
+
+  <!-- Stainless Steel Tear Bar / Label Output Roller -->
+  <path d="M51 68 L67 65 L67 71 L51 74 Z" fill="#cbd5e1" stroke="#ffffff" stroke-width="1"/>
+
+  <!-- Freshly Dispensed White Barcode Label (Emerging in 3D Perspective!) -->
+  <path d="M50 72 L66 69 L69 95 L53 98 Z" fill="url(#zpLabelPaper)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))"/>
+
+  <!-- Barcode Stripes on Label -->
+  <rect x="53" y="75" width="1.5" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="56" y="74.5" width="1" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="58.5" y="74" width="2" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="62" y="73.5" width="1" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="64.5" y="73" width="1.8" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+
+  <!-- Glowing Laser Scan Beam Across the Label -->
+  <line x1="47" y1="84" x2="72" y2="79" stroke="url(#zpLaserGlow)" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="59.5" cy="81.5" r="2.5" fill="#ffffff" filter="drop-shadow(0 0 4px #00f2fe)"/>
+
+  <!-- Lower Textured Ribs / Grip Grooves -->
+  <line x1="53" y1="102" x2="53" y2="120" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="57" y1="101" x2="57" y2="121" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="61" y1="100" x2="61" y2="122" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="65" y1="99" x2="65" y2="123" stroke="#1e293b" stroke-width="1.2"/>
+
+  <!-- 6. Precision Corner Crosshairs on Outer Baseplate -->
+  <path d="M16 26V16H26" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M144 26V16H134" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M16 134V144H26" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M144 134V144H134" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
       </div>
-      <h2>System Label Printing</h2>
-      <p class="login-sub">Department Access Control &amp; Verification Portal</p>
+      <div class="login-brand-meta">
+        <h2 class="login-brand-title">SYSTEM LABEL PRINTING</h2>
+
+        <p class="login-brand-sub">Department Access Control &amp; Verification Gateway</p>
+      </div>
     </div>
 
-    <!-- Error / Info Notice -->
+    <!-- Error Notice Banner -->
     <div id="loginError" class="login-alert hidden"></div>
 
     <form id="loginForm" class="login-form" autocomplete="off">
       <div class="login-field">
-        <label for="loginUsername">Username</label>
+        <label for="loginUsername">
+          <span>Username</span>
+        </label>
         <div class="login-input-wrap">
           <span class="login-input-icon"><i data-i="user"></i></span>
-          <input type="text" id="loginUsername" placeholder="Enter username..." required autofocus>
+          <input type="text" id="loginUsername" placeholder="Enter username..." required autofocus autocomplete="username">
         </div>
       </div>
 
       <div class="login-field">
-        <label for="loginPassword">Password</label>
+        <label for="loginPassword">
+          <span>Password</span>
+        </label>
         <div class="login-input-wrap">
           <span class="login-input-icon"><i data-i="lock"></i></span>
-          <input type="password" id="loginPassword" placeholder="Enter password..." required>
-          <button type="button" class="btn-toggle-pass" id="btnTogglePass" title="Show/Hide Password">
+          <input type="password" id="loginPassword" placeholder="Enter password..." required autocomplete="current-password">
+          <button type="button" class="btn-toggle-pass" id="btnTogglePass" title="Show/Hide Password" tabindex="-1">
             <i data-i="eye" id="passEyeIcon"></i>
           </button>
         </div>
@@ -954,7 +1260,7 @@
       <div class="login-options">
         <label class="login-remember">
           <input type="checkbox" id="loginRemember" checked>
-          <span>Remember me</span>
+          <span>Keep me signed in</span>
         </label>
         <span class="login-cloud-status" id="loginCloudStatus">
           <span class="live-dot-mini" style="background:#10b981"></span> Protected Gateway
@@ -970,7 +1276,7 @@
     <div class="login-footer">
       <div class="login-footer-info">
         <i data-i="shield"></i>
-        <span>User Account Isolation &amp; Remote Master Control</span>
+        <span>Cloud Synchronized &bull; Multi-User Verification Gateway</span>
       </div>
     </div>
   </div>
@@ -3173,9 +3479,15 @@
   const KEY_GITHUB_TOKEN='slp_github_token';
   const KEY_SYS_STATUS='slp_system_status';
   const USERS_VAULT_TOPIC='slp/titoahmedtito999/users_vault_v2';
-  const DEFAULT_ADMIN={username:'s26',password:'s26',role:'admin',name:'s26',active:true};
-  const DEFAULT_USER={username:'user',password:'user123',role:'operator',name:'Standard Operator',active:true};
-  const DEFAULT_OPERATOR_ALIAS={username:'operator',password:'user123',role:'operator',name:'Standard Operator',active:true};
+  const DEFAULT_USERS = [
+    {username:'s26',password:'s26',role:'admin',name:'Ahmed Samy',active:true},
+    {username:'hwaida',password:'2026',role:'operator',name:'Hwaida Elaraby',active:true},
+    {username:'abdo',password:'2026',role:'operator',name:'Abdelrahman Hossam',active:true},
+    {username:'khan',password:'2026',role:'operator',name:'Yassin Khan',active:true},
+    {username:'hassan',password:'hassan',role:'admin',name:'Ahmed Hassan',active:true}
+  ];
+  const DEFAULT_ADMIN = DEFAULT_USERS[0];
+  const DEFAULT_USER = DEFAULT_USERS[1];
 
   function getDeletedUsers(){
     try{
@@ -3239,24 +3551,24 @@
       if(raw){
         const arr=JSON.parse(raw);
         if(Array.isArray(arr)&&arr.length){
-          // Ensure master admin s26 exists
-          const adminIdx=arr.findIndex(u=>u.username==='s26');
-          if(adminIdx===-1){
-            const oldIdx=arr.findIndex(u=>u.username==='admin');
-            if(oldIdx!==-1) arr[oldIdx]=DEFAULT_ADMIN;
-            else arr.unshift(DEFAULT_ADMIN);
-            saveStoredUsers(arr);
-          }else{
-            arr[adminIdx].role='admin';
-            arr[adminIdx].active=true;
-          }
+          DEFAULT_USERS.forEach(defU=>{
+            const idx=arr.findIndex(u=>u.username.toLowerCase()===defU.username.toLowerCase());
+            if(idx===-1){
+              arr.push(defU);
+            }else{
+              if(!arr[idx].name||arr[idx].name===arr[idx].username){
+                arr[idx].name=defU.name;
+              }
+              if(arr[idx].role!==defU.role) arr[idx].role=defU.role;
+            }
+          });
+          saveStoredUsers(arr);
           return arr;
         }
       }
     }catch(e){}
-    const def=[DEFAULT_ADMIN,DEFAULT_USER];
-    saveStoredUsers(def);
-    return def;
+    saveStoredUsers(DEFAULT_USERS);
+    return DEFAULT_USERS.slice();
   }
   function broadcastUsersOverMqtt(usersList){
     if(!realtimeClient||!realtimeConnected) return;
@@ -3333,8 +3645,11 @@
   function showLoginError(msg){
     const errEl=$('#loginError');
     if(errEl){
-      errEl.textContent=msg;
+      errEl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>'+esc(msg)+'</span>';
       errEl.classList.remove('hidden');
+      errEl.classList.remove('shake');
+      void errEl.offsetWidth;
+      errEl.classList.add('shake');
     }
   }
   function hideLoginError(){
@@ -3566,28 +3881,22 @@
     // Helper to find matching user with case-sensitivity tolerance for mobile keyboards
     function findMatch(uList, inputUser, inputPass){
       const uLower=inputUser.toLowerCase();
+      const pool = [];
+      const seen = new Set();
+      [...(Array.isArray(uList)?uList:[]), ...DEFAULT_USERS].forEach(u=>{
+        if(u&&u.username&&!seen.has(u.username.toLowerCase())){
+          seen.add(u.username.toLowerCase());
+          pool.push(u);
+        }
+      });
+
       // 1. Exact match
-      let m=uList.find(u=>u.username.toLowerCase()===uLower&&u.password===inputPass);
+      let m=pool.find(u=>u.username.toLowerCase()===uLower&&u.password===inputPass);
       if(m) return m;
 
       // 2. Case-insensitive password match (handles mobile keyboard auto-capitalizing first letter)
-      m=uList.find(u=>u.username.toLowerCase()===uLower&&u.password.toLowerCase()===inputPass.toLowerCase());
+      m=pool.find(u=>u.username.toLowerCase()===uLower&&u.password.toLowerCase()===inputPass.toLowerCase());
       if(m) return m;
-
-      // 3. Default Operator aliases (user or operator with password user123 or user)
-      if(uLower==='user'||uLower==='operator'){
-        const pLower=inputPass.toLowerCase();
-        if(pLower==='user123'||pLower==='user'){
-          return uList.find(u=>u.role==='operator')||DEFAULT_USER;
-        }
-      }
-
-      // 4. Master Admin alias (s26 or admin with password s26)
-      if(uLower==='s26'||uLower==='admin'){
-        if(inputPass==='s26'||inputPass.toLowerCase()==='s26'){
-          return uList.find(u=>u.role==='admin')||DEFAULT_ADMIN;
-        }
-      }
 
       return null;
     }
@@ -3615,7 +3924,7 @@
     }
 
     if(!user){
-      showLoginError('Invalid username or password. Check spelling or try username: user / pass: user123');
+      showLoginError('Invalid username or password. Please try again.');
       return;
     }
     if(user.active===false){
