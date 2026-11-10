@@ -32,6 +32,17 @@
   .app{display:flex;min-height:100vh}
   .sidebar{width:262px;flex-shrink:0;background:linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%);color:#cbd5e1;display:flex;flex-direction:column;padding:22px 14px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
   .logo-wrap{display:flex;align-items:center;gap:12px;padding:2px 8px 20px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+  .sidebar-zebra-logo{
+    width:48px;height:48px;border-radius:14px;
+    display:grid;place-items:center;flex-shrink:0;
+    filter:drop-shadow(0 6px 14px rgba(6,182,212,0.35));
+    transition:transform .22s cubic-bezier(0.34, 1.56, 0.64, 1), filter .22s ease;
+  }
+  .sidebar-zebra-logo:hover{
+    transform:scale(1.08) translateY(-1px);
+    filter:drop-shadow(0 8px 20px rgba(6,182,212,0.55));
+  }
+  .sidebar-zebra-logo svg{width:100%;height:100%;display:block}
   .logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#14b8a6);display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.35);flex-shrink:0}
   .logo svg{width:26px;height:26px;stroke:#fff}
   .logo-wrap b{color:#fff;font-size:1rem;line-height:1.2;display:block}
@@ -1307,7 +1318,228 @@
   <!-- ===== Sidebar ===== -->
   <aside class="sidebar">
     <div class="logo-wrap">
-      <div class="logo"><i data-i="printer"></i></div>
+      <div class="sidebar-zebra-logo">
+        <svg class="login-emblem-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background 3D Podium Gradients -->
+    <radialGradient id="zpBackGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#6366f1" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#080c16" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="zpBasePlate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="zpPlateBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="40%" stop-color="#818cf8"/>
+      <stop offset="70%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+
+    <!-- Metallic Silver/Platinum Casing (Side & Top) -->
+    <linearGradient id="zpMetalTop" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="35%" stop-color="#e2e8f0"/>
+      <stop offset="75%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="zpMetalSide" x1="0%" y1="0%" x2="100%" y2="10%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="15%" stop-color="#cbd5e1"/>
+      <stop offset="70%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+
+    <!-- Charcoal / Black Matte Casing (Front Face) -->
+    <linearGradient id="zpFrontCharcoal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="40%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="zpFrontDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+
+    <!-- Touchscreen Display -->
+    <linearGradient id="zpTouchScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="40%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#0c4a6e"/>
+    </linearGradient>
+
+    <!-- Side Window Tint & Label Roll -->
+    <clipPath id="zpWindowClip">
+      <path d="M84 48 L126 40 C129 39 131 41 131 44 L131 82 C131 85 129 87 126 88 L84 96 C81 97 79 95 79 92 L79 54 C79 51 81 49 84 48 Z"/>
+    </clipPath>
+    <linearGradient id="zpWindowTint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="zpWindowGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="zpRollSpindle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="zpLabelPaper" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+
+    <!-- Laser & Holographic Scan Light -->
+    <linearGradient id="zpLaserGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#00f2fe" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="70%" stop-color="#00f2fe" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#00f2fe" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Soft 3D Drop Shadow Filters -->
+    <filter id="zpShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.65"/>
+    </filter>
+    <filter id="zpGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0284c7" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- 1. Ambient 3D Podium Backplate -->
+  <rect x="8" y="8" width="144" height="144" rx="36" fill="url(#zpBasePlate)" stroke="url(#zpPlateBorder)" stroke-width="2.2" filter="url(#zpGlow)"/>
+
+  <!-- Subtle High-Tech Blueprint Grid inside Backplate -->
+  <g opacity="0.14" stroke="#38bdf8" stroke-width="1">
+    <line x1="20" y1="50" x2="140" y2="50"/>
+    <line x1="20" y1="80" x2="140" y2="80"/>
+    <line x1="20" y1="110" x2="140" y2="110"/>
+    <line x1="50" y1="20" x2="50" y2="140"/>
+    <line x1="80" y1="20" x2="80" y2="140"/>
+    <line x1="110" y1="20" x2="110" y2="140"/>
+  </g>
+
+  <!-- 2. Cast Ground Shadow Under Printer -->
+  <ellipse cx="80" cy="132" rx="52" ry="11" fill="#000000" opacity="0.75" filter="blur(6px)"/>
+
+  <!-- 3. MAIN 3D PRINTER (Zebra ZT411 Industrial Body) -->
+  <!-- Base Chassis / Rubber Feet -->
+  <path d="M28 122 L70 134 L132 118 L90 106 Z" fill="#0b0f19"/>
+
+  <!-- RIGHT SIDE PANEL (Metallic Silver Aluminum) -->
+  <!-- Main Side Face: Extends from front edge (X:70, Y:42 to Y:133) to rear corner (X:134, Y:30 to Y:116) -->
+  <path d="M70 42 L134 30 L134 116 L70 133 Z" fill="url(#zpMetalSide)"/>
+
+  <!-- Rounded Corner Chamfer at Rear of Side -->
+  <path d="M130 30 C133 30 135 32 135 35 L135 113 C135 115 133 117 130 117" stroke="#cbd5e1" stroke-width="1" fill="none" opacity="0.5"/>
+
+  <!-- TOP ROOF PANEL (Bi-fold Silver Lid) -->
+  <!-- Top Face: (Front-Left: 26, 49) -> (Front-Center: 70, 42) -> (Rear-Right: 134, 30) -> (Rear-Left: 90, 22) -->
+  <path d="M26 49 L70 42 L134 30 L90 22 Z" fill="url(#zpMetalTop)"/>
+  <!-- Longitudinal Hinge Seams on Top Cover -->
+  <line x1="79" y1="24" x2="123" y2="32" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="48" y1="46" x2="112" y2="34" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+
+  <!-- SIDE INSPECTION WINDOW (Zebra ZT411 Signature Window) -->
+  <!-- Positioned on the Silver Side: reveals media roll & yellow spindle -->
+  <path d="M84 48 L126 40 C129 39 131 41 131 44 L131 82 C131 85 129 87 126 88 L84 96 C81 97 79 95 79 92 L79 54 C79 51 81 49 84 48 Z"
+        fill="url(#zpWindowTint)" stroke="#1e293b" stroke-width="2.5"/>
+
+  <!-- Inside Window: Thermal Label Roll & Yellow Core Spindle -->
+  <g clip-path="url(#zpWindowClip)">
+    <!-- White Paper Roll Contour -->
+    <ellipse cx="112" cy="62" rx="14" ry="18" fill="url(#zpLabelPaper)"/>
+    <ellipse cx="112" cy="62" rx="11" ry="15" fill="#e2e8f0"/>
+    <ellipse cx="112" cy="62" rx="7" ry="10" fill="#94a3b8"/>
+    <!-- Yellow / Amber Spindle Gear Hub (Iconic Zebra ZT411 feature) -->
+    <ellipse cx="94" cy="66" rx="8" ry="11" fill="url(#zpRollSpindle)" stroke="#b45309" stroke-width="1"/>
+    <ellipse cx="94" cy="66" rx="4" ry="6" fill="#78350f"/>
+    <circle cx="94" cy="66" r="2" fill="#fde68a"/>
+    <!-- Window Gloss Reflection Streak -->
+    <path d="M81 52 L120 44 L114 86 L81 92 Z" fill="url(#zpWindowGloss)" opacity="0.28"/>
+  </g>
+
+  <!-- Lower Handle Indentation on Side -->
+  <path d="M96 112 L124 106 L124 114 L96 120 Z" fill="#1e293b" rx="2"/>
+
+  <!-- FRONT PANEL (Charcoal / Black Console & Dispenser) -->
+  <!-- Left Console Tower Face: (26, 49) down to (26, 118) and across to (48, 126) & (48, 46) -->
+  <path d="M26 49 L48 46 L48 126 L26 118 Z" fill="url(#zpFrontCharcoal)"/>
+
+  <!-- Front Dispensing Chamber / Right Section of Front: (48, 46) to (70, 42) down to (70, 133) & (48, 126) -->
+  <path d="M48 46 L70 42 L70 133 L48 126 Z" fill="url(#zpFrontDark)"/>
+
+  <!-- Front Bevel Highlight Line -->
+  <line x1="48" y1="46" x2="48" y2="126" stroke="#475569" stroke-width="1.2"/>
+
+  <!-- 4. FRONT CONSOLE DETAILS (Zebra ZT411 Interface) -->
+  <!-- Status LEDs (Top of Console) -->
+  <circle cx="31" cy="54" r="1.3" fill="#22c55e"/>
+  <circle cx="35" cy="54.8" r="1.3" fill="#f59e0b"/>
+  <circle cx="39" cy="55.5" r="1.3" fill="#38bdf8"/>
+
+  <!-- Color Touchscreen Display -->
+  <path d="M30 60 L45 57 L45 88 L30 85 Z" fill="#0369a1" stroke="#0284c7" stroke-width="1.2"/>
+  <path d="M31 62 L44 59 L44 86 L31 83 Z" fill="url(#zpTouchScreen)"/>
+  <!-- UI Icons on Screen (Simulating Zebra OS Touch UI) -->
+  <rect x="33" y="65" width="8" height="6" rx="1" fill="#38bdf8" opacity="0.8"/>
+  <line x1="33" y1="74" x2="42" y2="72" stroke="#ffffff" stroke-width="1" opacity="0.9"/>
+  <line x1="33" y1="77" x2="40" y2="75.5" stroke="#93c5fd" stroke-width="0.8"/>
+  <rect x="33" y="80" width="3" height="3" rx="0.5" fill="#38bdf8"/>
+  <rect x="38" y="79" width="3" height="3" rx="0.5" fill="#38bdf8"/>
+
+  <!-- Keypad Buttons (Pause ||, Feed, Cancel X) -->
+  <rect x="30" y="90" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
+  <rect x="35.5" y="91" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
+  <rect x="41" y="92" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
+
+  <!-- ZEBRA Model Label Text -->
+  <line x1="31" y1="99" x2="42" y2="101" stroke="#94a3b8" stroke-width="1.2"/>
+
+  <!-- USB Port Door at Bottom of Console -->
+  <rect x="33" y="106" width="7" height="8" rx="1.5" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
+
+  <!-- 5. LABEL DISPENSING MOUTH & FRESHLY PRINTED BARCODE LABEL -->
+  <!-- Zebra Head Logo Emblem on Upper Door -->
+  <path d="M56 50 L62 49 L60 55 L54 56 Z" fill="#ffffff" opacity="0.85"/>
+
+  <!-- Stainless Steel Tear Bar / Label Output Roller -->
+  <path d="M51 68 L67 65 L67 71 L51 74 Z" fill="#cbd5e1" stroke="#ffffff" stroke-width="1"/>
+
+  <!-- Freshly Dispensed White Barcode Label (Emerging in 3D Perspective!) -->
+  <path d="M50 72 L66 69 L69 95 L53 98 Z" fill="url(#zpLabelPaper)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))"/>
+
+  <!-- Barcode Stripes on Label -->
+  <rect x="53" y="75" width="1.5" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="56" y="74.5" width="1" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="58.5" y="74" width="2" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="62" y="73.5" width="1" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+  <rect x="64.5" y="73" width="1.8" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
+
+  <!-- Glowing Laser Scan Beam Across the Label -->
+  <line x1="47" y1="84" x2="72" y2="79" stroke="url(#zpLaserGlow)" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="59.5" cy="81.5" r="2.5" fill="#ffffff" filter="drop-shadow(0 0 4px #00f2fe)"/>
+
+  <!-- Lower Textured Ribs / Grip Grooves -->
+  <line x1="53" y1="102" x2="53" y2="120" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="57" y1="101" x2="57" y2="121" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="61" y1="100" x2="61" y2="122" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="65" y1="99" x2="65" y2="123" stroke="#1e293b" stroke-width="1.2"/>
+
+  <!-- 6. Precision Corner Crosshairs on Outer Baseplate -->
+  <path d="M16 26V16H26" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M144 26V16H134" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M16 134V144H26" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M144 134V144H134" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
+      </div>
       <div><b>System Label Printing</b><small>Label Printing Department</small></div>
     </div>
 
