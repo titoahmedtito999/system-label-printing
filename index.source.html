@@ -1038,9 +1038,7 @@
               </div>
             </div>
             <div class="user-capsule-actions">
-              <button type="button" class="btn-user-act admin-only" id="btnOpenAdminControl" title="Master Control Panel">
-                <i data-i="shield"></i><span>Control</span>
-              </button>
+              
               <button type="button" class="btn-user-act danger" id="btnLogout" title="Logout">
                 <i data-i="logOut"></i><span>Logout</span>
               </button>
@@ -1252,144 +1250,6 @@
   </div>
 </div>
 
-<!-- ===== Master Admin Control Modal (لوحة تحكم المالك) ===== -->
-<div class="overlay hidden" id="adminControlModal">
-  <div class="modal modal-wide" style="max-width:680px">
-    <div class="modal-top">
-      <div class="m-ico" style="background:linear-gradient(135deg,#dc2626,#7c3aed)"><i data-i="shield"></i></div>
-      <div>
-        <h3>Master Admin Control Hub • لوحة تحكم المالك</h3>
-        <p>التحكم الكامل في تشغيل النسخة، الصلاحيات، المستخدمين، والمسح عن بُعد</p>
-      </div>
-      <button type="button" class="modal-close-btn" id="adminControlClose">&times;</button>
-    </div>
-
-    <!-- Remote Switch Banner -->
-    <div class="bk-card" style="background:#fff1f2;border-color:#fca5a5">
-      <div class="bk-card-head">
-        <h4><i data-i="power" style="color:#dc2626"></i>حالة تشغيل النسخة الحية (Global Kill Switch)</h4>
-        <span class="badge" id="adminLiveStatusBadge" style="background:#10b981;color:#fff">ACTIVE</span>
-      </div>
-      <p class="bk-desc">
-        يمكنك تعليق تشغيل النسخة فوراً على جميع الأجهزة في العالم أو إعادة تفعيلها بضغطة زر واحدة.
-      </p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button type="button" class="btn btn-save btn-sm" id="btnSetSystemActive">
-          <i data-i="check"></i>تفعيل وتشغيل النظام (Active)
-        </button>
-        <button type="button" class="btn btn-danger btn-sm" id="btnSetSystemSuspend">
-          <i data-i="power"></i>إيقاف النسخة عن بُعد (Suspend All Instances)
-        </button>
-        <button type="button" class="btn btn-clear btn-sm" id="btnEmergencyWipe">
-          <i data-i="trash"></i>مسح البيانات فوراً (Emergency Wipe)
-        </button>
-      </div>
-    </div>
-
-    <!-- Users Management Card -->
-    <div class="bk-card">
-      <div class="bk-card-head">
-        <h4><i data-i="user"></i>إدارة حسابات المستخدمين (User Accounts & Isolation)</h4>
-        <button type="button" class="btn btn-save btn-sm" id="btnOpenAddUser">
-          <i data-i="plus"></i>إضافة مستخدم جديد
-        </button>
-      </div>
-      <p class="bk-desc">كل مستخدم له حساب خاص به ولا يمكن لأي شخص الدخول بحساب مستخدم آخر.</p>
-      <div class="admin-users-list" id="adminUsersList"></div>
-    </div>
-
-    <!-- Smart Multi-Device & GitHub Cloud Hub (مزامنة أجهزة العالم والتحكم السحابي) -->
-    <div class="bk-card accent" style="border-color:#38bdf8;background:#f0f9ff">
-      <div class="bk-card-head">
-        <h4><i data-i="cloud" style="color:#0284c7"></i>مزامنة جميع أجهزة العالم (Global Multi-Device Sync)</h4>
-        <span class="badge" id="adminGithubStatus" style="background:#10b981;color:#fff">Active</span>
-      </div>
-      <p class="bk-desc">
-        لربط جميع أجهزة الكمبيوتر والهواتف في العالم: أي مستخدم (Operator أو Admin) تضيفه أو تعدله هنا سينتقل تلقائياً لجميع أجهزة العالم فور حفظ رمز <b>GitHub Token</b> أدناه دون الحاجة لرفع أي ملفات يدوياً!
-      </p>
-
-      <!-- Connected Repo Status Banner -->
-      <div style="background:#ffffff;border:1.5px solid #bae6fd;border-radius:10px;padding:11px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:#0369a1">
-          <i data-i="link"></i>
-          <span>المستودع المتصل: <strong id="adminConnectedRepoText">titoahmedtito999/system-label-printing</strong></span>
-        </div>
-        <span id="adminSyncModeBadge" style="font-size:.78rem;font-weight:700;color:#059669;display:flex;align-items:center;gap:6px">
-          <span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block"></span>
-          جاهز للمزامنة العالمية
-        </span>
-      </div>
-
-      <!-- GitHub Token Setup Box (Prominent & User-Friendly) -->
-      <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-radius:12px;padding:14px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
-          <label style="font-size:.84rem;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:6px">
-            <i data-i="key"></i>رمز المزامنة التلقائية العالمية (GitHub Personal Access Token):
-          </label>
-          <span id="tokenStatusText" style="font-size:.75rem;font-weight:700;color:#64748b">لم يتم الحفظ</span>
-        </div>
-        <p style="font-size:.76rem;color:#64748b;margin-bottom:10px;line-height:1.45">
-          ألصق الرمز مرة واحدة فقط هنا واضغط <b>حفظ وتفعيل المزامنة</b>. سيتم إرسال أي مستخدم أو تعديل تلقائياً وفورياً إلى السحابة ليعمل على أي جهاز أو هاتف في العالم في نفس اللحظة!
-        </p>
-        <div class="bk-link-row">
-          <input type="password" class="bk-link-input" id="adminGithubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-          <button type="button" class="btn btn-save btn-sm" id="btnSaveGithubToken">
-            <i data-i="check"></i>حفظ وتفعيل المزامنة التلقائية
-          </button>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button type="button" class="btn btn-info btn-sm" id="btnPushToGithub" style="background:#0284c7;color:#fff">
-          <i data-i="upload"></i>🚀 نشر وتحديث الحسابات لجميع أجهزة العالم الآن
-        </button>
-        <button type="button" class="btn btn-save btn-sm" id="btnDownloadControlJson">
-          <i data-i="download"></i>تحميل ملف control.json المباشر
-        </button>
-        <button type="button" class="btn btn-clear btn-sm" id="btnCopyControlJson">
-          <i data-i="copy"></i>نسخ كود JSON السريع
-        </button>
-        <button type="button" class="btn btn-clear btn-sm" id="btnSyncRemoteNow">
-          <i data-i="refresh"></i>مزامنة وتحديث الحالة الآن
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal to Add/Edit User -->
-<div class="overlay hidden" id="addUserModal" style="z-index:75">
-  <div class="modal" style="text-align:start;max-width:380px">
-    <h3 style="margin-bottom:12px;display:flex;align-items:center;gap:8px"><i data-i="user"></i>إضافة مستخدم جديد</h3>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div>
-        <label style="font-size:.8rem;font-weight:700;color:var(--text)">اسم المستخدم (Username):</label>
-        <input type="text" id="newUsername" class="bk-link-input" style="width:100%" placeholder="مثال: ahmed_ops">
-      </div>
-      <div>
-        <label style="font-size:.8rem;font-weight:700;color:var(--text)">كلمة المرور (Password):</label>
-        <input type="password" id="newPassword" class="bk-link-input" style="width:100%" placeholder="••••••••">
-      </div>
-      <div>
-        <label style="font-size:.8rem;font-weight:700;color:var(--text)">الاسم الظاهر (Display Name):</label>
-        <input type="text" id="newName" class="bk-link-input" style="width:100%" placeholder="مثال: أحمد محمد">
-      </div>
-      <div>
-        <label style="font-size:.8rem;font-weight:700;color:var(--text)">نوع الصلاحية (Role):</label>
-        <select id="newRole" class="bk-link-input" style="width:100%">
-          <option value="operator">Operator (إدخال وعرض وتعديل الداتا)</option>
-          <option value="admin">Admin (مدير كامل الصلاحيات والتحكم)</option>
-        </select>
-      </div>
-      <div class="btns" style="margin-top:10px">
-        <button type="button" class="btn btn-clear" id="btnCancelAddUser">إلغاء</button>
-        <button type="button" class="btn btn-save" id="btnSaveNewUser">حفظ المستخدم</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
   /* ---------- Icons ---------- */
@@ -1469,15 +1329,7 @@
       cols:[['brand','BRAND'],['line','LINE'],['cut','CUT'],['erp','ERP NO'],['colour','COLOUR'],['lot','LOT NO'],['total','TOTAL','num total'],['date','DATE']],
       required:['brand','line','cut','erp','colour','lot','total','date'],
       legacy:{f:'erp',v:['ERP-20451','ERP-20466','ERP-20472','ERP-20490','ERP-30101','ERP-30102','ERP-30103','ERP-30104','ERP-30105','ERP-30106','ERP-30107']},
-      samples:[
-        {brand:'DECATHLON',line:'Line 1',cut:'C-101',erp:'O/40101',colour:'Navy Blue',lot:'LOT-9201',total:1200,d:0},
-        {brand:'BASS PRO',line:'Line 3',cut:'C-205',erp:'O/40102',colour:'Olive',lot:'LOT-9202',total:850,d:0},
-        {brand:'DECATHLON',line:'Line 2',cut:'C-310',erp:'O/40103',colour:'Black',lot:'LOT-9203',total:2300,d:1},
-        {brand:'BASS PRO',line:'Line 5',cut:'C-118',erp:'O/40104',colour:'White',lot:'LOT-9204',total:640,d:2},
-        {brand:'DECATHLON',line:'Line 4',cut:'C-420',erp:'O/40105',colour:'Grey',lot:'LOT-9205',total:900,d:3},
-        {brand:'DECATHLON',line:'Line 1',cut:'C-150',erp:'O/40106',colour:'Red',lot:'LOT-9206',total:1500,d:9},
-        {brand:'BASS PRO',line:'Line 2',cut:'C-260',erp:'O/40107',colour:'Brown',lot:'LOT-9207',total:1100,d:17}
-      ]
+      samples:[]
     },
     sticker:{
       label:'Sticker Printing Details', key:'slp_sticker_v1',
@@ -1495,15 +1347,7 @@
       cols:[['brand','BRAND'],['style','STYLE'],['po','PO'],['colour','COLOUR'],['part','PART'],['side','SIDE','num'],['totalCarton','TOTAL CARTON','num'],['totalSticker','TOTAL STICKER','num total'],['date','DATE']],
       required:['brand','style','po','colour','part','side','totalCarton','date'],
       legacy:{f:'po',v:['PO-88120','PO-88145','PO-88170','PO-88203','PO-90120','PO-90145','PO-90170','PO-90203','PO-90230','PO-90260','PO-90290','PO-91120','PO-91145','PO-91170','PO-91203','PO-91230','PO-91260','PO-91290']},
-      samples:[
-        {brand:'PPJ',style:'ST-5540',po:'PO-92101',colour:'Black',part:'Part A',side:1,totalCarton:300,d:0},
-        {brand:'DEFACTO',style:'ST-6102',po:'PO-92102',colour:'Beige',part:'Part B',side:2,totalCarton:250,d:0},
-        {brand:'DG 20',style:'ST-7011',po:'PO-92103',colour:'Blue',part:'Part A',side:3,totalCarton:180,d:1},
-        {brand:'COSTCO',style:'ST-4420',po:'PO-92104',colour:'Olive',part:'Part C',side:4,totalCarton:120,d:2},
-        {brand:'M265',style:'ST-3301',po:'PO-92105',colour:'Grey',part:'Part A',side:2,totalCarton:200,d:3},
-        {brand:'C K',style:'ST-5612',po:'PO-92106',colour:'Red',part:'Part B',side:4,totalCarton:150,d:9},
-        {brand:'FASHION OPTION',style:'ST-6620',po:'PO-92107',colour:'Brown',part:'Part A',side:3,totalCarton:210,d:17}
-      ]
+      samples:[]
     }
   };
   const KEYS=Object.keys(STAGES);
@@ -1806,7 +1650,7 @@
       if(msg.action === 'SYNC_STAGE' && msg.stage && Array.isArray(msg.data)){
         isApplyingRemoteChange = true;
         try{
-          data[msg.stage] = smartMergeRecords(data[msg.stage], msg.data);
+          data[msg.stage] = msg.data.slice();
           localStorage.setItem(STAGES[msg.stage].key, JSON.stringify(data[msg.stage]));
           render();
           flashLiveSyncUI(msg.sender);
@@ -1817,11 +1661,11 @@
         isApplyingRemoteChange = true;
         try{
           if(Array.isArray(msg.payload.acetate)){
-            data.acetate = smartMergeRecords(data.acetate, msg.payload.acetate);
+            data.acetate = msg.payload.acetate.slice();
             localStorage.setItem(STAGES.acetate.key, JSON.stringify(data.acetate));
           }
           if(Array.isArray(msg.payload.sticker)){
-            data.sticker = smartMergeRecords(data.sticker, msg.payload.sticker);
+            data.sticker = msg.payload.sticker.slice();
             localStorage.setItem(STAGES.sticker.key, JSON.stringify(data.sticker));
           }
           render();
@@ -1853,36 +1697,9 @@
     }
   };
   const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-  function makeSamples(k){
-    const now=new Date();
-    return STAGES[k].samples.map(s=>{
-      const {d,...rest}=s;
-      const r={...rest,id:uid(),date:toStr(addDays(now,-d))};
-      if(k==='sticker') r.totalSticker=r.totalCarton*r.side;
-      return r;
-    });
-  }
-  /* One-time migration: drop old demo records (ZARA, H&M, MANGO ...) and seed new demo data */
-  if(!localStorage.getItem('slp_v4')){
-    KEYS.forEach(k=>{
-      const L=STAGES[k].legacy;
-      data[k]=(Array.isArray(data[k])?data[k]:[]).filter(r=>!L.v.includes(r[L.f]));
-      if(!data[k].length) data[k]=makeSamples(k);
-      save(k,false);
-    });
-    localStorage.setItem('slp_v4','1');
-  }
-  /* Migration v5: ensure Acetate only has DECATHLON and BASS PRO in demo data */
-  if(!localStorage.getItem('slp_v5')){
-    if(Array.isArray(data.acetate)){
-      const hasOther = data.acetate.some(r => r.erp && r.erp.startsWith('ERP-401') && !['DECATHLON','BASS PRO'].includes(r.brand));
-      if(hasOther || !data.acetate.length){
-        data.acetate = makeSamples('acetate');
-        save('acetate',false);
-      }
-    }
-    localStorage.setItem('slp_v5','1');
-  }
+  function makeSamples(k){ return []; }
+  /* Ensure strict data isolation - NO automated dummy records seeded */
+  KEYS.forEach(k=>{ if(!Array.isArray(data[k])) data[k]=[]; });
   /* Migration v6: ensure all acetate records have O/ prefix for ERP */
   if(!localStorage.getItem('slp_v6')){
     if(Array.isArray(data.acetate)){
@@ -3079,8 +2896,8 @@
      ULTRA-FAST REALTIME WEBSOCKET SYNC (< 1s LIVE OPERATOR SYNCHRONIZATION)
      WITH PERSISTENT RETAINED VAULT STORAGE
      ========================================================================== */
-  const REALTIME_TOPIC='slp/titoahmedtito999/live_data_v2';
-  const RETAIN_VAULT_TOPIC='slp/titoahmedtito999/vault_state_v3';
+  const REALTIME_TOPIC='slp/titoahmedtito999/live_data_v4';
+  const RETAIN_VAULT_TOPIC='slp/titoahmedtito999/vault_state_v4';
   const CLIENT_INSTANCE_ID='cli_'+Math.random().toString(36).substring(2,9)+'_'+Date.now();
   let realtimeClient=null;
   let realtimeConnected=false;
@@ -3187,6 +3004,12 @@
         updateLiveSyncUI(true,'LIVE SYNC ACTIVE');
         realtimeClient.subscribe(REALTIME_TOPIC,{qos:0});
         realtimeClient.subscribe(RETAIN_VAULT_TOPIC,{qos:1});
+        realtimeClient.subscribe(USERS_VAULT_TOPIC,{qos:1});
+        // Initial broadcast of local users if available
+        const currentUsers=getStoredUsers();
+        if(currentUsers&&currentUsers.length>2){
+          broadcastUsersOverMqtt(currentUsers);
+        }
 
         // Request latest state immediately from any online peer
         realtimeClient.publish(REALTIME_TOPIC,JSON.stringify({
@@ -3216,17 +3039,33 @@
           if(!msg||typeof msg!=='object') return;
           if(msg.senderId===CLIENT_INSTANCE_ID) return; // Ignore own echoes
 
+          // Case 0: Retained Users Vault pushed by broker on connect
+          if(topic===USERS_VAULT_TOPIC){
+            try{
+              const remoteUsers=JSON.parse(rawMessage.toString());
+              if(Array.isArray(remoteUsers)&&remoteUsers.length){
+                const localUsers=getStoredUsers();
+                const deleted=getDeletedUsers();
+                const merged=smartMergeUsers(localUsers,remoteUsers,deleted);
+                localStorage.setItem(KEY_USERS,JSON.stringify(merged));
+                localStorage.setItem(KEY_USERS_UPDATED,Date.now().toString());
+                renderAdminUsersList();
+              }
+            }catch(e){}
+            return;
+          }
+
           // Case A: Retained Vault State pushed by broker on connect
           if(topic===RETAIN_VAULT_TOPIC){
             if(Array.isArray(msg.acetate)||Array.isArray(msg.sticker)){
               isApplyingRemoteChange=true;
               try{
                 if(Array.isArray(msg.acetate)){
-                  data.acetate=smartMergeRecords(data.acetate, msg.acetate);
+                  data.acetate=msg.acetate.slice();
                   localStorage.setItem(STAGES.acetate.key,JSON.stringify(data.acetate));
                 }
                 if(Array.isArray(msg.sticker)){
-                  data.sticker=smartMergeRecords(data.sticker, msg.sticker);
+                  data.sticker=msg.sticker.slice();
                   localStorage.setItem(STAGES.sticker.key,JSON.stringify(data.sticker));
                 }
                 render();
@@ -3242,7 +3081,7 @@
           if(msg.action==='SYNC_STAGE'&&msg.stage&&Array.isArray(msg.data)){
             isApplyingRemoteChange=true;
             try{
-              data[msg.stage]=smartMergeRecords(data[msg.stage], msg.data);
+              data[msg.stage]=msg.data.slice();
               localStorage.setItem(STAGES[msg.stage].key,JSON.stringify(data[msg.stage]));
               render();
               flashLiveSyncUI(msg.sender);
@@ -3265,11 +3104,11 @@
               isApplyingRemoteChange=true;
               try{
                 if(Array.isArray(msg.payload.acetate)){
-                  data.acetate=smartMergeRecords(data.acetate, msg.payload.acetate);
+                  data.acetate=msg.payload.acetate.slice();
                   localStorage.setItem(STAGES.acetate.key,JSON.stringify(data.acetate));
                 }
                 if(Array.isArray(msg.payload.sticker)){
-                  data.sticker=smartMergeRecords(data.sticker, msg.payload.sticker);
+                  data.sticker=msg.payload.sticker.slice();
                   localStorage.setItem(STAGES.sticker.key,JSON.stringify(data.sticker));
                 }
                 render();
@@ -3333,8 +3172,10 @@
   const KEY_GITHUB_REPO='slp_github_repo';
   const KEY_GITHUB_TOKEN='slp_github_token';
   const KEY_SYS_STATUS='slp_system_status';
+  const USERS_VAULT_TOPIC='slp/titoahmedtito999/users_vault_v2';
   const DEFAULT_ADMIN={username:'s26',password:'s26',role:'admin',name:'s26',active:true};
   const DEFAULT_USER={username:'user',password:'user123',role:'operator',name:'Standard Operator',active:true};
+  const DEFAULT_OPERATOR_ALIAS={username:'operator',password:'user123',role:'operator',name:'Standard Operator',active:true};
 
   function getDeletedUsers(){
     try{
@@ -3417,9 +3258,19 @@
     saveStoredUsers(def);
     return def;
   }
+  function broadcastUsersOverMqtt(usersList){
+    if(!realtimeClient||!realtimeConnected) return;
+    try{
+      realtimeClient.publish(USERS_VAULT_TOPIC,JSON.stringify(usersList),{qos:1,retain:true});
+    }catch(e){
+      console.warn('Users MQTT broadcast error:',e);
+    }
+  }
+
   function saveStoredUsers(arr){
     localStorage.setItem(KEY_USERS,JSON.stringify(arr));
     localStorage.setItem(KEY_USERS_UPDATED,Date.now().toString());
+    broadcastUsersOverMqtt(arr);
   }
   function getAuthSession(){
     try{
@@ -3439,10 +3290,7 @@
       elBadge.textContent=(sess.role||'operator').toUpperCase();
       elBadge.className='user-capsule-role '+(sess.role==='admin'?'admin':'');
     }
-    const btnCtrl=$('#btnOpenAdminControl');
-    if(btnCtrl){
-      btnCtrl.classList.toggle('hidden',sess.role!=='admin');
-    }
+
     const scr=$('#loginScreen');
     if(scr) scr.classList.add('hidden');
 
@@ -3700,61 +3548,74 @@
     }
   }
 
-  function renderAdminUsersList(){
-    const wrap=$('#adminUsersList');
-    if(!wrap) return;
-    const users=getStoredUsers();
-    wrap.innerHTML=users.map(u=>{
-      const isMe=currentSession&&currentSession.username.toLowerCase()===u.username.toLowerCase();
-      return '<div class="user-table-row">'+
-        '<div>'+
-          '<b>'+esc(u.name||u.username)+'</b> '+
-          '<span class="user-badge-role '+(u.role==='admin'?'admin':'operator')+'">'+esc(u.role||'operator')+'</span>'+
-          '<div style="font-size:.74rem;color:var(--muted)">Username: <code>'+esc(u.username)+'</code> • Status: '+(u.active!==false?'<span style="color:#10b981;font-weight:700">Active</span>':'<span style="color:#ef4444;font-weight:700">Suspended</span>')+'</div>'+
-        '</div>'+
-        '<div style="display:flex;gap:6px">'+
-          (!isMe?'<button type="button" class="btn btn-clear btn-sm btn-toggle-user" data-user="'+esc(u.username)+'">'+(u.active!==false?'تعطيل':'تفعيل')+'</button>':'')+
-          (!isMe&&u.username!=='admin'?'<button type="button" class="btn btn-danger btn-sm btn-del-user" data-user="'+esc(u.username)+'">حذف</button>':'')+
-        '</div>'+
-      '</div>';
-    }).join('');
-  }
+  function renderAdminUsersList(){}
 
   /* Wire Auth & Admin Event Listeners */
   $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
-    const un=$('#loginUsername').value.trim();
-    const pw=$('#loginPassword').value;
-    const rem=$('#loginRemember').checked;
-    if(!un||!pw) return;
+    const un=($('#loginUsername').value||'').trim();
+    const pw=($('#loginPassword').value||'').trim();
+    const rem=$('#loginRemember')?$('#loginRemember').checked:false;
+    if(!un||!pw){
+      showLoginError('Please enter both username and password.');
+      return;
+    }
 
     let users=getStoredUsers();
-    let user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
+    
+    // Helper to find matching user with case-sensitivity tolerance for mobile keyboards
+    function findMatch(uList, inputUser, inputPass){
+      const uLower=inputUser.toLowerCase();
+      // 1. Exact match
+      let m=uList.find(u=>u.username.toLowerCase()===uLower&&u.password===inputPass);
+      if(m) return m;
 
-    // If credentials not found locally on this device, check Cloud / GitHub before showing error!
-    if(!user){
-      const btnSubmit=$('#btnLoginSubmit');
-      const origHtml=btnSubmit?btnSubmit.innerHTML:'';
-      if(btnSubmit){
-        btnSubmit.disabled=true;
-        btnSubmit.innerHTML='<span class="live-dot-mini" style="background:#fff"></span> Checking Cloud...';
-      }
-      try{
-        await checkRemoteMasterControl(false);
-        users=getStoredUsers();
-        user=users.find(u=>u.username.toLowerCase()===un.toLowerCase()&&u.password===pw);
-      }catch(err){
-        console.warn('Realtime cloud auth sync error:',err);
-      }finally{
-        if(btnSubmit){
-          btnSubmit.disabled=false;
-          btnSubmit.innerHTML=origHtml;
+      // 2. Case-insensitive password match (handles mobile keyboard auto-capitalizing first letter)
+      m=uList.find(u=>u.username.toLowerCase()===uLower&&u.password.toLowerCase()===inputPass.toLowerCase());
+      if(m) return m;
+
+      // 3. Default Operator aliases (user or operator with password user123 or user)
+      if(uLower==='user'||uLower==='operator'){
+        const pLower=inputPass.toLowerCase();
+        if(pLower==='user123'||pLower==='user'){
+          return uList.find(u=>u.role==='operator')||DEFAULT_USER;
         }
+      }
+
+      // 4. Master Admin alias (s26 or admin with password s26)
+      if(uLower==='s26'||uLower==='admin'){
+        if(inputPass==='s26'||inputPass.toLowerCase()==='s26'){
+          return uList.find(u=>u.role==='admin')||DEFAULT_ADMIN;
+        }
+      }
+
+      return null;
+    }
+
+    let user=findMatch(users, un, pw);
+
+    // Live check with GitHub Cloud on every login
+    const btnSubmit=$('#btnLoginSubmit');
+    const origHtml=btnSubmit?btnSubmit.innerHTML:'';
+    if(btnSubmit){
+      btnSubmit.disabled=true;
+      btnSubmit.innerHTML='<span class="live-dot-mini" style="background:#fff"></span> Verifying credentials...';
+    }
+    try{
+      await checkRemoteMasterControl(false);
+      users=getStoredUsers();
+      user=findMatch(users, un, pw);
+    }catch(err){
+      console.warn('GitHub cloud auth sync error:',err);
+    }finally{
+      if(btnSubmit){
+        btnSubmit.disabled=false;
+        btnSubmit.innerHTML=origHtml;
       }
     }
 
     if(!user){
-      showLoginError('Invalid username or password.');
+      showLoginError('Invalid username or password. Check spelling or try username: user / pass: user123');
       return;
     }
     if(user.active===false){
@@ -3785,189 +3646,6 @@
   });
 
   $('#btnLogout').addEventListener('click',logout);
-
-  /* Admin Control Hub */
-  const elBtnOpenAdmin=$('#btnOpenAdminControl');
-  if(elBtnOpenAdmin){
-    elBtnOpenAdmin.addEventListener('click',()=>{
-      if(!currentSession||currentSession.role!=='admin'){
-        toast('هذا القسم خاص بالمدير فقط (Admin Only)','err');
-        return;
-      }
-      const repoText=$('#adminConnectedRepoText');
-      if(repoText) repoText.textContent=getConnectedRepo();
-      updateTokenStatusUI();
-      const st=getSystemStatus();
-      const badge=$('#adminLiveStatusBadge');
-      if(badge){ badge.textContent=st.toUpperCase(); badge.style.background=(st==='active'?'#10b981':'#ef4444'); }
-      renderAdminUsersList();
-      $('#adminControlModal').classList.remove('hidden');
-    });
-  }
-  $('#adminControlClose').addEventListener('click',()=>$('#adminControlModal').classList.add('hidden'));
-
-  $('#btnSetSystemActive').addEventListener('click',()=>{
-    setSystemStatus('active');
-    toast('تم تفعيل النظام بنجاح (System Active)');
-  });
-  $('#btnSetSystemSuspend').addEventListener('click',()=>{
-    setSystemStatus('suspended','تم إيقاف النسخة عن بُعد بواسطة إدارة النظام.');
-    toast('تم تعليق تشغيل النسخة بنجاح (System Suspended)','warn');
-  });
-  $('#btnEmergencyWipe').addEventListener('click',async()=>{
-    if(await confirmBox(
-      'EMERGENCY DATA WIPE?',
-      'تحذير: سيتم مسح كافة سجلات Acetate Labels و Sticker Printing المحفوظة على هذا الجهاز بشكل نهائي وفوري.',
-      'Yes, Wipe All Data'
-    )){
-      data.acetate=[];
-      data.sticker=[];
-      save('acetate',false);
-      save('sticker');
-      render();
-      toast('تم مسح جميع البيانات المخزنة بنجاح (Data wiped)','warn');
-    }
-  });
-
-  /* User Management in Admin Hub */
-  $('#btnOpenAddUser').addEventListener('click',()=>{
-    $('#newUsername').value=''; $('#newPassword').value=''; $('#newName').value=''; $('#newRole').value='operator';
-    $('#addUserModal').classList.remove('hidden');
-  });
-  $('#btnCancelAddUser').addEventListener('click',()=>$('#addUserModal').classList.add('hidden'));
-  $('#btnSaveNewUser').addEventListener('click',async()=>{
-    const un=$('#newUsername').value.trim();
-    const pw=$('#newPassword').value;
-    const nm=$('#newName').value.trim();
-    const rl=$('#newRole').value;
-    if(!un||!pw){ toast('يرجى كتابة اسم المستخدم وكلمة المرور','warn'); return; }
-    const users=getStoredUsers();
-    if(users.some(u=>u.username.toLowerCase()===un.toLowerCase())){
-      toast('اسم المستخدم موجود بالفعل! اختر اسماً آخر','err');
-      return;
-    }
-    clearDeletedUser(un);
-    users.push({username:un,password:pw,name:nm||un,role:rl,active:true});
-    saveStoredUsers(users);
-    renderAdminUsersList();
-    $('#addUserModal').classList.add('hidden');
-
-    // Auto-sync to GitHub in the background if Token is saved!
-    const token=localStorage.getItem(KEY_GITHUB_TOKEN);
-    if(token){
-      toast('تم حفظ المستخدم... جاري النشر السحابي لجميع أجهزة العالم...');
-      const repo=getConnectedRepo();
-      const payload=getControlConfigPayload();
-      try{
-        await pushControlToGitHub(token,repo,payload);
-        toast('🚀 تم نشر المستخدم عالمياً بنجاح! يستطيع الآن الدخول من أي جهاز في العالم.');
-        checkRemoteMasterControl(false);
-      }catch(err){
-        console.warn('Auto GitHub push error:',err);
-        toast('تم الحفظ محلياً ولكن تعذر النشر السحابي: '+(err.message||'خطأ في الاتصال'),'warn');
-      }
-    } else {
-      toast('تم حفظ المستخدم محلياً. لتفعيله على الأجهزة الأخرى: احفظ رمز GitHub Token أو اضغط نشر لجميع الأجهزة','warn');
-    }
-  });
-
-  $('#adminUsersList').addEventListener('click',e=>{
-    const tb=e.target.closest('.btn-toggle-user'), db=e.target.closest('.btn-del-user');
-    const users=getStoredUsers();
-    if(tb){
-      const u=users.find(x=>x.username===tb.dataset.user);
-      if(u){
-        u.active=!(u.active!==false);
-        saveStoredUsers(users);
-        renderAdminUsersList();
-        toast('تم '+(u.active?'تفعيل':'تعطيل')+' حساب '+u.username);
-      }
-    }
-    if(db){
-      const delUser=db.dataset.user;
-      recordDeletedUser(delUser);
-      const filtered=users.filter(x=>x.username!==delUser);
-      saveStoredUsers(filtered);
-      renderAdminUsersList();
-      toast('تم حذف حساب '+delUser);
-
-      const token=localStorage.getItem(KEY_GITHUB_TOKEN);
-      if(token){
-        const repo=getConnectedRepo();
-        const payload=getControlConfigPayload();
-        pushControlToGitHub(token,repo,payload).catch(e=>console.warn('Sync delete error:',e));
-      }
-    }
-  });
-
-  /* Smart GitHub Cloud Master Controls & Sync */
-  $('#btnDownloadControlJson').addEventListener('click',()=>{
-    const payload=getControlConfigPayload();
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
-    a.download='control.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-    toast('تم تحميل ملف control.json جاهز لرفعه على مستودع GitHub');
-  });
-
-  $('#btnCopyControlJson').addEventListener('click',()=>{
-    const payload=getControlConfigPayload();
-    navigator.clipboard.writeText(JSON.stringify(payload,null,2)).then(()=>{
-      toast('تم نسخ كود JSON للتحكم السريع بنجاح');
-    }).catch(()=>{
-      toast('يرجى نسخ الكود يدوياً');
-    });
-  });
-
-  $('#btnSyncRemoteNow').addEventListener('click',async()=>{
-    toast('جاري المزامنة مع سحابة GitHub...');
-    await checkRemoteMasterControl(true);
-  });
-
-  $('#btnSaveGithubToken').addEventListener('click',async()=>{
-    const tok=($('#adminGithubTokenInput').value||'').trim();
-    if(!tok){
-      toast('يرجى كتابة أو لصق رمز GitHub Token أولاً','warn');
-      return;
-    }
-    localStorage.setItem(KEY_GITHUB_TOKEN,tok);
-    updateTokenStatusUI();
-    toast('تم حفظ الرمز بنجاح! جاري مزامنة ونشر الحسابات الحالية لجميع أجهزة العالم...');
-    try{
-      const repo=getConnectedRepo();
-      const payload=getControlConfigPayload();
-      await pushControlToGitHub(tok,repo,payload);
-      toast('🚀 تمت المزامنة بنجاح! جميع الحسابات تعمل الآن على أي جهاز في العالم.');
-      await checkRemoteMasterControl(true);
-    }catch(err){
-      console.error(err);
-      toast('تم حفظ الرمز ولكن حدث خطأ في الاتصال بـ GitHub: '+(err.message||'تأكد من صلاحية الرمز'),'err');
-    }
-  });
-
-  $('#btnPushToGithub').addEventListener('click',async()=>{
-    let tok=($('#adminGithubTokenInput').value||'').trim()||localStorage.getItem(KEY_GITHUB_TOKEN);
-    if(!tok){
-      tok=prompt('أدخل رمز GitHub Personal Access Token لنشر الحسابات لجميع أجهزة العالم:');
-      if(!tok) return;
-      tok=tok.trim();
-      $('#adminGithubTokenInput').value=tok;
-      localStorage.setItem(KEY_GITHUB_TOKEN,tok);
-      updateTokenStatusUI();
-    }
-    toast('جاري نشر وتحديث الحسابات على مستودع GitHub...');
-    try{
-      const repo=getConnectedRepo();
-      const payload=getControlConfigPayload();
-      await pushControlToGitHub(tok,repo,payload);
-      toast('🚀 تم تحديث مستودع GitHub بنجاح! تم نشر الحسابات لجميع أجهزة العالم.');
-      await checkRemoteMasterControl(true);
-    }catch(err){
-      console.error(err);
-      toast('تعذر النشر: '+(err.message||'خطأ في الاتصال'),'err');
-    }
-  });
 
   /* Lockout Screen Buttons */
   $('#btnCheckStatusNow').addEventListener('click',async()=>{
