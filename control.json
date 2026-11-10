@@ -11,6 +11,13 @@
       "active": true
     },
     {
+      "username": "samy",
+      "password": "2026",
+      "role": "admin",
+      "name": "Ahmed Samy",
+      "active": true
+    },
+    {
       "username": "hwaida",
       "password": "2026",
       "role": "operator",
