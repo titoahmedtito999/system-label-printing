@@ -7,16 +7,41 @@
       "username": "s26",
       "password": "s26",
       "role": "admin",
-      "name": "s26",
+      "name": "Ahmed Samy",
       "active": true
     },
+    
     {
-      "username": "user",
-      "password": "user123",
+      "username": "hwaida",
+      "password": "2026",
       "role": "operator",
-      "name": "Standard Operator",
+      "name": "Hwaida Elaraby",
       "active": true
-    }
+    },
+    
+    {
+      "username": "abdo",
+      "password": "2026",
+       "role": "operator",
+      "name": "Abdelrahman Hossam",
+      "active": true
+    },
+    
+    {
+      "username": "khan",
+      "password": "2026",
+      "role": "operator",
+      "name": "Yassin Khan",
+      "active": true
+    },
+    
+    {
+      "username": "hassan",
+      "password": "hassan",
+      "role": "admin",
+      "name": "Ahmed Hassan",
+      "active": true
+    },
   ],
   "updated_at": "2026-11-08T18:00:00.000Z"
 }
