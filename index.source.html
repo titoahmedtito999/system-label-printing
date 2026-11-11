@@ -342,6 +342,48 @@
   .toast{background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;display:flex;align-items:center;gap:10px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);border-inline-start:5px solid var(--success);animation:pop .25s ease;font-weight:600;font-size:.9rem}
   .toast.warn{border-color:var(--warning)} .toast.err{border-color:var(--danger)}
 
+  /* Operator Productivity & Analytics Grid */
+  .op-departments-grid{
+    display:grid;grid-template-columns:repeat(auto-fit, minmax(420px, 1fr));gap:20px;margin-top:10px;
+  }
+  @media(max-width:900px){
+    .op-departments-grid{grid-template-columns:1fr}
+  }
+  .op-dept-box{
+    background:#ffffff;border:1.8px solid var(--border);border-radius:16px;
+    padding:18px;box-shadow:0 4px 16px -4px rgba(15,23,42,0.06);
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .op-dept-box.acetate-box{border-top:4px solid #4f46e5}
+  .op-dept-box.sticker-box{border-top:4px solid #0d9488}
+  .op-dept-box-head{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding-bottom:10px;border-bottom:1px solid var(--border);
+  }
+  .op-dept-tag{display:flex;align-items:center;gap:8px}
+  .op-dept-tag h4{font-size:.95rem;font-weight:800;color:var(--text);letter-spacing:.3px}
+  .op-dept-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+  .op-stats-table{width:100%;border-collapse:collapse;font-size:.84rem}
+  .op-stats-table th{
+    background:var(--bg);padding:9px 10px;font-size:.74rem;font-weight:800;
+    letter-spacing:.6px;color:var(--muted);text-align:start;border-bottom:1.5px solid var(--border);
+    white-space:nowrap;
+  }
+  .op-stats-table td{
+    padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle;
+  }
+  .op-stats-table tfoot td{border-top:2px solid var(--border);font-weight:800}
+  .share-bar{width:46px;height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden;flex-shrink:0}
+  .share-fill{height:100%;border-radius:99px}
+  .rank-badge{
+    font-size:.7rem;font-weight:800;padding:2px 6px;border-radius:6px;
+    background:#f1f5f9;color:#64748b;display:inline-block;min-width:22px;text-align:center;
+  }
+  .rank-badge.gold{background:#fef3c7;color:#b45309;border:1px solid #fde68a}
+  .rank-badge.silver{background:#f1f5f9;color:#475569;border:1px solid #cbd5e1}
+  .rank-badge.bronze{background:#ffedd5;color:#c2410c;border:1px solid #fed7aa}
+
   /* Responsive */
   @media(max-width:1000px){
     .app{flex-direction:column}
@@ -998,6 +1040,221 @@
     body{background:#fff} .view{padding:0} .card{box-shadow:none} .topbar{position:static;background:#fff}
     thead th{background:#000!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
+
+  /* Zero Horizontal Scroll & Proportional Table Distribution */
+  .table-wrap{
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
+  #view-records .table-wrap table{
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  #view-records thead th{
+    background: var(--navy);
+    color: #fff;
+    padding: 9px 6px;
+    font-size: 0.72rem;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #view-records tbody td{
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
+  }
+  #view-records tbody tr:nth-child(even){ background: #f8fafc; }
+  #view-records tbody tr:hover{ background: var(--accent-l); }
+  #view-records td.num, #view-records th.num{ text-align: center; }
+  #view-records .user-capsule-name{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  #view-records .user-capsule-name span{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #view-records .row-act{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex-wrap: nowrap;
+  }
+  #view-records .row-act .btn{
+    padding: 3px 5px !important;
+    font-size: 0.71rem !important;
+    line-height: 1.1 !important;
+    border-radius: 4px !important;
+    gap: 2px !important;
+  }
+  #view-records .row-act .btn svg{
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  /* AI-Styled Operator Analytics Page */
+  .op-kpi-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .op-kpi-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .op-kpi-card:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+  .op-kpi-card::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--kpi-accent, var(--accent));
+  }
+  .op-kpi-label{
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .op-kpi-val{
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .op-kpi-sub{
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .op-avatar{
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+
+  /* Vertical Full-Width Stacking for Operator Analytics (Acetate on Top, Sticker on Bottom) */
+  .op-departments-grid{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+  .op-dept-box{
+    width: 100% !important;
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 14px !important;
+    padding: 20px 22px !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.03) !important;
+  }
+  .op-dept-box.acetate-box{
+    border-top: 4px solid #4f46e5 !important;
+  }
+  .op-dept-box.sticker-box{
+    border-top: 4px solid #0d9488 !important;
+  }
+  .op-stats-table{
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 0.86rem !important;
+  }
+  .op-stats-table thead th{
+    background: var(--navy) !important;
+    color: #fff !important;
+    padding: 11px 10px !important;
+    font-size: 0.74rem !important;
+    letter-spacing: 0.5px !important;
+    white-space: nowrap !important;
+  }
+  .op-stats-table tbody td{
+    padding: 10px 10px !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  /* Unclipped Actions Column with 100% Visible Delete Button */
+  #view-records th.col-act, #view-records td.col-act{
+    width: 24% !important;
+    text-align: center !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
+    padding: 6px 4px !important;
+  }
+  #view-records .row-act{
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
+    width: auto !important;
+  }
+  #view-records .row-act .btn{
+    padding: 3px 6px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    gap: 3px !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+  #view-records .row-act .btn svg{
+    width: 11px !important;
+    height: 11px !important;
+    flex-shrink: 0 !important;
+  }
+
 </style>
 </head>
 <body class="theme-acetate">
@@ -1548,6 +1805,7 @@
       <button class="nav-item active" data-view="entry" type="button"><i data-i="edit"></i>Data Entry</button>
       <button class="nav-item" data-view="records" type="button"><i data-i="table"></i>Records Report</button>
       <button class="nav-item" data-view="dashboard" type="button"><i data-i="dash"></i>Dashboard</button>
+      <button class="nav-item" data-view="operators" type="button"><i data-i="users"></i>Operators Analytics</button>
 
       <div class="nav-label" style="margin-top:14px">TOOLS</div>
       <button class="nav-item" id="navBtnBackup" type="button" title="Take a backup of all production data"><i data-i="download"></i>Backup Data</button>
@@ -1648,9 +1906,6 @@
             <div class="input"><i data-i="search"></i><input id="search" type="text" placeholder="Search..."></div>
             <div class="input"><i data-i="cal"></i><input id="filterDate" type="date" title="Filter by date"></div>
             <button class="btn btn-clear btn-sm" id="btnResetFilter" type="button">Reset</button>
-            <button class="btn btn-word btn-sm" id="btnReportWord" type="button" title="Open Word Label for selected record"><i data-i="word"></i>WORD</button>
-            <button class="btn btn-pdf btn-sm" id="btnReportPdf" type="button" title="Open PDF Label for selected record"><i data-i="pdf"></i>PDF</button>
-            <span id="reportSelectedBadge" class="badge hidden" style="background:#e0e7ff;color:#3730a3"></span>
             <button class="btn btn-danger btn-sm" id="btnExportPdf" type="button"><i data-i="pdf"></i>Export PDF</button>
             <button class="btn btn-save btn-sm" id="btnPrint" type="button"><i data-i="printer"></i>Print</button>
           </div>
@@ -1691,7 +1946,52 @@
         <div class="card-head"><h2><i data-i="table"></i>Daily / Weekly / Monthly Summary by Brand</h2><span class="badge" id="matrixBadge"></span></div>
         <div class="table-wrap" id="dashMatrix"></div>
       </div>
+
+      </section>
+
+    <!-- Dedicated Operators Analytics View -->
+    <section class="view hidden" id="view-operators">
+      <!-- Clean Top Action Bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge" style="background:#eef2ff;color:#4f46e5;font-weight:700;padding:5px 12px;border-radius:8px">
+            <span class="live-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;margin-inline-end:6px"></span>
+            Active Operators
+          </span>
+        </div>
+        <button class="btn btn-clear btn-sm" id="btnOpPrint" type="button" title="Print Operators Analytics">
+          <i data-i="printer"></i>Print Report
+        </button>
+      </div>
+
+      <!-- Departmental Comparison Tables (Acetate on Top, Sticker on Bottom) -->
+      <div class="op-departments-grid">
+        <!-- 1. Acetate Box (TOP) -->
+        <div class="op-dept-box acetate-box">
+          <div class="op-dept-box-head">
+            <div class="op-dept-tag">
+              <span class="op-dept-dot" style="background:#4f46e5"></span>
+              <h4>ACETATE LABELS</h4>
+            </div>
+            <span class="pill" id="badgeTotalAcetateOps">0 Records</span>
+          </div>
+          <div class="table-wrap" id="wrapOpAcetateTable"></div>
+        </div>
+
+        <!-- 2. Sticker Box (BOTTOM) -->
+        <div class="op-dept-box sticker-box">
+          <div class="op-dept-box-head">
+            <div class="op-dept-tag">
+              <span class="op-dept-dot" style="background:#0d9488"></span>
+              <h4>STICKER PRINTING DETAILS</h4>
+            </div>
+            <span class="pill" id="badgeTotalStickerOps">0 Records</span>
+          </div>
+          <div class="table-wrap" id="wrapOpStickerTable"></div>
+        </div>
+      </div>
     </section>
+
   </div>
 </div>
 
@@ -1792,6 +2092,7 @@
 (function(){
   /* ---------- Icons ---------- */
   const ICON={
+    users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     folder:'<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
     printer:'<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/>',
     cloud:'<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
@@ -1864,7 +2165,7 @@
         {n:'lot',label:'LOT NO',t:'text',icon:'pkg'},
         {n:'total',label:'TOTAL',t:'number',icon:'sum'}
       ],
-      cols:[['brand','BRAND'],['line','LINE'],['cut','CUT'],['erp','ERP NO'],['colour','COLOUR'],['lot','LOT NO'],['total','TOTAL','num total'],['date','DATE']],
+      cols:[['brand','BRAND'],['line','LINE'],['cut','CUT'],['erp','ERP NO'],['colour','COLOUR'],['lot','LOT NO'],['total','TOTAL','num total'],['date','DATE'],['operator','OPERATOR']],
       required:['brand','line','cut','erp','colour','lot','total','date'],
       legacy:{f:'erp',v:['ERP-20451','ERP-20466','ERP-20472','ERP-20490','ERP-30101','ERP-30102','ERP-30103','ERP-30104','ERP-30105','ERP-30106','ERP-30107']},
       samples:[]
@@ -1882,7 +2183,7 @@
         {n:'totalCarton',label:'TOTAL CARTON',t:'number',icon:'pkg'},
         {n:'totalSticker',label:'TOTAL STICKER',t:'calc',icon:'receipt',req:false}
       ],
-      cols:[['brand','BRAND'],['style','STYLE'],['po','PO'],['colour','COLOUR'],['part','PART'],['side','SIDE','num'],['totalCarton','TOTAL CARTON','num'],['totalSticker','TOTAL STICKER','num total'],['date','DATE']],
+      cols:[['brand','BRAND'],['style','STYLE'],['po','PO'],['colour','COLOUR'],['part','PART'],['side','SIDE','num'],['totalCarton','TOTAL CARTON','num'],['totalSticker','TOTAL STICKER','num total'],['date','DATE'],['operator','OPERATOR']],
       required:['brand','style','po','colour','part','side','totalCarton','date'],
       legacy:{f:'po',v:['PO-88120','PO-88145','PO-88170','PO-88203','PO-90120','PO-90145','PO-90170','PO-90203','PO-90230','PO-90260','PO-90290','PO-91120','PO-91145','PO-91170','PO-91203','PO-91230','PO-91260','PO-91290']},
       samples:[]
@@ -1892,6 +2193,7 @@
 
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const $$$=$$;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmt=n=>Number(n||0).toLocaleString('en-US');
 
@@ -1988,7 +2290,7 @@
       if(!db) return null;
       return new Promise(res=>{
         const tx=db.transaction(IDB_STORE,'readonly');
-        const req=tx.objectStore(IDB_STORE).get(key);
+        const req=tx.objectStore(VAULT_IDB_STORE).get(key);
         req.onsuccess=()=>res(req.result);
         req.onerror=()=>res(null);
       });
@@ -1999,7 +2301,7 @@
       const db=await openIDB();
       if(!db) return;
       const tx=db.transaction(IDB_STORE,'readwrite');
-      tx.objectStore(IDB_STORE).put(val,key);
+      tx.objectStore(VAULT_IDB_STORE).put(val,key);
     }catch(e){}
   }
 
@@ -2162,18 +2464,119 @@
     return null;
   }
 
-  KEYS.forEach(k=>{ try{data[k]=JSON.parse(localStorage.getItem(STAGES[k].key))}catch(e){data[k]=null} });
+  /* ===== PERSISTENCE VAULT & ZERO-DATA-LOSS ENGINE ===== */
+  const KEY_DELETED_RECORDS = 'slp_deleted_record_ids_v1';
+  function getDeletedRecordIds(){
+    try{
+      const raw = localStorage.getItem(KEY_DELETED_RECORDS);
+      if(raw){
+        const arr = JSON.parse(raw);
+        if(Array.isArray(arr)) return new Set(arr.map(String));
+      }
+    }catch(e){}
+    return new Set();
+  }
+  function recordDeletedId(id){
+    if(!id) return;
+    try{
+      const set = getDeletedRecordIds();
+      set.add(String(id));
+      localStorage.setItem(KEY_DELETED_RECORDS, JSON.stringify([...set]));
+    }catch(e){}
+  }
 
+  /* IndexedDB Dual-Shield Offline Persistence */
+  const VAULT_IDB_NAME = 'SLP_PRODUCTION_VAULT_V1';
+  const VAULT_IDB_STORE = 'stages_store';
+  function getIDB(){
+    return new Promise(res=>{
+      if(typeof indexedDB === 'undefined') return res(null);
+      try{
+        const req = indexedDB.open(VAULT_IDB_NAME, 1);
+        req.onupgradeneeded = e => {
+          const db = e.target.result;
+          if(!db.objectStoreNames.contains(VAULT_IDB_STORE)){
+            db.createObjectStore(VAULT_IDB_STORE);
+          }
+        };
+        req.onsuccess = e => res(e.target.result);
+        req.onerror = () => res(null);
+      }catch(e){ res(null); }
+    });
+  }
+
+  async function persistToIndexedDB(stageKey, recordList){
+    if(typeof indexedDB === 'undefined') return;
+    try{
+      const db = await getIDB();
+      if(!db) return;
+      const tx = db.transaction(VAULT_IDB_STORE, "readwrite");
+      tx.objectStore(VAULT_IDB_STORE).put(JSON.stringify(recordList), stageKey);
+    }catch(e){}
+  }
+
+  async function initIndexedDBRecovery(){
+    if(typeof indexedDB === 'undefined') return;
+    try{
+      const db = await getIDB();
+      if(!db) return;
+      const tx = db.transaction(VAULT_IDB_STORE, "readonly");
+      const store = tx.objectStore(VAULT_IDB_STORE);
+      KEYS.forEach(k => {
+        const req = store.get(k);
+        req.onsuccess = () => {
+          if(req.result){
+            try{
+              const arr = JSON.parse(req.result);
+              if(Array.isArray(arr) && arr.length > 0){
+                const currentCount = (data[k]||[]).length;
+                const merged = smartMergeRecords(data[k], arr);
+                if(merged.length > currentCount){
+                  data[k] = merged;
+                  localStorage.setItem(STAGES[k].key, JSON.stringify(merged));
+                  localStorage.setItem(STAGES[k].key + '_backup', JSON.stringify(merged));
+                  render();
+                }
+              }
+            }catch(e){}
+          }
+        };
+      });
+    }catch(e){}
+  }
+
+  // Load from localStorage with redundant backup key fallback
+  KEYS.forEach(k=>{
+    try{
+      let stored = localStorage.getItem(STAGES[k].key);
+      if(!stored || stored === '[]' || stored === 'null'){
+        stored = localStorage.getItem(STAGES[k].key + '_backup');
+      }
+      if(stored) data[k] = JSON.parse(stored);
+    }catch(e){
+      data[k] = null;
+    }
+  });
+
+  // Smart Merge Records: NEVER delete or overwrite local records from remote sync
   function smartMergeRecords(currentList, incomingList){
-    if(!Array.isArray(incomingList)) return currentList || [];
-    if(!Array.isArray(currentList) || currentList.length === 0) return incomingList.filter(Boolean);
+    const deleted = getDeletedRecordIds();
     const map = new Map();
-    // 1. Load incoming records
-    incomingList.forEach(r => { if(r && r.id) map.set(String(r.id), r); });
-    // 2. Preserve any local records not present in incoming
-    currentList.forEach(r => {
-      if(r && r.id && !map.has(String(r.id))){
+    // 1. Preserve local records first (NEVER lose local records!)
+    (Array.isArray(currentList) ? currentList : []).forEach(r => {
+      if(r && r.id && !deleted.has(String(r.id))){
         map.set(String(r.id), r);
+      }
+    });
+    // 2. Merge incoming records from remote/cloud
+    (Array.isArray(incomingList) ? incomingList : []).forEach(r => {
+      if(r && r.id && !deleted.has(String(r.id))){
+        if(!map.has(String(r.id))){
+          map.set(String(r.id), r);
+        } else {
+          const local = map.get(String(r.id));
+          map.set(String(r.id), Object.assign({}, r, local));
+        }
       }
     });
     return Array.from(map.values());
@@ -2188,8 +2591,11 @@
       if(msg.action === 'SYNC_STAGE' && msg.stage && Array.isArray(msg.data)){
         isApplyingRemoteChange = true;
         try{
-          data[msg.stage] = msg.data.slice();
-          localStorage.setItem(STAGES[msg.stage].key, JSON.stringify(data[msg.stage]));
+          const merged = smartMergeRecords(data[msg.stage], msg.data);
+          data[msg.stage] = merged;
+          localStorage.setItem(STAGES[msg.stage].key, JSON.stringify(merged));
+          localStorage.setItem(STAGES[msg.stage].key + '_backup', JSON.stringify(merged));
+          persistToIndexedDB(msg.stage, merged);
           render();
           flashLiveSyncUI(msg.sender);
         }finally{
@@ -2199,12 +2605,18 @@
         isApplyingRemoteChange = true;
         try{
           if(Array.isArray(msg.payload.acetate)){
-            data.acetate = msg.payload.acetate.slice();
-            localStorage.setItem(STAGES.acetate.key, JSON.stringify(data.acetate));
+            const merged = smartMergeRecords(data.acetate, msg.payload.acetate);
+            data.acetate = merged;
+            localStorage.setItem(STAGES.acetate.key, JSON.stringify(merged));
+            localStorage.setItem(STAGES.acetate.key + '_backup', JSON.stringify(merged));
+            persistToIndexedDB('acetate', merged);
           }
           if(Array.isArray(msg.payload.sticker)){
-            data.sticker = msg.payload.sticker.slice();
-            localStorage.setItem(STAGES.sticker.key, JSON.stringify(data.sticker));
+            const merged = smartMergeRecords(data.sticker, msg.payload.sticker);
+            data.sticker = merged;
+            localStorage.setItem(STAGES.sticker.key, JSON.stringify(merged));
+            localStorage.setItem(STAGES.sticker.key + '_backup', JSON.stringify(merged));
+            persistToIndexedDB('sticker', merged);
           }
           render();
           flashLiveSyncUI(msg.sender);
@@ -2216,8 +2628,15 @@
   }
 
   const save=(k,shouldBroadcast=true)=>{
+    // 1. Primary localStorage save
     localStorage.setItem(STAGES[k].key,JSON.stringify(data[k]));
+    // 2. Redundant backup key in localStorage
+    localStorage.setItem(STAGES[k].key+'_backup',JSON.stringify(data[k]));
+    // 3. Persistent IndexedDB save
+    persistToIndexedDB(k, data[k]);
+    // 4. Trigger auto sync to cloud/disk
     triggerAutoSync();
+    // 5. Broadcast to all open tabs and devices immediately!
     if(shouldBroadcast && !isApplyingRemoteChange){
       if(localSyncChannel){
         try{
@@ -2333,13 +2752,15 @@
     sel.value=[...sel.options].some(o=>o.value===keep)?keep:'';
   }
   function getVal(k,name){
+    if(name==='operator') return '';
     const f=form(k);
     if(name==='side'){const c=$('input[name=side]:checked',f);return c?Number(c.value):''}
     if(name==='brand'){
-      const v=f.elements.brandSel.value;
+      const v=f.elements.brandSel ? f.elements.brandSel.value : '';
       if(!v) return '';
-      return v===OTHER?norm(f.elements.brandOther.value):v;
+      return v===OTHER?norm(f.elements.brandOther ? f.elements.brandOther.value : ''):v;
     }
+    if(!f.elements[name]) return '';
     return f.elements[name].value.trim();
   }
   function syncBrand(k){
@@ -2371,13 +2792,21 @@
     else if(n==='brand'){
       if(!f.elements.brandSel.value) f.elements.brandSel.classList.add('invalid');
       else f.elements.brandOther.classList.add('invalid');
-    } else f.elements[n].classList.add('invalid');
+    } else if(f.elements[n]) {
+      f.elements[n].classList.add('invalid');
+    }
   }
   function collect(k){
     const st=STAGES[k], r={}; let ok=true;
     clearMarks(k);
-    st.cols.forEach(([name])=>{ if(name!=='totalSticker') r[name]=getVal(k,name); });
-    st.required.forEach(n=>{ if(r[n]===''||r[n]===undefined){ ok=false; mark(k,n); } });
+    st.cols.forEach(([name])=>{
+      if(name==='totalSticker' || name==='operator') return;
+      r[name]=getVal(k,name);
+    });
+    st.required.forEach(n=>{
+      if(n==='operator') return;
+      if(r[n]===''||r[n]===undefined){ ok=false; mark(k,n); }
+    });
     ['total','totalCarton'].forEach(n=>{
       if(r[n]!==undefined && r[n]!==''){
         const v=Number(r[n]);
@@ -2416,7 +2845,7 @@
     const f=form(k);
     fillBrandOptions(k);
     STAGES[k].cols.forEach(([n])=>{
-      if(n==='totalSticker')return;
+      if(n==='totalSticker' || n==='operator') return;
       if(n==='brand'){
         const sel=f.elements.brandSel;
         sel.value=rec.brand;
@@ -2425,7 +2854,7 @@
         return;
       }
       if(n==='side'){const r=$('input[name=side][value="'+rec.side+'"]',f);if(r)r.checked=true;return}
-      f.elements[n].value=rec[n];
+      if(f.elements[n]) f.elements[n].value=rec[n]||'';
     });
     clearMarks(k);
     if(k==='sticker') calcSticker();
@@ -2433,21 +2862,51 @@
 
   KEYS.forEach(k=>{
     const f=form(k);
-    f.addEventListener('submit',e=>{
-      e.preventDefault();
+
+    function handleSave(){
       const r=collect(k);
       if(!r){toast('Please complete all required fields','err');return}
-      r.id=uid(); data[k].push(r); save(k,false);
+      r.id=uid();
+      const cur = currentSession || getAuthSession();
+      r.operator = cur ? (cur.name || cur.username) : 'Ahmed Samy';
+      r.operatorUsername = cur ? cur.username : 's26';
+      data[k].push(r);
+      save(k,true);
       if(k==='acetate') lastAcetatePoRecord = Object.assign({}, r);
       toast('Record saved successfully');
       resetForm(k,true);
+      renderEntry();
+    }
+
+    f.addEventListener('submit',e=>{
+      e.preventDefault();
+      handleSave();
     });
+
+    const btnSave=$('[data-act=save]',f);
+    if(btnSave){
+      btnSave.addEventListener('click',e=>{
+        e.preventDefault();
+        handleSave();
+      });
+    }
+
     $('[data-act=update]',f).addEventListener('click',()=>{
       const r=collect(k);
       if(!r){toast('Please complete all required fields','err');return}
       const i=data[k].findIndex(x=>x.id===editing[k]);
-      if(i>-1){ r.id=editing[k]; data[k][i]=r; save(k,false); if(k==='acetate') lastAcetatePoRecord = Object.assign({}, r); toast('Record updated successfully','warn'); }
+      if(i>-1){
+        r.id=editing[k];
+        const cur = currentSession || getAuthSession();
+        r.operator = data[k][i].operator || (cur ? (cur.name || cur.username) : 'Ahmed Samy');
+        r.operatorUsername = data[k][i].operatorUsername || (cur ? cur.username : 's26');
+        data[k][i]=r;
+        save(k,true);
+        if(k==='acetate') lastAcetatePoRecord = Object.assign({}, r);
+        toast('Record updated successfully','warn');
+      }
       resetForm(k,true);
+      renderEntry();
       if(returnTo){ const v=returnTo; returnTo=null; setView(v); }
     });
     $('[data-act=clear]',f).addEventListener('click',()=>{ returnTo=null; resetForm(k,false); });
@@ -2525,6 +2984,32 @@
     const firstMetricIdx=cols.findIndex(([k])=>st.metrics.some(m=>m.f===k));
     const colspan=firstMetricIdx+1; // includes '#' column
 
+    // Proportional column distribution matching 100% table-layout width
+    const colWidths = stage === 'acetate' ? {
+      '#': 'width:34px',
+      'line': 'width:6%',
+      'cut': 'width:6%',
+      'erp': 'width:10%',
+      'colour': 'width:12%',
+      'lot': 'width:11%',
+      'total': 'width:9%',
+      'date': 'width:10%',
+      'operator': 'width:12%',
+      'act': 'width:24%'
+    } : {
+      '#': 'width:34px',
+      'style': 'width:11%',
+      'po': 'width:10%',
+      'colour': 'width:11%',
+      'part': 'width:9%',
+      'side': 'width:7%',
+      'totalCarton': 'width:9%',
+      'totalSticker': 'width:10%',
+      'date': 'width:9%',
+      'operator': 'width:11%',
+      'act': 'width:13%'
+    };
+
     let out='';
     brands.forEach(b=>{
       const rs=rows.filter(r=>r.brand===b), a=agg(rs,st);
@@ -2538,26 +3023,32 @@
           '</button>'+
         '</div>'+
         '</div>'+
-        '<div class="table-wrap"><table><thead><tr>'+(stage==='acetate'?'<th class="col-select" style="width:55px;text-align:center">SELECT</th>':'')+'<th class="num">#</th>'+cols.map(c=>'<th class="'+(c[2]||'').replace('total','')+'">'+c[1]+'</th>').join('')+'<th class="col-act">ACTIONS</th></tr></thead><tbody>';
+        '<div class="table-wrap"><table><thead><tr>'+
+          '<th class="num" style="'+(colWidths['#']||'width:36px')+';text-align:center">#</th>'+
+          cols.map(c=>'<th class="'+(c[2]||'').replace('total','')+'" style="'+(colWidths[c[0]]||'')+';'+((c[2]||'').includes('num')?'text-align:center;':'')+'">'+c[1]+'</th>').join('')+
+          '<th class="col-act" style="'+(colWidths['act']||'width:12%')+';text-align:center">ACTIONS</th>'+
+        '</tr></thead><tbody>';
       rs.forEach((r,i)=>{
-        const isSelected = selectedReportRecordId === r.id;
-        out+='<tr class="'+(editing[stage]===r.id?'editing':'')+' '+(isSelected?'row-selected':'')+'" data-row-id="'+r.id+'">'+
-          (stage==='acetate'?'<td class="col-select" style="text-align:center"><input type="radio" name="reportSelectedRecord" class="record-radio-select" data-id="'+r.id+'" '+(isSelected?'checked':'')+' title="Select record"></td>':'')+
-          '<td class="num">'+(i+1)+'</td>'+
+        out+='<tr class="'+(editing[stage]===r.id?'editing':'')+'" data-row-id="'+r.id+'">'+
+          '<td class="num" style="text-align:center">'+(i+1)+'</td>'+
           cols.map(([n,,cls])=>{
             let v;
-            if(n==='side') v='<span class="chip">'+esc(r[n])+' SIDE</span>';
+            if(n==='operator'){
+              const op = r.operator || r.operatorUsername || 'Ahmed Samy';
+              v = '<span class="user-capsule-name" title="'+esc(op)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;color:var(--accent);flex-shrink:0"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>'+esc(op)+'</span></span>';
+            }
+            else if(n==='side') v='<span class="chip">'+esc(r[n])+' SIDE</span>';
             else if(cls&&cls.includes('num')) v=esc(fmt(r[n]));
             else v=esc(r[n]);
-            return '<td class="'+(cls||'')+'">'+v+'</td>';
+            return '<td class="'+(cls||'')+'" '+(n==='date'||n==='operator'?'style="white-space:nowrap"':'')+'>'+v+'</td>';
           }).join('')+
-          '<td class="col-act"><div class="row-act">'+
+          '<td class="col-act" style="text-align:center"><div class="row-act">'+
           (stage==='acetate'?'<button class="btn btn-word btn-sm btn-act-word" data-id="'+r.id+'" title="Open Word Label">'+svg('word')+'WORD</button><button class="btn btn-pdf btn-sm btn-act-pdf" data-id="'+r.id+'" title="Open PDF Label">'+svg('pdf')+'PDF</button>':'')+
           '<button class="btn btn-update btn-sm" data-edit="'+r.id+'" title="Edit">'+svg('edit')+'Edit</button>'+
-          '<button class="btn btn-danger btn-sm" data-del="'+r.id+'" title="Delete">'+svg('trash')+'Delete</button>'+
+          '<button class="btn btn-danger btn-sm" data-del="'+r.id+'" title="Delete Record">'+svg('trash')+'Delete</button>'+
           '</div></td></tr>';
       });
-      out+='</tbody><tfoot><tr><td colspan="'+(colspan + (stage==='acetate'?1:0))+'" style="text-align:center;font-weight:800;letter-spacing:1.5px;color:var(--accent-d);white-space:nowrap">TOTAL</td>'+
+      out+='</tbody><tfoot><tr><td colspan="'+colspan+'" style="text-align:center;font-weight:800;letter-spacing:1.5px;color:var(--accent-d);white-space:nowrap">TOTAL</td>'+
         cols.slice(firstMetricIdx).map(c=>{
           const m=st.metrics.find(m=>m.f===c[0]);
           return '<td class="'+(m?'num':'')+'" style="white-space:nowrap">'+(m?fmt(a[m.f]):'')+'</td>';
@@ -2660,11 +3151,162 @@
     $('#dashMatrix').innerHTML=h;
   }
 
+  function renderOperatorAnalytics(){
+    const wrapAcetate = $('#wrapOpAcetateTable');
+    const wrapSticker = $('#wrapOpStickerTable');
+    const badgeAcetate = $('#badgeTotalAcetateOps');
+    const badgeSticker = $('#badgeTotalStickerOps');
+
+    if(!wrapAcetate || !wrapSticker) return;
+
+    // 1. Acetate Breakdown (STRICTLY ACTIVE OPERATORS)
+    const acetateRows = data.acetate || [];
+    const opAcetateMap = new Map();
+
+    acetateRows.forEach(r => {
+      const opName = (r.operator || r.operatorUsername || 'Ahmed Samy').trim();
+      if(!opName) return;
+      if(!opAcetateMap.has(opName)){
+        opAcetateMap.set(opName, {
+          name: opName,
+          username: r.operatorUsername || opName,
+          role: 'operator',
+          count: 0,
+          totalPieces: 0
+        });
+      }
+      const stat = opAcetateMap.get(opName);
+      stat.count++;
+      stat.totalPieces += Number(r.total || 0);
+    });
+
+    const acetateList = Array.from(opAcetateMap.values())
+      .filter(op => op.count > 0)
+      .sort((a,b) => b.totalPieces - a.totalPieces || b.count - a.count);
+
+    const grandAcetatePieces = acetateRows.reduce((sum, r) => sum + Number(r.total || 0), 0);
+    if(badgeAcetate) badgeAcetate.textContent = acetateList.length + ' Active Operator' + (acetateList.length===1?'':'s') + ' • ' + fmt(grandAcetatePieces) + ' Total Pieces (' + acetateRows.length + ' Records)';
+
+    if(!acetateList.length){
+      wrapAcetate.innerHTML = '<div class="empty" style="padding:28px 18px">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:32px;height:32px;color:#94a3b8;margin-bottom:8px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>'+
+        '<div style="font-weight:700;color:var(--text);font-size:.9rem">No entries recorded yet</div>'+
+        '</div>';
+    } else {
+      wrapAcetate.innerHTML = '<table class="op-stats-table"><thead><tr>'+
+        '<th style="width:48px;text-align:center">#</th>'+
+        '<th>OPERATOR</th>'+
+        '<th class="num">RECORDS</th>'+
+        '<th class="num">TOTAL PIECES</th>'+
+        '<th class="num">AVG / ENTRY</th>'+
+        '</tr></thead><tbody>'+
+        acetateList.map((op, idx) => {
+          const avgPerEntry = op.count > 0 ? Math.round(op.totalPieces / op.count) : 0;
+          const rankBadge = idx === 0 ? '<span class="rank-badge gold">1st</span>' :
+                            idx === 1 ? '<span class="rank-badge silver">2nd</span>' :
+                            idx === 2 ? '<span class="rank-badge bronze">3rd</span>' :
+                            '<span class="rank-badge">'+(idx+1)+'</span>';
+          const initials = op.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+          return '<tr>'+
+            '<td style="text-align:center">'+rankBadge+'</td>'+
+            '<td><div style="display:flex;align-items:center;gap:10px">'+
+              '<div class="op-avatar" style="background:#eef2ff;color:#4f46e5;font-weight:800">'+initials+'</div>'+
+              '<div><b style="color:var(--text);display:block;font-size:.9rem">'+esc(op.name)+'</b><small style="color:var(--muted)">@'+esc(op.username)+'</small></div>'+
+            '</div></td>'+
+            '<td class="num"><span class="pill" style="font-weight:700;font-size:.82rem">'+fmt(op.count)+' Records</span></td>'+
+            '<td class="num"><span class="chip" style="font-weight:900;font-size:.92rem;color:#4f46e5;background:#eef2ff;padding:4px 14px;border:1px solid rgba(79,70,229,0.2)">'+fmt(op.totalPieces)+' pieces</span></td>'+
+            '<td class="num"><span style="font-weight:700;color:var(--text)">'+fmt(avgPerEntry)+' pieces</span></td>'+
+            '</tr>';
+        }).join('')+
+        '</tbody><tfoot><tr style="font-weight:800;background:var(--bg)">'+
+        '<td colspan="2" style="text-align:center">TOTAL ACETATE LABELS</td>'+
+        '<td class="num">'+fmt(acetateRows.length)+' Records</td>'+
+        '<td class="num" style="color:#4f46e5;font-size:.95rem">'+fmt(grandAcetatePieces)+' pieces</td>'+
+        '<td class="num">-</td>'+
+        '</tr></tfoot></table>';
+    }
+
+    // 2. Sticker Breakdown (STRICTLY ACTIVE OPERATORS)
+    const stickerRows = data.sticker || [];
+    const opStickerMap = new Map();
+
+    stickerRows.forEach(r => {
+      const opName = (r.operator || r.operatorUsername || 'Ahmed Samy').trim();
+      if(!opName) return;
+      if(!opStickerMap.has(opName)){
+        opStickerMap.set(opName, {
+          name: opName,
+          username: r.operatorUsername || opName,
+          role: 'operator',
+          count: 0,
+          totalCarton: 0,
+          totalSticker: 0
+        });
+      }
+      const stat = opStickerMap.get(opName);
+      stat.count++;
+      stat.totalCarton += Number(r.totalCarton || 0);
+      stat.totalSticker += Number(r.totalSticker || 0);
+    });
+
+    const stickerList = Array.from(opStickerMap.values())
+      .filter(op => op.count > 0)
+      .sort((a,b) => b.totalSticker - a.totalSticker || b.count - a.count);
+
+    const grandStickerTotal = stickerRows.reduce((sum, r) => sum + Number(r.totalSticker || 0), 0);
+    const grandCartonTotal = stickerRows.reduce((sum, r) => sum + Number(r.totalCarton || 0), 0);
+
+    if(badgeSticker) badgeSticker.textContent = stickerList.length + ' Active Operator' + (stickerList.length===1?'':'s') + ' • ' + fmt(grandStickerTotal) + ' Total Stickers (' + stickerRows.length + ' Records)';
+
+    if(!stickerList.length){
+      wrapSticker.innerHTML = '<div class="empty" style="padding:28px 18px">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:32px;height:32px;color:#94a3b8;margin-bottom:8px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>'+
+        '<div style="font-weight:700;color:var(--text);font-size:.9rem">No entries recorded yet</div>'+
+        '</div>';
+    } else {
+      wrapSticker.innerHTML = '<table class="op-stats-table"><thead><tr>'+
+        '<th style="width:48px;text-align:center">#</th>'+
+        '<th>OPERATOR</th>'+
+        '<th class="num">RECORDS</th>'+
+        '<th class="num">TOTAL CARTONS</th>'+
+        '<th class="num">TOTAL STICKERS</th>'+
+        '<th class="num">AVG / ENTRY</th>'+
+        '</tr></thead><tbody>'+
+        stickerList.map((op, idx) => {
+          const avgStickersPerEntry = op.count > 0 ? Math.round(op.totalSticker / op.count) : 0;
+          const rankBadge = idx === 0 ? '<span class="rank-badge gold">1st</span>' :
+                            idx === 1 ? '<span class="rank-badge silver">2nd</span>' :
+                            idx === 2 ? '<span class="rank-badge bronze">3rd</span>' :
+                            '<span class="rank-badge">'+(idx+1)+'</span>';
+          const initials = op.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+          return '<tr>'+
+            '<td style="text-align:center">'+rankBadge+'</td>'+
+            '<td><div style="display:flex;align-items:center;gap:10px">'+
+              '<div class="op-avatar" style="background:#f0fdfa;color:#0d9488;font-weight:800">'+initials+'</div>'+
+              '<div><b style="color:var(--text);display:block;font-size:.9rem">'+esc(op.name)+'</b><small style="color:var(--muted)">@'+esc(op.username)+'</small></div>'+
+            '</div></td>'+
+            '<td class="num"><span class="pill" style="font-weight:700;font-size:.82rem">'+fmt(op.count)+' Records</span></td>'+
+            '<td class="num"><b style="color:var(--text);font-size:.9rem">'+fmt(op.totalCarton)+' cartons</b></td>'+
+            '<td class="num"><span class="chip" style="font-weight:900;font-size:.92rem;color:#0d9488;background:#f0fdfa;padding:4px 14px;border:1px solid rgba(13,148,136,0.2)">'+fmt(op.totalSticker)+' stickers</span></td>'+
+            '<td class="num"><span style="font-weight:700;color:var(--text)">'+fmt(avgStickersPerEntry)+' stickers</span></td>'+
+            '</tr>';
+        }).join('')+
+        '</tbody><tfoot><tr style="font-weight:800;background:var(--bg)">'+
+        '<td colspan="2" style="text-align:center">TOTAL STICKER PRINTING</td>'+
+        '<td class="num">'+fmt(stickerRows.length)+' Records</td>'+
+        '<td class="num">'+fmt(grandCartonTotal)+' cartons</td>'+
+        '<td class="num" style="color:#0d9488;font-size:.95rem">'+fmt(grandStickerTotal)+' stickers</td>'+
+        '<td class="num">-</td>'+
+        '</tr></tfoot></table>';
+    }
+  }
+
   /* ---------- Navigation ---------- */
   const VIEW_INFO={
     entry:['Data Entry','Register new data'],
     records:['Records Report','Browse, edit and delete saved records by brand'],
-    dashboard:['Dashboard','Daily, weekly and monthly totals by brand']
+    dashboard:['Dashboard','Daily, weekly and monthly totals by brand'],
+    operators:['Operators Analytics','Production totals & active operator comparison']
   };
   function render(){
     KEYS.forEach(fillBrandOptions);
@@ -2673,12 +3315,15 @@
     $('#pageSub').textContent=VIEW_INFO[view][1]+' — '+STAGES[stage].label;
     if(view==='entry') renderEntry();
     else if(view==='records') renderRecords();
+    else if(view==='operators') renderOperatorAnalytics();
     else renderDash();
   }
   function setView(v){
     view=v;
     $$('.view').forEach(x=>x.classList.toggle('hidden',x.id!=='view-'+v));
     $$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+    const sw=$('#stageSwitch');
+    if(sw) sw.classList.toggle('hidden', v==='operators');
     render(); window.scrollTo(0,0);
   }
   function setStage(k){
@@ -2815,7 +3460,7 @@
         'All '+cnt+' records for '+b+' will be permanently deleted from '+STAGES[stage].label+'. Other brands will not be affected.',
         'Yes, Clear '+b
       )){
-        data[stage]=data[stage].filter(r=>r.brand!==b);
+        const deletedRows=data[stage].filter(r=>r.brand===b); deletedRows.forEach(r=>recordDeletedId(r.id)); data[stage]=data[stage].filter(r=>r.brand!==b);
         save(stage);
         resetForm(stage,true);
         render();
@@ -2834,7 +3479,7 @@
     if(db){
       const id=db.dataset.del;
       if(await confirmBox('Delete this record?','This action cannot be undone.')){
-        data[stage]=data[stage].filter(r=>r.id!==id); save(stage);
+        recordDeletedId(id); data[stage]=data[stage].filter(r=>r.id!==id); save(stage, true);
         if(editing[stage]===id) resetForm(stage,true);
         render(); toast('Record deleted','err');
       }
@@ -2849,6 +3494,8 @@
   $('#btnResetFilter').addEventListener('click',()=>{$('#search').value='';$('#filterDate').value='';brandFilter[stage]='ALL';render()});
   $('#btnPrint').addEventListener('click',()=>window.print());
   $('#dashPrint').addEventListener('click',()=>window.print());
+  const btnOpPrint = $('#btnOpPrint');
+  if(btnOpPrint) btnOpPrint.addEventListener('click',()=>window.print());
 
   /* Dashboard controls */
   $('#dashPeriod').addEventListener('click',e=>{
@@ -2923,6 +3570,7 @@
           String(i+1),
           ...st.cols.map(([key,,cls])=>{
             let v=r[key];
+            if(key==='operator') return r.operator || r.operatorUsername || 'Ahmed Samy';
             if(key==='side') return v+' SIDE';
             if(cls&&cls.includes('num')) return fmt(v);
             return String(v??'');
@@ -2969,14 +3617,16 @@
             1:{fontStyle:'bold'},
             4:{fontStyle:'bold',textColor:primary},
             7:{halign:'center',fontStyle:'bold',textColor:primary},
-            8:{halign:'center'}
+            8:{halign:'center'},
+            9:{halign:'center'}
           }:{
             0:{halign:'center',cellWidth:10},
             1:{fontStyle:'bold'},
             6:{halign:'center'},
             7:{halign:'center',fontStyle:'bold'},
             8:{halign:'center',fontStyle:'bold',textColor:primary},
-            9:{halign:'center'}
+            9:{halign:'center'},
+            10:{halign:'center'}
           },
           didParseCell:function(data){
             if(data.row.index===body.length-1){
@@ -3021,7 +3671,8 @@
     rows.forEach((r,idx)=>{
       tableHtml+='<tr><td class="num" style="width:44px;text-align:center">'+(idx+1)+'</td>'+cols.map(([key,,cls])=>{
         let v=r[key];
-        if(key==='side') v='<span class="chip">'+esc(v)+' SIDE</span>';
+        if(key==='operator') v='<span class="chip" style="font-weight:600">'+esc(r.operator || r.operatorUsername || 'Ahmed Samy')+'</span>';
+        else if(key==='side') v='<span class="chip">'+esc(v)+' SIDE</span>';
         else if(cls&&cls.includes('num')) v=esc(fmt(v));
         else v=esc(v);
         return '<td class="'+(cls||'')+'">'+v+'</td>';
@@ -3058,7 +3709,7 @@
   if(elClearAll) elClearAll.addEventListener('click',async()=>{
     if(!data[stage].length){toast('No data to clear','warn');return}
     if(await confirmBox('Clear all '+STAGES[stage].label+' data?','All '+data[stage].length+' records of this stage will be permanently deleted.','Yes, Clear All')){
-      data[stage]=[]; save(stage); resetForm(stage,true); render(); toast('All data cleared','err');
+      (data[stage]||[]).forEach(r=>recordDeletedId(r.id)); data[stage]=[]; save(stage, true); resetForm(stage,true); render(); toast('All data cleared','err');
     }
   });
 
@@ -3598,16 +4249,34 @@
             if(Array.isArray(msg.acetate)||Array.isArray(msg.sticker)){
               isApplyingRemoteChange=true;
               try{
+                let needsVaultUpdate = false;
                 if(Array.isArray(msg.acetate)){
-                  data.acetate=msg.acetate.slice();
-                  localStorage.setItem(STAGES.acetate.key,JSON.stringify(data.acetate));
+                  const prevLen = (data.acetate||[]).length;
+                  const merged = smartMergeRecords(data.acetate, msg.acetate);
+                  data.acetate = merged;
+                  localStorage.setItem(STAGES.acetate.key, JSON.stringify(merged));
+                  localStorage.setItem(STAGES.acetate.key + '_backup', JSON.stringify(merged));
+                  persistToIndexedDB('acetate', merged);
+                  if(merged.length > msg.acetate.length || merged.length > prevLen){
+                    needsVaultUpdate = true;
+                  }
                 }
                 if(Array.isArray(msg.sticker)){
-                  data.sticker=msg.sticker.slice();
-                  localStorage.setItem(STAGES.sticker.key,JSON.stringify(data.sticker));
+                  const prevLen = (data.sticker||[]).length;
+                  const merged = smartMergeRecords(data.sticker, msg.sticker);
+                  data.sticker = merged;
+                  localStorage.setItem(STAGES.sticker.key, JSON.stringify(merged));
+                  localStorage.setItem(STAGES.sticker.key + '_backup', JSON.stringify(merged));
+                  persistToIndexedDB('sticker', merged);
+                  if(merged.length > msg.sticker.length || merged.length > prevLen){
+                    needsVaultUpdate = true;
+                  }
                 }
                 render();
                 flashLiveSyncUI(msg.sender||'Cloud');
+                if(needsVaultUpdate){
+                  broadcastRetainedVault();
+                }
               }finally{
                 isApplyingRemoteChange=false;
               }
@@ -3619,8 +4288,11 @@
           if(msg.action==='SYNC_STAGE'&&msg.stage&&Array.isArray(msg.data)){
             isApplyingRemoteChange=true;
             try{
-              data[msg.stage]=msg.data.slice();
-              localStorage.setItem(STAGES[msg.stage].key,JSON.stringify(data[msg.stage]));
+              const merged = smartMergeRecords(data[msg.stage], msg.data);
+              data[msg.stage] = merged;
+              localStorage.setItem(STAGES[msg.stage].key, JSON.stringify(merged));
+              localStorage.setItem(STAGES[msg.stage].key + '_backup', JSON.stringify(merged));
+              persistToIndexedDB(msg.stage, merged);
               render();
               flashLiveSyncUI(msg.sender);
             }finally{
@@ -3642,12 +4314,18 @@
               isApplyingRemoteChange=true;
               try{
                 if(Array.isArray(msg.payload.acetate)){
-                  data.acetate=msg.payload.acetate.slice();
-                  localStorage.setItem(STAGES.acetate.key,JSON.stringify(data.acetate));
+                  const merged = smartMergeRecords(data.acetate, msg.payload.acetate);
+                  data.acetate = merged;
+                  localStorage.setItem(STAGES.acetate.key, JSON.stringify(merged));
+                  localStorage.setItem(STAGES.acetate.key + '_backup', JSON.stringify(merged));
+                  persistToIndexedDB('acetate', merged);
                 }
                 if(Array.isArray(msg.payload.sticker)){
-                  data.sticker=msg.payload.sticker.slice();
-                  localStorage.setItem(STAGES.sticker.key,JSON.stringify(data.sticker));
+                  const merged = smartMergeRecords(data.sticker, msg.payload.sticker);
+                  data.sticker = merged;
+                  localStorage.setItem(STAGES.sticker.key, JSON.stringify(merged));
+                  localStorage.setItem(STAGES.sticker.key + '_backup', JSON.stringify(merged));
+                  persistToIndexedDB('sticker', merged);
                 }
                 render();
                 flashLiveSyncUI(msg.sender);
@@ -3669,7 +4347,8 @@
   document.addEventListener('visibilitychange',()=>{
     if(document.visibilityState==='visible'){
       if(!realtimeClient||!realtimeConnected){
-        initRealtimeSync();
+        initIndexedDBRecovery();
+  initRealtimeSync();
       }else{
         try{
           realtimeClient.publish(REALTIME_TOPIC,JSON.stringify({
@@ -3836,16 +4515,31 @@
     }
 
     const scr=$('#loginScreen');
-    if(scr) scr.classList.add('hidden');
+    if(scr){
+      scr.classList.add('hidden');
+      scr.style.display='none';
+    }
 
     // Reload unified production dataset & render so all users see all data
     KEYS.forEach(k=>{
       try{
-        const stored=localStorage.getItem(STAGES[k].key);
-        if(stored) data[k]=JSON.parse(stored);
+        let stored=localStorage.getItem(STAGES[k].key);
+        if(!stored || stored==='[]' || stored==='null'){
+          stored=localStorage.getItem(STAGES[k].key+'_backup');
+        }
+        if(stored){
+          const parsed=JSON.parse(stored);
+          if(Array.isArray(parsed)){
+            data[k]=smartMergeRecords(data[k], parsed);
+          }
+        }
       }catch(e){}
     });
-    render();
+    try{
+      render();
+    }catch(err){
+      console.warn('Post-auth render safe notice:',err);
+    }
   }
 
   // Live cross-tab / cross-window synchronization for unified data across all users
@@ -3870,7 +4564,10 @@
     if(pw) pw.value='';
     hideLoginError();
     const scr=$('#loginScreen');
-    if(scr) scr.classList.remove('hidden');
+    if(scr){
+      scr.classList.remove('hidden');
+      scr.style.display='flex';
+    }
     toast('Logged out successfully');
   }
 
@@ -4135,24 +4832,32 @@
 
     let user=findMatch(users, un, pw);
 
-    // Live check with GitHub Cloud on every login
-    const btnSubmit=$('#btnLoginSubmit');
-    const origHtml=btnSubmit?btnSubmit.innerHTML:'';
-    if(btnSubmit){
-      btnSubmit.disabled=true;
-      btnSubmit.innerHTML='<span class="live-dot-mini" style="background:#fff"></span> Verifying credentials...';
-    }
-    try{
-      await checkRemoteMasterControl(false);
-      users=getStoredUsers();
-      user=findMatch(users, un, pw);
-    }catch(err){
-      console.warn('GitHub cloud auth sync error:',err);
-    }finally{
+    // If local match not found, check remote GitHub control with a strict 2s timeout
+    if(!user){
+      const btnSubmit=$('#btnLoginSubmit');
+      const origHtml=btnSubmit?btnSubmit.innerHTML:'';
       if(btnSubmit){
-        btnSubmit.disabled=false;
-        btnSubmit.innerHTML=origHtml;
+        btnSubmit.disabled=true;
+        btnSubmit.innerHTML='<span class="live-dot-mini" style="background:#fff"></span> Verifying credentials...';
       }
+      try{
+        await Promise.race([
+          checkRemoteMasterControl(false),
+          new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),2000))
+        ]);
+        users=getStoredUsers();
+        user=findMatch(users, un, pw);
+      }catch(err){
+        console.warn('Cloud auth check fallback:',err);
+      }finally{
+        if(btnSubmit){
+          btnSubmit.disabled=false;
+          btnSubmit.innerHTML=origHtml;
+        }
+      }
+    }else{
+      // Valid credentials already matched locally: sync non-blocking in background
+      checkRemoteMasterControl(false).catch(()=>{});
     }
 
     if(!user){
