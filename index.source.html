@@ -426,100 +426,150 @@
   .btn-user-act.danger:hover{background:#fee2e2;color:#dc2626}
   .admin-only.hidden{display:none!important}
 
-  /* ===== Login Screen Gateway (Luxury High-End Redesign) ===== */
+  /* ===== Luxury 3D Circular Login Screen Gateway ===== */
   .login-overlay{
     position:fixed;inset:0;z-index:99999;
-    background:#080c16;
+    background:radial-gradient(circle at 50% 28%, #ffffff 0%, #f1f5f9 55%, #e2e8f0 100%);
     display:flex;align-items:center;justify-content:center;
     padding:24px 16px;overflow-y:auto;
-    transition:opacity .25s ease, visibility .25s ease;
+    transition:opacity .3s ease, visibility .3s ease;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   .login-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .login-mesh-bg{
-    position:absolute;inset:0;
-    background-image:radial-gradient(rgba(56,189,248,0.07) 1px, transparent 1px);
-    background-size:24px 24px;
-    pointer-events:none;
-    mask-image:radial-gradient(ellipse at center, #000 40%, transparent 80%);
-    -webkit-mask-image:radial-gradient(ellipse at center, #000 40%, transparent 80%);
+
+  /* Ambient soft background lighting */
+  .login-light-ambient-glow{
+    position:absolute;border-radius:50%;pointer-events:none;filter:blur(80px);
   }
-  .login-ambient-glow{
-    position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px);
+  .glow-top{
+    width:520px;height:520px;top:-120px;right:-100px;
+    background:radial-gradient(circle,rgba(14,165,233,0.12) 0%,transparent 70%);
   }
-  .glow-cyan{
-    width:520px;height:520px;top:-100px;right:-100px;
-    background:radial-gradient(circle,rgba(6,182,212,0.18) 0%,rgba(14,165,233,0.06) 50%,transparent 70%);
-  }
-  .glow-indigo{
-    width:560px;height:560px;bottom:-120px;left:-120px;
-    background:radial-gradient(circle,rgba(99,102,241,0.2) 0%,rgba(79,70,229,0.06) 50%,transparent 70%);
+  .glow-bottom{
+    width:560px;height:560px;bottom:-150px;left:-120px;
+    background:radial-gradient(circle,rgba(99,102,241,0.1) 0%,transparent 70%);
   }
 
-  .login-card{
-    position:relative;width:100%;max-width:480px;
-    background:linear-gradient(180deg,rgba(15,23,42,0.92) 0%,rgba(10,15,30,0.96) 100%);
-    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-    border:1.5px solid rgba(255,255,255,0.13);
-    border-radius:28px;
-    padding:42px 38px 36px;
-    box-shadow:0 35px 90px -15px rgba(0,0,0,0.85), 0 0 50px -10px rgba(56,189,248,0.18), inset 0 1px 0 rgba(255,255,255,0.2);
-    color:#f8fafc;
-    color-scheme:dark;
-    animation:loginCardPop .3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  @keyframes loginCardPop{
-    from{transform:scale(.95) translateY(10px);opacity:0}
-    to{transform:none;opacity:1}
+  .login-page-container{
+    position:relative;width:100%;max-width:540px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    z-index:5;
   }
 
-  /* Logo Emblem */
-  .login-header{text-align:center;margin-bottom:24px}
-  .login-emblem-wrap{
-    position:relative;display:inline-block;margin:0 auto 16px;
+  /* Top Classical Serif Header with Calligraphic Flourish */
+  .login-header-group{
+    text-align:center;margin-bottom:18px;
   }
-  .login-emblem-halo{
-    position:absolute;inset:-12px;border-radius:32px;
-    background:radial-gradient(circle,rgba(6,182,212,0.3) 0%,transparent 70%);
-    filter:blur(14px);pointer-events:none;
+  .login-serif-title{
+    font-family:"Playfair Display", "Georgia", "Times New Roman", serif;
+    font-style:italic;font-weight:600;font-size:2.2rem;color:#1e293b;
+    letter-spacing:0.5px;margin:0 0 6px;text-shadow:0 2px 4px rgba(15,23,42,0.05);
   }
-  .login-emblem-svg{
-    width:82px;height:82px;display:block;position:relative;z-index:2;
-    transition:transform .3s ease;
+  .login-flourish-wrap{
+    display:flex;align-items:center;justify-content:center;margin:0 auto 8px;
   }
-  .login-emblem-wrap:hover .login-emblem-svg{transform:scale(1.04)}
+  .login-flourish-svg{
+    width:160px;height:22px;display:block;
+  }
+  .login-sub-brand{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:0.72rem;font-weight:800;letter-spacing:1.2px;color:#64748b;
+    text-transform:uppercase;
+  }
+  .sub-brand-dot{
+    width:6px;height:6px;border-radius:50%;background:#0ea5e9;
+    box-shadow:0 0 8px rgba(14,165,233,0.6);
+  }
 
-  .login-brand-meta{display:flex;flex-direction:column;align-items:center;gap:6px}
-  .login-brand-title{
-    font-size:1.45rem;font-weight:900;letter-spacing:1px;margin:0;
-    background:linear-gradient(135deg,#ffffff 30%,#93c5fd 80%,#38bdf8 100%);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    text-shadow:0 2px 10px rgba(56,189,248,0.2);
+  /* 3D Scene Wrapper */
+  .login-3d-scene{
+    perspective:1400px;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    margin:6px 0 20px;width:100%;
   }
-  .login-badge-pill{
-    display:inline-flex;align-items:center;gap:6px;
-    background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);
-    border-radius:99px;padding:3px 10px;font-size:.68rem;font-weight:800;
-    letter-spacing:.8px;color:#38bdf8;margin-top:2px;
-  }
-  .login-beacon-dot{
-    width:6px;height:6px;border-radius:50%;background:#10b981;
-    box-shadow:0 0 8px #10b981;animation:beaconPulse 1.8s infinite ease-in-out;
-  }
-  @keyframes beaconPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.4}}
-  .login-brand-sub{font-size:.82rem;color:#94a3b8;margin-top:2px}
 
-  /* Error Alert */
+  /* 3D Cast Shadow (projected to the left, exactly as in Image 1!) */
+  .login-3d-cast-shadow{
+    position:absolute;width:220px;height:380px;left:24px;top:50%;
+    transform:translateY(-50%) rotate(-4deg);
+    background:radial-gradient(ellipse at center, rgba(30,41,59,0.22) 0%, rgba(30,41,59,0.08) 45%, transparent 70%);
+    filter:blur(18px);pointer-events:none;z-index:1;
+  }
+
+  /* Left Arc Floating Dock Icons */
+  .login-dock-arc{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:16px;z-index:25;
+  }
+  .login-dock-icon{
+    width:36px;height:36px;border-radius:50%;
+    background:#1e293b;color:#f8fafc;display:grid;place-items:center;
+    border:1.5px solid rgba(255,255,255,0.25);
+    box-shadow:0 8px 18px -3px rgba(15,23,42,0.4);
+    cursor:pointer;transition:all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .login-dock-icon:hover{
+    transform:scale(1.15) translateX(-3px);
+    background:#0284c7;border-color:#38bdf8;
+    box-shadow:0 10px 24px rgba(2,132,199,0.55);
+  }
+  .login-dock-icon svg{
+    width:17px;height:17px;
+  }
+
+  /* The 3D Disc Card */
+  .login-3d-disc{
+    position:relative;width:440px;height:440px;border-radius:50%;
+    background:radial-gradient(circle at 35% 26%, #ffffff 0%, #f8fafc 46%, #edf2f7 80%, #e2e8f0 100%);
+    border:2px solid rgba(255,255,255,0.95);
+    box-shadow:
+      0 35px 80px -15px rgba(30,41,59,0.24),
+      0 15px 35px -8px rgba(15,23,42,0.14),
+      inset 0 2px 4px #ffffff,
+      inset -4px -6px 14px rgba(148,163,184,0.32);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:32px 52px;box-sizing:border-box;z-index:10;
+    transform-style:preserve-3d;
+    animation:disc3dEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition:transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+  }
+
+  /* Specular 3D metallic bevel edge (Image 1 chrome rim) */
+  .login-3d-disc::before{
+    content:'';position:absolute;inset:-3.5px;border-radius:50%;
+    background:linear-gradient(135deg, #ffffff 0%, #cbd5e1 35%, #94a3b8 65%, #64748b 85%, #ffffff 100%);
+    z-index:-1;transform:translateZ(-6px);
+    filter:drop-shadow(-8px 10px 22px rgba(15,23,42,0.25));
+  }
+
+  @keyframes disc3dEntrance{
+    0%{
+      transform:perspective(1400px) rotateY(-50deg) rotateX(10deg) scale(0.92);
+      opacity:0.5;
+    }
+    100%{
+      transform:perspective(1400px) rotateY(0deg) rotateX(0deg) scale(1);
+      opacity:1;
+    }
+  }
+
+  .disc-login-title{
+    font-size:1.55rem;font-weight:800;color:#1e293b;
+    text-align:center;margin:0 0 12px;letter-spacing:-0.3px;
+  }
+
+  /* Error Notice Banner inside disc */
   .login-alert{
-    background:rgba(239,68,68,0.12);
-    border:1.5px solid rgba(239,68,68,0.4);
-    color:#fca5a5;border-radius:14px;
-    padding:12px 16px;font-size:.86rem;font-weight:700;
-    margin-bottom:20px;display:flex;align-items:center;gap:10px;
-    box-shadow:0 6px 20px -2px rgba(239,68,68,0.25);
-    animation:alertSlideIn .25s ease-out;
+    width:100%;
+    background:rgba(239,68,68,0.1);border:1.5px solid rgba(239,68,68,0.35);
+    color:#b91c1c;border-radius:10px;padding:8px 12px;font-size:0.78rem;font-weight:700;
+    margin-bottom:10px;display:flex;align-items:center;gap:8px;
+    animation:alertSlideIn 0.25s ease-out;
+  }
+  .login-alert.shake{
+    animation:alertShake 0.4s cubic-bezier(.36,.07,.19,.97) both;
   }
   @keyframes alertSlideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-  .login-alert.shake{animation:alertShake .4s cubic-bezier(.36,.07,.19,.97) both}
   @keyframes alertShake{
     10%, 90% { transform: translate3d(-1px, 0, 0); }
     20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -527,78 +577,194 @@
     40%, 60% { transform: translate3d(3px, 0, 0); }
   }
 
-  /* Form Controls */
-  .login-form{display:flex;flex-direction:column;gap:18px}
-  .login-field{display:flex;flex-direction:column;gap:7px;text-align:start}
-  .login-field label{
-    font-size:.82rem;font-weight:800;color:#94a3b8;letter-spacing:.6px;
-    text-transform:uppercase;display:flex;align-items:center;gap:6px;
+  /* Form layout inside circular disc */
+  .disc-login-form{
+    width:100%;display:flex;flex-direction:column;gap:11px;
   }
-  .login-input-wrap{
+
+  .disc-field{
+    display:flex;flex-direction:column;gap:4px;text-align:left;
+  }
+  .disc-field label{
+    font-size:0.8rem;font-weight:700;color:#334155;letter-spacing:0.2px;
+  }
+
+  .disc-input-wrap{
     position:relative;display:flex;align-items:center;
-    background:rgba(4,9,20,0.85);border:1.5px solid rgba(255,255,255,0.12);
-    border-radius:14px;padding:0 14px;transition:all .2s ease;
-    overflow:hidden;
+    background:rgba(255,255,255,0.95);border:1.5px solid #cbd5e1;
+    border-radius:9px;padding:0 12px;
+    box-shadow:inset 0 1.5px 3px rgba(0,0,0,0.04);
+    transition:all 0.2s ease;
   }
-  .login-input-wrap:focus-within{
-    border-color:#38bdf8;
-    background:rgba(8,15,31,0.95);
-    box-shadow:0 0 0 3px rgba(56,189,248,0.22), 0 0 25px rgba(56,189,248,0.12);
+  .disc-input-wrap:focus-within{
+    border-color:#0ea5e9;background:#ffffff;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.18), inset 0 1px 2px rgba(0,0,0,0.02);
   }
-  .login-input-icon{color:#38bdf8;display:grid;place-items:center;margin-inline-end:10px;z-index:2}
-  .login-input-icon svg{width:18px;height:18px}
-  .login-input-wrap input{
-    flex:1;background:transparent !important;background-color:transparent !important;
-    border:none !important;color:#ffffff !important;
-    padding:14px 0;font:inherit;font-size:.98rem;font-weight:600;outline:none;
-    color-scheme:dark;
+  .disc-input-wrap input{
+    flex:1;background:transparent !important;border:none !important;
+    outline:none !important;color:#0f172a !important;
+    font:inherit;font-size:0.92rem;font-weight:600;padding:9px 0;
   }
-  .login-input-wrap input::placeholder{color:#475569;font-weight:400}
-  .login-input-wrap input:-webkit-autofill,
-  .login-input-wrap input:-webkit-autofill:hover,
-  .login-input-wrap input:-webkit-autofill:focus,
-  .login-input-wrap input:-webkit-autofill:active{
-    -webkit-box-shadow:0 0 0 1000px #080f1f inset !important;
-    box-shadow:0 0 0 1000px #080f1f inset !important;
-    -webkit-text-fill-color:#f8fafc !important;
-    color:#f8fafc !important;
-    caret-color:#ffffff !important;
-    transition:background-color 50000s ease-in-out 0s !important;
+  .disc-input-wrap input::placeholder{
+    color:#94a3b8;font-weight:400;
+  }
+  .disc-input-wrap input:-webkit-autofill,
+  .disc-input-wrap input:-webkit-autofill:hover,
+  .disc-input-wrap input:-webkit-autofill:focus,
+  .disc-input-wrap input:-webkit-autofill:active{
+    -webkit-box-shadow:0 0 0 1000px #ffffff inset !important;
+    box-shadow:0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color:#0f172a !important;
+    color:#0f172a !important;
   }
 
   .btn-toggle-pass{
-    background:transparent;border:none;color:#64748b;cursor:pointer;
-    padding:6px;border-radius:6px;display:grid;place-items:center;z-index:2;
-    transition:color .18s ease;
+    background:transparent;border:none;color:#94a3b8;cursor:pointer;
+    padding:4px;border-radius:4px;display:grid;place-items:center;
+    transition:color 0.18s ease;
   }
-  .btn-toggle-pass:hover{color:#38bdf8}
-  .btn-toggle-pass svg{width:18px;height:18px}
+  .btn-toggle-pass:hover{color:#0ea5e9}
+  .btn-toggle-pass svg{width:16px;height:16px}
 
-  .login-options{display:flex;align-items:center;justify-content:space-between;font-size:.82rem;color:#94a3b8;margin-top:2px}
-  .login-remember{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
-  .login-remember input{cursor:pointer;accent-color:#38bdf8;width:16px;height:16px}
-  .login-cloud-status{display:flex;align-items:center;gap:6px;font-size:.76rem;color:#34d399;font-weight:700}
-
-  /* Sign In Button */
-  .btn-login{
-    background:linear-gradient(135deg,#2563eb 0%,#0ea5e9 60%,#06b6d4 100%);
-    color:#fff;border:none;border-radius:14px;
-    padding:14px 20px;font:inherit;font-weight:800;font-size:1.02rem;letter-spacing:.4px;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
-    box-shadow:0 12px 28px -6px rgba(14,165,233,0.5), inset 0 1px 0 rgba(255,255,255,0.35);
-    transition:all .2s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top:6px;
+  /* Options row: Remember me + iOS Toggle Switch */
+  .disc-options-row{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:2px;margin-bottom:4px;user-select:none;
   }
-  .btn-login:hover{
-    box-shadow:0 16px 36px -6px rgba(6,182,212,0.7), inset 0 1px 0 rgba(255,255,255,0.45);
-    transform:translateY(-2px);filter:brightness(1.05);
+  .disc-remember-label{
+    display:flex;align-items:center;gap:7px;cursor:pointer;
+    font-size:0.8rem;font-weight:600;color:#334155;
   }
-  .btn-login:active{transform:translateY(0);box-shadow:0 6px 16px -4px rgba(14,165,233,0.4)}
-  .btn-login:disabled{opacity:.75;cursor:not-allowed;transform:none}
+  .disc-remember-label input[type="checkbox"]{
+    display:none;
+  }
+  .disc-custom-checkbox{
+    width:16px;height:16px;border-radius:4px;
+    border:1.5px solid #0f172a;background:#0f172a;
+    display:grid;place-items:center;color:#ffffff;
+    transition:all 0.18s ease;
+  }
+  .disc-custom-checkbox svg{
+    width:11px;height:11px;stroke:#ffffff;
+  }
+  .disc-remember-label input:not(:checked) + .disc-custom-checkbox{
+    background:transparent;border-color:#94a3b8;
+  }
+  .disc-remember-label input:not(:checked) + .disc-custom-checkbox svg{
+    opacity:0;
+  }
 
-  .login-footer{margin-top:22px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;text-align:center}
-  .login-footer-info{font-size:.76rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px}
-  .login-footer-info svg{width:13px;height:13px;color:#38bdf8}
+  /* iOS-style Blue Toggle Switch (exact from Image 2!) */
+  .disc-toggle-switch{
+    width:44px;height:24px;border-radius:99px;
+    background:#0ea5e9;padding:2.5px;cursor:pointer;
+    transition:background 0.25s ease;position:relative;
+    box-shadow:inset 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .disc-toggle-switch:not(.active){
+    background:#cbd5e1;
+  }
+  .toggle-switch-knob{
+    width:19px;height:19px;border-radius:50%;
+    background:#ffffff;box-shadow:0 2px 4px rgba(0,0,0,0.2);
+    transform:translateX(20px);
+    transition:transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .disc-toggle-switch:not(.active) .toggle-switch-knob{
+    transform:translateX(0);
+  }
+
+  /* Sign In Button with Vibrant Cyan/Blue Gradient */
+  .btn-login-disc{
+    width:100%;height:42px;
+    background:linear-gradient(90deg, #38bdf8 0%, #0ea5e9 55%, #0284c7 100%);
+    color:#ffffff;border:none;border-radius:10px;
+    font:inherit;font-weight:800;font-size:0.94rem;letter-spacing:0.8px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+    box-shadow:0 8px 22px -3px rgba(14,165,233,0.52), inset 0 1px 0 rgba(255,255,255,0.4);
+    transition:all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top:4px;text-transform:uppercase;
+  }
+  .btn-login-disc:hover{
+    transform:translateY(-1.5px);
+    box-shadow:0 12px 28px -3px rgba(14,165,233,0.65), inset 0 1px 0 rgba(255,255,255,0.5);
+    filter:brightness(1.05);
+  }
+  .btn-login-disc:active{
+    transform:translateY(0);box-shadow:0 4px 12px -2px rgba(14,165,233,0.45);
+  }
+  .btn-login-disc:disabled{
+    opacity:0.75;cursor:not-allowed;transform:none;
+  }
+
+  /* Bottom Secure Footer */
+  .login-secure-footer{
+    margin-top:14px;display:flex;align-items:center;gap:7px;
+    font-size:0.76rem;font-weight:700;color:#64748b;letter-spacing:0.3px;
+  }
+  .secure-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#10b981;box-shadow:0 0 8px #10b981;
+  }
+
+  /* ===== INTERNAL PAGE HARMONIZATION (LUXURY LIGHT TOUCHES) ===== */
+  body{
+    background:radial-gradient(circle at 50% 0%, #ffffff 0%, #f1f5f9 45%, #e2e8f0 100%) !important;
+    background-attachment:fixed !important;
+  }
+
+  /* Translucent Frosted Glass Topbar */
+  .topbar{
+    background:rgba(255,255,255,0.88) !important;
+    backdrop-filter:blur(14px) !important;-webkit-backdrop-filter:blur(14px) !important;
+    border-bottom:1.5px solid rgba(226,232,240,0.9) !important;
+    box-shadow:0 4px 20px -5px rgba(15,23,42,0.05) !important;
+  }
+
+  /* Refined Clean White Cards */
+  .card{
+    border-radius:20px !important;
+    border:1.5px solid rgba(226,232,240,0.85) !important;
+    box-shadow:0 10px 30px -10px rgba(15,23,42,0.06), 0 4px 12px -2px rgba(15,23,42,0.03) !important;
+  }
+
+  /* Luxury Touch on Primary Save Record Button */
+  .btn-save{
+    background:linear-gradient(135deg,#0284c7 0%,#0ea5e9 100%) !important;
+    color:#ffffff !important;
+    box-shadow:0 6px 18px -3px rgba(14,165,233,0.45) !important;
+    border-radius:12px !important;
+    border:none !important;
+  }
+  .btn-save:hover{
+    transform:translateY(-2px) !important;
+    box-shadow:0 8px 24px -3px rgba(14,165,233,0.6) !important;
+    filter:brightness(1.05) !important;
+  }
+
+  /* Stats Cards Harmonization */
+  .stat{
+    border-radius:16px !important;
+    border:1.5px solid #e2e8f0 !important;
+    box-shadow:0 6px 18px -4px rgba(15,23,42,0.05) !important;
+    background:#ffffff !important;
+  }
+
+  /* Clock Capsule Header */
+  .capsule-clock{
+    background:#ffffff !important;
+    border:1.5px solid #cbd5e1 !important;
+    box-shadow:0 4px 14px -2px rgba(15,23,42,0.06) !important;
+    border-radius:12px !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width:520px){
+    .login-3d-disc{width:350px;height:350px;padding:24px 30px}
+    .login-dock-arc{left:-10px;gap:10px}
+    .login-dock-icon{width:30px;height:30px}
+    .login-serif-title{font-size:1.7rem}
+  }
 
   /* ===== Lockout Screen (إيقاف النسخة عن بُعد) ===== */
   .lockout-overlay{
@@ -1259,293 +1425,100 @@
 </head>
 <body class="theme-acetate">
 
-<!-- ===== Login & Authentication Gateway ===== -->
+<!-- ===== Login & Authentication Gateway (Luxury 3D Circular Disc) ===== -->
 <div id="loginScreen" class="login-overlay">
-  <div class="login-mesh-bg"></div>
-  <div class="login-ambient-glow glow-cyan"></div>
-  <div class="login-ambient-glow glow-indigo"></div>
+  <div class="login-light-ambient-glow glow-top"></div>
+  <div class="login-light-ambient-glow glow-bottom"></div>
 
-  <div class="login-card">
-    <div class="login-header">
-      <!-- High-Tier Custom Industrial Label Printing Emblem -->
-      <div class="login-emblem-wrap">
-        <div class="login-emblem-halo"></div>
-        <svg class="login-emblem-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <!-- Background 3D Podium Gradients -->
-    <radialGradient id="zpBackGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.4"/>
-      <stop offset="60%" stop-color="#6366f1" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#080c16" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="zpBasePlate" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e1b4b"/>
-      <stop offset="50%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#020617"/>
-    </linearGradient>
-    <linearGradient id="zpPlateBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="40%" stop-color="#818cf8"/>
-      <stop offset="70%" stop-color="#c084fc"/>
-      <stop offset="100%" stop-color="#06b6d4"/>
-    </linearGradient>
-
-    <!-- Metallic Silver/Platinum Casing (Side & Top) -->
-    <linearGradient id="zpMetalTop" x1="20%" y1="0%" x2="80%" y2="100%">
-      <stop offset="0%" stop-color="#f8fafc"/>
-      <stop offset="35%" stop-color="#e2e8f0"/>
-      <stop offset="75%" stop-color="#cbd5e1"/>
-      <stop offset="100%" stop-color="#94a3b8"/>
-    </linearGradient>
-    <linearGradient id="zpMetalSide" x1="0%" y1="0%" x2="100%" y2="10%">
-      <stop offset="0%" stop-color="#e2e8f0"/>
-      <stop offset="15%" stop-color="#cbd5e1"/>
-      <stop offset="70%" stop-color="#94a3b8"/>
-      <stop offset="100%" stop-color="#64748b"/>
-    </linearGradient>
-
-    <!-- Charcoal / Black Matte Casing (Front Face) -->
-    <linearGradient id="zpFrontCharcoal" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#334155"/>
-      <stop offset="40%" stop-color="#1e293b"/>
-      <stop offset="100%" stop-color="#0f172a"/>
-    </linearGradient>
-    <linearGradient id="zpFrontDark" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e293b"/>
-      <stop offset="100%" stop-color="#090d16"/>
-    </linearGradient>
-
-    <!-- Touchscreen Display -->
-    <linearGradient id="zpTouchScreen" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0284c7"/>
-      <stop offset="40%" stop-color="#0369a1"/>
-      <stop offset="100%" stop-color="#0c4a6e"/>
-    </linearGradient>
-
-    <!-- Side Window Tint & Label Roll -->
-    <clipPath id="zpWindowClip">
-      <path d="M84 48 L126 40 C129 39 131 41 131 44 L131 82 C131 85 129 87 126 88 L84 96 C81 97 79 95 79 92 L79 54 C79 51 81 49 84 48 Z"/>
-    </clipPath>
-    <linearGradient id="zpWindowTint" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.95"/>
-      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.85"/>
-    </linearGradient>
-    <linearGradient id="zpWindowGloss" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
-      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="zpRollSpindle" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24"/>
-      <stop offset="50%" stop-color="#f59e0b"/>
-      <stop offset="100%" stop-color="#d97706"/>
-    </linearGradient>
-    <linearGradient id="zpLabelPaper" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="60%" stop-color="#f8fafc"/>
-      <stop offset="100%" stop-color="#e2e8f0"/>
-    </linearGradient>
-
-    <!-- Laser & Holographic Scan Light -->
-    <linearGradient id="zpLaserGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0"/>
-      <stop offset="30%" stop-color="#00f2fe" stop-opacity="0.9"/>
-      <stop offset="50%" stop-color="#ffffff" stop-opacity="1"/>
-      <stop offset="70%" stop-color="#00f2fe" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#00f2fe" stop-opacity="0"/>
-    </linearGradient>
-
-    <!-- Soft 3D Drop Shadow Filters -->
-    <filter id="zpShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.65"/>
-    </filter>
-    <filter id="zpGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0284c7" flood-opacity="0.4"/>
-    </filter>
-  </defs>
-
-  <!-- 1. Ambient 3D Podium Backplate -->
-  <rect x="8" y="8" width="144" height="144" rx="36" fill="url(#zpBasePlate)" stroke="url(#zpPlateBorder)" stroke-width="2.2" filter="url(#zpGlow)"/>
-
-  <!-- Subtle High-Tech Blueprint Grid inside Backplate -->
-  <g opacity="0.14" stroke="#38bdf8" stroke-width="1">
-    <line x1="20" y1="50" x2="140" y2="50"/>
-    <line x1="20" y1="80" x2="140" y2="80"/>
-    <line x1="20" y1="110" x2="140" y2="110"/>
-    <line x1="50" y1="20" x2="50" y2="140"/>
-    <line x1="80" y1="20" x2="80" y2="140"/>
-    <line x1="110" y1="20" x2="110" y2="140"/>
-  </g>
-
-  <!-- 2. Cast Ground Shadow Under Printer -->
-  <ellipse cx="80" cy="132" rx="52" ry="11" fill="#000000" opacity="0.75" filter="blur(6px)"/>
-
-  <!-- 3. MAIN 3D PRINTER (Zebra ZT411 Industrial Body) -->
-  <!-- Base Chassis / Rubber Feet -->
-  <path d="M28 122 L70 134 L132 118 L90 106 Z" fill="#0b0f19"/>
-
-  <!-- RIGHT SIDE PANEL (Metallic Silver Aluminum) -->
-  <!-- Main Side Face: Extends from front edge (X:70, Y:42 to Y:133) to rear corner (X:134, Y:30 to Y:116) -->
-  <path d="M70 42 L134 30 L134 116 L70 133 Z" fill="url(#zpMetalSide)"/>
-
-  <!-- Rounded Corner Chamfer at Rear of Side -->
-  <path d="M130 30 C133 30 135 32 135 35 L135 113 C135 115 133 117 130 117" stroke="#cbd5e1" stroke-width="1" fill="none" opacity="0.5"/>
-
-  <!-- TOP ROOF PANEL (Bi-fold Silver Lid) -->
-  <!-- Top Face: (Front-Left: 26, 49) -> (Front-Center: 70, 42) -> (Rear-Right: 134, 30) -> (Rear-Left: 90, 22) -->
-  <path d="M26 49 L70 42 L134 30 L90 22 Z" fill="url(#zpMetalTop)"/>
-  <!-- Longitudinal Hinge Seams on Top Cover -->
-  <line x1="79" y1="24" x2="123" y2="32" stroke="#94a3b8" stroke-width="1.2"/>
-  <line x1="48" y1="46" x2="112" y2="34" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
-
-  <!-- SIDE INSPECTION WINDOW (Zebra ZT411 Signature Window) -->
-  <!-- Positioned on the Silver Side: reveals media roll & yellow spindle -->
-  <path d="M84 48 L126 40 C129 39 131 41 131 44 L131 82 C131 85 129 87 126 88 L84 96 C81 97 79 95 79 92 L79 54 C79 51 81 49 84 48 Z"
-        fill="url(#zpWindowTint)" stroke="#1e293b" stroke-width="2.5"/>
-
-  <!-- Inside Window: Thermal Label Roll & Yellow Core Spindle -->
-  <g clip-path="url(#zpWindowClip)">
-    <!-- White Paper Roll Contour -->
-    <ellipse cx="112" cy="62" rx="14" ry="18" fill="url(#zpLabelPaper)"/>
-    <ellipse cx="112" cy="62" rx="11" ry="15" fill="#e2e8f0"/>
-    <ellipse cx="112" cy="62" rx="7" ry="10" fill="#94a3b8"/>
-    <!-- Yellow / Amber Spindle Gear Hub (Iconic Zebra ZT411 feature) -->
-    <ellipse cx="94" cy="66" rx="8" ry="11" fill="url(#zpRollSpindle)" stroke="#b45309" stroke-width="1"/>
-    <ellipse cx="94" cy="66" rx="4" ry="6" fill="#78350f"/>
-    <circle cx="94" cy="66" r="2" fill="#fde68a"/>
-    <!-- Window Gloss Reflection Streak -->
-    <path d="M81 52 L120 44 L114 86 L81 92 Z" fill="url(#zpWindowGloss)" opacity="0.28"/>
-  </g>
-
-  <!-- Lower Handle Indentation on Side -->
-  <path d="M96 112 L124 106 L124 114 L96 120 Z" fill="#1e293b" rx="2"/>
-
-  <!-- FRONT PANEL (Charcoal / Black Console & Dispenser) -->
-  <!-- Left Console Tower Face: (26, 49) down to (26, 118) and across to (48, 126) & (48, 46) -->
-  <path d="M26 49 L48 46 L48 126 L26 118 Z" fill="url(#zpFrontCharcoal)"/>
-
-  <!-- Front Dispensing Chamber / Right Section of Front: (48, 46) to (70, 42) down to (70, 133) & (48, 126) -->
-  <path d="M48 46 L70 42 L70 133 L48 126 Z" fill="url(#zpFrontDark)"/>
-
-  <!-- Front Bevel Highlight Line -->
-  <line x1="48" y1="46" x2="48" y2="126" stroke="#475569" stroke-width="1.2"/>
-
-  <!-- 4. FRONT CONSOLE DETAILS (Zebra ZT411 Interface) -->
-  <!-- Status LEDs (Top of Console) -->
-  <circle cx="31" cy="54" r="1.3" fill="#22c55e"/>
-  <circle cx="35" cy="54.8" r="1.3" fill="#f59e0b"/>
-  <circle cx="39" cy="55.5" r="1.3" fill="#38bdf8"/>
-
-  <!-- Color Touchscreen Display -->
-  <path d="M30 60 L45 57 L45 88 L30 85 Z" fill="#0369a1" stroke="#0284c7" stroke-width="1.2"/>
-  <path d="M31 62 L44 59 L44 86 L31 83 Z" fill="url(#zpTouchScreen)"/>
-  <!-- UI Icons on Screen (Simulating Zebra OS Touch UI) -->
-  <rect x="33" y="65" width="8" height="6" rx="1" fill="#38bdf8" opacity="0.8"/>
-  <line x1="33" y1="74" x2="42" y2="72" stroke="#ffffff" stroke-width="1" opacity="0.9"/>
-  <line x1="33" y1="77" x2="40" y2="75.5" stroke="#93c5fd" stroke-width="0.8"/>
-  <rect x="33" y="80" width="3" height="3" rx="0.5" fill="#38bdf8"/>
-  <rect x="38" y="79" width="3" height="3" rx="0.5" fill="#38bdf8"/>
-
-  <!-- Keypad Buttons (Pause ||, Feed, Cancel X) -->
-  <rect x="30" y="90" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
-  <rect x="35.5" y="91" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
-  <rect x="41" y="92" width="4" height="4" rx="0.8" fill="#334155" stroke="#64748b" stroke-width="0.5"/>
-
-  <!-- ZEBRA Model Label Text -->
-  <line x1="31" y1="99" x2="42" y2="101" stroke="#94a3b8" stroke-width="1.2"/>
-
-  <!-- USB Port Door at Bottom of Console -->
-  <rect x="33" y="106" width="7" height="8" rx="1.5" fill="#0f172a" stroke="#334155" stroke-width="0.8"/>
-
-  <!-- 5. LABEL DISPENSING MOUTH & FRESHLY PRINTED BARCODE LABEL -->
-  <!-- Zebra Head Logo Emblem on Upper Door -->
-  <path d="M56 50 L62 49 L60 55 L54 56 Z" fill="#ffffff" opacity="0.85"/>
-
-  <!-- Stainless Steel Tear Bar / Label Output Roller -->
-  <path d="M51 68 L67 65 L67 71 L51 74 Z" fill="#cbd5e1" stroke="#ffffff" stroke-width="1"/>
-
-  <!-- Freshly Dispensed White Barcode Label (Emerging in 3D Perspective!) -->
-  <path d="M50 72 L66 69 L69 95 L53 98 Z" fill="url(#zpLabelPaper)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))"/>
-
-  <!-- Barcode Stripes on Label -->
-  <rect x="53" y="75" width="1.5" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
-  <rect x="56" y="74.5" width="1" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
-  <rect x="58.5" y="74" width="2" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
-  <rect x="62" y="73.5" width="1" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
-  <rect x="64.5" y="73" width="1.8" height="16" rx="0.3" fill="#0f172a" transform="skewY(7)"/>
-
-  <!-- Glowing Laser Scan Beam Across the Label -->
-  <line x1="47" y1="84" x2="72" y2="79" stroke="url(#zpLaserGlow)" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="59.5" cy="81.5" r="2.5" fill="#ffffff" filter="drop-shadow(0 0 4px #00f2fe)"/>
-
-  <!-- Lower Textured Ribs / Grip Grooves -->
-  <line x1="53" y1="102" x2="53" y2="120" stroke="#1e293b" stroke-width="1.2"/>
-  <line x1="57" y1="101" x2="57" y2="121" stroke="#1e293b" stroke-width="1.2"/>
-  <line x1="61" y1="100" x2="61" y2="122" stroke="#1e293b" stroke-width="1.2"/>
-  <line x1="65" y1="99" x2="65" y2="123" stroke="#1e293b" stroke-width="1.2"/>
-
-  <!-- 6. Precision Corner Crosshairs on Outer Baseplate -->
-  <path d="M16 26V16H26" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M144 26V16H134" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M16 134V144H26" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M144 134V144H134" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
-</svg>
+  <div class="login-page-container">
+    <!-- Top Classical Serif Header with Calligraphic Flourish -->
+    <div class="login-header-group">
+      <h1 class="login-serif-title">Login &amp; Signup Form</h1>
+      <div class="login-flourish-wrap">
+        <svg class="login-flourish-svg" viewBox="0 0 180 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 12 C 40 12, 55 5, 80 11 C 85 12, 88 12, 90 12 C 92 12, 95 12, 100 11 C 125 5, 140 12, 170 12" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M70 12 C 78 7, 85 7, 90 12 C 95 17, 102 17, 110 12" stroke="#64748b" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="90" cy="12" r="3" fill="#64748b"/>
+          <circle cx="68" cy="12" r="1.5" fill="#94a3b8"/>
+          <circle cx="112" cy="12" r="1.5" fill="#94a3b8"/>
+        </svg>
       </div>
-      <div class="login-brand-meta">
-        <h2 class="login-brand-title">SYSTEM LABEL PRINTING</h2>
-
-        <p class="login-brand-sub">Department Access Control &amp; Verification Gateway</p>
+      <div class="login-sub-brand">
+        <span class="sub-brand-dot"></span>
+        <span>SYSTEM LABEL PRINTING &bull; PRODUCTION GATEWAY</span>
       </div>
     </div>
 
-    <!-- Error Notice Banner -->
-    <div id="loginError" class="login-alert hidden"></div>
+    <!-- Center 3D Disc Scene with Left Arc Dock -->
+    <div class="login-3d-scene">
+      <!-- 3D Cast Shadow (projected to the left, matching Image 1) -->
+      <div class="login-3d-cast-shadow"></div>
 
-    <form id="loginForm" class="login-form" autocomplete="off">
-      <div class="login-field">
-        <label for="loginUsername">
-          <span>Username</span>
-        </label>
-        <div class="login-input-wrap">
-          <span class="login-input-icon"><i data-i="user"></i></span>
-          <input type="text" id="loginUsername" placeholder="Enter username..." required autofocus autocomplete="username">
+      <!-- Left Arc Floating Icons Dock (matching Image 1 & 2) -->
+      <div class="login-dock-arc">
+        <div class="login-dock-icon" title="Label Printing System">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </div>
+        <div class="login-dock-icon" title="Industrial Monitor">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </div>
+        <div class="login-dock-icon" title="Cloud Synchronization">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </div>
+        <div class="login-dock-icon" title="Security Vault">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
         </div>
       </div>
 
-      <div class="login-field">
-        <label for="loginPassword">
-          <span>Password</span>
-        </label>
-        <div class="login-input-wrap">
-          <span class="login-input-icon"><i data-i="lock"></i></span>
-          <input type="password" id="loginPassword" placeholder="Enter password..." required autocomplete="current-password">
-          <button type="button" class="btn-toggle-pass" id="btnTogglePass" title="Show/Hide Password" tabindex="-1">
-            <i data-i="eye" id="passEyeIcon"></i>
+      <!-- The 3D Disc Card Body -->
+      <div class="login-3d-disc" id="login3dDisc">
+        <h2 class="disc-login-title">Login</h2>
+
+        <!-- Error Notice Banner -->
+        <div id="loginError" class="login-alert hidden"></div>
+
+        <form id="loginForm" class="disc-login-form" autocomplete="off">
+          <div class="disc-field">
+            <label for="loginUsername">Username</label>
+            <div class="disc-input-wrap">
+              <input type="text" id="loginUsername" placeholder="Username" required autofocus autocomplete="username">
+            </div>
+          </div>
+
+          <div class="disc-field">
+            <label for="loginPassword">Password</label>
+            <div class="disc-input-wrap">
+              <input type="password" id="loginPassword" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-pass" id="btnTogglePass" title="Show/Hide Password" tabindex="-1">
+                <i data-i="eye" id="passEyeIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="disc-options-row">
+            <label class="disc-remember-label" for="loginRemember">
+              <input type="checkbox" id="loginRemember" checked>
+              <span class="disc-custom-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <span class="disc-remember-text">Remember me</span>
+            </label>
+            <div class="disc-toggle-switch active" id="loginToggleSwitch" title="Toggle Remember Me">
+              <div class="toggle-switch-knob"></div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login-disc" id="btnLoginSubmit">
+            <span>SIGN IN</span>
           </button>
-        </div>
+        </form>
       </div>
+    </div>
 
-      <div class="login-options">
-        <label class="login-remember">
-          <input type="checkbox" id="loginRemember" checked>
-          <span>Keep me signed in</span>
-        </label>
-        <span class="login-cloud-status" id="loginCloudStatus">
-          <span class="live-dot-mini" style="background:#10b981"></span> Protected Gateway
-        </span>
-      </div>
-
-      <button type="submit" class="btn btn-login" id="btnLoginSubmit">
-        <i data-i="check"></i>
-        <span>Sign In</span>
-      </button>
-    </form>
-
-    <div class="login-footer">
-      <div class="login-footer-info">
-        <i data-i="shield"></i>
-        <span>Cloud Synchronized &bull; Multi-User Verification Gateway</span>
-      </div>
+    <!-- Bottom Status / Secure Badge -->
+    <div class="login-secure-footer">
+      <span class="secure-dot"></span>
+      <span>Protected Gateway &bull; Multi-User Verification System</span>
     </div>
   </div>
 </div>
@@ -4882,6 +4855,36 @@
     applyAuthSession(sess);
     toast('Welcome '+sess.name+' to System Label Printing');
   });
+
+  // Sync iOS-style toggle switch with #loginRemember
+  const elSwitch = $('#loginToggleSwitch');
+  const elRem = $('#loginRemember');
+  if(elSwitch && elRem){
+    elSwitch.addEventListener('click', () => {
+      elRem.checked = !elRem.checked;
+      elSwitch.classList.toggle('active', elRem.checked);
+    });
+    elRem.addEventListener('change', () => {
+      elSwitch.classList.toggle('active', elRem.checked);
+    });
+  }
+
+  // Interactive 3D mouse parallax on the floating disc
+  const disc = $('#login3dDisc');
+  const scene = $('.login-3d-scene');
+  if(disc && scene){
+    scene.addEventListener('mousemove', e => {
+      const rect = disc.getBoundingClientRect();
+      const x = e.clientX - (rect.left + rect.width / 2);
+      const y = e.clientY - (rect.top + rect.height / 2);
+      const rotX = Math.max(-14, Math.min(14, -(y / rect.height) * 16));
+      const rotY = Math.max(-14, Math.min(14, (x / rect.width) * 16));
+      disc.style.transform = `perspective(1400px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+    });
+    scene.addEventListener('mouseleave', () => {
+      disc.style.transform = 'perspective(1400px) rotateX(0deg) rotateY(0deg)';
+    });
+  }
 
   $('#btnTogglePass').addEventListener('click',()=>{
     const inp=$('#loginPassword');
